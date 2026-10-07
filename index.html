@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV NOVA JUAREZ - Sistema de Cobrança</title>
+    <style>
+        :root {
+            --bg: #121212; --card: #1e1e1e; --text: #f0f0f0; --border: #333;
+            --primary: #ffffff; --whatsapp: #25D366; --telegram: #0088cc;
+            --foto: #9b59b6; --pdf: #e74c3c; --email: #3498db; --messenger: #0084FF;
+            --telefone: #f1c40f; --pix: #32bcad; --danger: #c0392b; --edit: #f39c12;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h1, h2, h3 { margin: 5px 0; }
+        .logo { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 15px; width: 100%; max-width: 900px; }
+        .logo h1 { font-size: 2.2em; letter-spacing: 4px; text-transform: uppercase; }
+        .logo span { color: #888; font-size: 0.6em; letter-spacing: 2px; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        .tab-btn { background: var(--card); color: white; border: 1px solid var(--border); padding: 10px 15px; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.3s; font-size: 0.9em; }
+        .tab-btn.active, .tab-btn:hover { background: var(--primary); color: black; }
+        
+        .container { width: 100%; max-width: 900px; background: var(--card); padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: none; }
+        .container.active { display: block; }
+        
+        .form-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .form-group.full { grid-template-columns: 1fr; }
+        label { display: block; margin-bottom: 5px; font-size: 0.85em; color: #aaa; }
+        input, select { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--border); background: #111; color: white; box-sizing: border-box; }
+        
+        .btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; font-size: 0.85em; margin: 2px; }
+        .btn:hover { opacity: 0.85; transform: scale(1.03); }
+        .btn-salvar { background: #27ae60; width: 100%; margin-top: 10px; padding: 12px; font-size: 1em;}
+        .btn-edit { background: var(--edit); color: black; }
+        .btn-del { background: var(--danger); }
+        .btn-whatsapp { background: var(--whatsapp); }
+        .btn-telegram { background: var(--telegram); }
+        .btn-foto { background: var(--foto); }
+        .btn-pdf { background: var(--pdf); }
+        .btn-email { background: var(--email); }
+        .btn-messenger { background: var(--messenger); }
+        .btn-telefone { background: var(--telefone); color: black; }
+        
+        .lista-item { background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; border-left: 4px solid var(--whatsapp); }
+        .lista-item.revenda { border-left-color: var(--telegram); }
+        .lista-item.historico { border-left-color: var(--foto); }
+        .lista-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .lista-info strong { display: block; font-size: 1.1em; }
+        .lista-info small { color: #aaa; display: block; margin-top: 3px; }
+        .acoes { display: flex; gap: 5px; flex-wrap: wrap; }
+        
+        .config-box { background: #111; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .aviso { background: #f39c12; color: black; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 15px; font-size: 0.9em; font-weight: bold; }
+        .radio-group { display: flex; gap: 20px; margin-bottom: 15px; padding: 10px; background: #222; border-radius: 5px; }
+        .radio-group label { display: flex; align-items: center; gap: 8px; cursor: pointer; color: white; font-size: 1em; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card); padding: 25px; border-radius: 10px; width: 90%; max-width: 500px; border: 1px solid var(--border); }
+        .modal-content h3 { margin-bottom: 15px; }
+        
+        .historico-preview { width: 100%; max-width: 300px; border-radius: 5px; margin-top: 10px; border: 1px solid #444; }
+        .empty-msg { text-align: center; color: #666; padding: 20px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="logo">
+        <h1>TV NOVA JUAREZ</h1>
+        <span>SISTEMA DE COBRANÇA AUTOMÁTICA</span>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="abrirAba('clientes')">👤 Clientes</button>
+        <button class="tab-btn" onclick="abrirAba('revendas')">🏢 Revendas</button>
+        <button class="tab-btn" onclick="abrirAba('historico')">📂 Histórico Cobranças</button>
+        <button class="tab-btn" onclick="abrirAba('config')">⚙️ Configurações (Dono)</button>
+    </div>
+
+    <!-- ABA CLIENTES -->
+    <div id="clientes" class="container active">
+        <h2 id="titulo-cliente">Cadastrar Cliente</h2>
+        <input type="hidden" id="cli_id_edit">
+        <div class="form-group">
+            <div><label>Nome</label><input type="text" id="cli_nome"></div>
+            <div><label>Sobrenome</label><input type="text" id="cli_sobrenome"></div>
+            <div><label>E-mail</label><input type="email" id="cli_email"></div>
+            <div><label>Telefone (WhatsApp/Telegram)</label><input type="text" id="cli_telefone" placeholder="11999999999"></div>
+            <div><label>Usuário</label><input type="text" id="cli_usuario"></div>
+            <div><label>Senha</label><input type="password" id="cli_senha"></div>
+            <div><label>Servidor</label><input type="text" id="cli_servidor"></div>
+            <div><label>Data/Hora/Ano</label><input type="datetime-local" id="cli_data"></div>
+        </div>
+        <button class="btn btn-salvar" onclick="salvarCliente()" id="btn-salvar-cli">💾 Salvar Cliente</button>
+        <button class="btn btn-del" onclick="cancelarEdicaoCliente()" id="btn-cancelar-cli" style="display:none; width:100%; margin-top:5px;">❌ Cancelar Edição</button>
+
+        <h3 style="margin-top: 30px;">📋 Clientes Cadastrados</h3>
+        <div id="lista-clientes"></div>
+    </div>
+
+    <!-- ABA REVENDAS -->
+    <div id="revendas" class="container">
+        <h2 id="titulo-revenda">Cadastrar Revenda</h2>
+        <input type="hidden" id="rev_id_edit">
+        <div class="form-group">
+            <div><label>Nome</label><input type="text" id="rev_nome"></div>
+            <div><label>Sobrenome</label><input type="text" id="rev_sobrenome"></div>
+            <div><label>E-mail</label><input type="email" id="rev_email"></div>
+            <div><label>Telefone</label><input type="text" id="rev_telefone"></div>
+            <div><label>Usuário</label><input type="text" id="rev_usuario"></div>
+            <div><label>Senha</label><input type="password" id="rev_senha"></div>
+            <div><label>Servidor</label><input type="text" id="rev_servidor"></div>
+            <div><label>Data/Hora/Ano</label><input type="datetime-local" id="rev_data"></div>
+        </div>
+        <button class="btn btn-salvar" onclick="salvarRevenda()" id="btn-salvar-rev">💾 Salvar Revenda</button>
+        <button class="btn btn-del" onclick="cancelarEdicaoRevenda()" id="btn-cancelar-rev" style="display:none; width:100%; margin-top:5px;">❌ Cancelar Edição</button>
+
+        <h3 style="margin-top: 30px;">📋 Revendas Cadastradas</h3>
+        <div id="lista-revendas"></div>
+    </div>
+
+    <!-- ABA HISTÓRICO -->
+    <div id="historico" class="container">
+        <h2>📂 Histórico de Cobranças Geradas</h2>
+        <p style="color:#aaa; font-size:0.9em;">Todas as fotos e PDFs gerados ficam salvos aqui no seu aparelho.</p>
+        <div id="lista-historico"></div>
+    </div>
+
+    <!-- ABA CONFIGURAÇÕES -->
+    <div id="config" class="container">
+        <h2>⚙️ Configurações do Dono</h2>
+        <div class="aviso">🔒 Apenas o Dono pode ver e alterar. Tudo fica salvo no seu navegador.</div>
+        
+        <div class="config-box">
+            <h3>Modo de Dados Bancários</h3>
+            <div class="radio-group">
+                <label><input type="radio" name="modo_banco" value="completo" onchange="mudarModoBanco()"> Dados Completos</label>
+                <label><input type="radio" name="modo_banco" value="simples" onchange="mudarModoBanco()"> Apenas Pix + Nome</label>
+            </div>
+        </div>
+
+        <div class="config-box" id="box-completo">
+            <h3>Dados Bancários Completos</h3>
+            <div class="form-group">
+                <div><label>Banco</label><input type="text" id="cfg_banco" placeholder="Ex: Banco do Brasil"></div>
+                <div><label>Agência</label><input type="text" id="cfg_agencia" placeholder="1234-5"></div>
+                <div><label>Conta</label><input type="text" id="cfg_conta" placeholder="67890-1"></div>
+                <div><label>Titular</label><input type="text" id="cfg_titular" placeholder="Seu Nome"></div>
+                <div class="full"><label>Chave Pix</label><input type="text" id="cfg_pix" placeholder="Sua chave pix"></div>
+            </div>
+        </div>
+
+        <div class="config-box" id="box-simples" style="display:none;">
+            <h3>Dados Simplificados</h3>
+            <div class="form-group">
+                <div><label>Nome do Banco (Pix)</label><input type="text" id="cfg_banco_simples" placeholder="Ex: Nubank, Caixa..."></div>
+                <div><label>Nome do Titular</label><input type="text" id="cfg_titular_simples" placeholder="Seu Nome"></div>
+                <div class="full"><label>Chave Pix</label><input type="text" id="cfg_pix_simples" placeholder="Sua chave pix"></div>
+            </div>
+        </div>
+
+        <button class="btn btn-salvar" onclick="salvarConfig()">💾 Salvar Configurações</button>
+    </div>
+
+    <!-- MODAL DE EDIÇÃO DO HISTÓRICO -->
+    <div id="modal-historico" class="modal">
+        <div class="modal-content">
+            <h3>Detalhes da Cobrança</h3>
+            <p id="modal-info"></p>
+            <div id="modal-preview"></div>
+            <button class="btn btn-del" onclick="fecharModal()" style="width:100%; margin-top:15px;">Fechar</button>
+        </div>
+    </div>
+
+    <script>
+        // --- BANCO DE DADOS LOCAL ---
+        let clientes = JSON.parse(localStorage.getItem('tv_clientes')) || [];
+        let revendas = JSON.parse(localStorage.getItem('tv_revendas')) || [];
+        let historico = JSON.parse(localStorage.getItem('tv_historico')) || [];
+        let config = JSON.parse(localStorage.getItem('tv_config')) || { modo: 'completo' };
+
+        // --- NAVEGAÇÃO ---
+        function abrirAba(id) {
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+            if(id === 'clientes') renderizarClientes();
+            if(id === 'revendas') renderizarRevendas();
+            if(id === 'historico') renderizarHistorico();
+            if(id === 'config') carregarConfig();
+        }
+
+        // --- CONFIGURAÇÕES ---
+        function mudarModoBanco() {
+            const modo = document.querySelector('input[name="modo_banco"]:checked').value;
+            document.getElementById('box-completo').style.display = modo === 'completo' ? 'block' : 'none';
+            document.getElementById('box-simples').style.display = modo === 'simples' ? 'block' : 'none';
+        }
+
+        function salvarConfig() {
+            const modo = document.querySelector('input[name="modo_banco"]:checked').value;
+            config = {
+                modo: modo,
+                banco: document.getElementById('cfg_banco').value,
+                agencia: document.getElementById('cfg_agencia').value,
+                conta: document.getElementById('cfg_conta').value,
+                titular: document.getElementById('cfg_titular').value,
+                pix: document.getElementById('cfg_pix').value,
+                banco_simples: document.getElementById('cfg_banco_simples').value,
+                titular_simples: document.getElementById('cfg_titular_simples').value,
+                pix_simples: document.getElementById('cfg_pix_simples').value
+            };
+            localStorage.setItem('tv_config', JSON.stringify(config));
+            alert("✅ Configurações salvas com sucesso!");
+        }
+
+        function carregarConfig() {
+            if(config.modo) {
+                document.querySelector(`input[name="modo_banco"][value="${config.modo}"]`).checked = true;
+                mudarModoBanco();
+            }
+            if(config.banco) document.getElementById('cfg_banco').value = config.banco;
+            if(config.agencia) document.getElementById('cfg_agencia').value = config.agencia;
+            if(config.conta) document.getElementById('cfg_conta').value = config.conta;
+            if(config.titular) document.getElementById('cfg_titular').value = config.titular;
+            if(config.pix) document.getElementById('cfg_pix').value = config.pix;
+            if(config.banco_simples) document.getElementById('cfg_banco_simples').value = config.banco_simples;
+            if(config.titular_simples) document.getElementById('cfg_titular_simples').value = config.titular_simples;
+            if(config.pix_simples) document.getElementById('cfg_pix_simples').value = config.pix_simples;
+        }
+
+        // --- CLIENTES ---
+        function salvarCliente() {
+            const idEdit = document.getElementById('cli_id_edit').value;
+            const nome = document.getElementById('cli_nome').value;
+            const telefone = document.getElementById('cli_telefone').value;
+            if(!nome || !telefone) return alert("⚠️ Preencha Nome e Telefone!");
+
+            const dados = {
+                id: idEdit ? parseInt(idEdit) : Date.now(),
+                nome, sobrenome: document.getElementById('cli_sobrenome').value,
+                email: document.getElementById('cli_email').value,
+                telefone, usuario: document.getElementById('cli_usuario').value,
+                senha: document.getElementById('cli_senha').value,
+                servidor: document.getElementById('cli_servidor').value,
+                data: document.getElementById('cli_data').value,
+                tipo: 'cliente'
+            };
+
+            if(idEdit) {
+                const idx = clientes.findIndex(c => c.id === parseInt(idEdit));
+                clientes[idx] = dados;
+                alert("✅ Cliente atualizado!");
+            } else {
+                clientes.push(dados);
+                alert("✅ Cliente salvo!");
+            }
+            localStorage.setItem('tv_clientes', JSON.stringify(clientes));
+            renderizarClientes();
+            cancelarEdicaoCliente();
+        }
+
+        function editarCliente(id) {
+            const c = clientes.find(x => x.id === id);
+            if(!c) return;
+            document.getElementById('cli_id_edit').value = c.id;
+            document.getElementById('cli_nome').value = c.nome;
+            document.getElementById('cli_sobrenome').value = c.sobrenome;
+            document.getElementById('cli_email').value = c.email;
+            document.getElementById('cli_telefone').value = c.telefone;
+            document.getElementById('cli_usuario').value = c.usuario;
+            document.getElementById('cli_senha').value = c.senha;
+            document.getElementById('cli_servidor').value = c.servidor;
+            document.getElementById('cli_data').value = c.data;
+            document.getElementById('titulo-cliente').innerText = "✏️ Editando Cliente";
+            document.getElementById('btn-salvar-cli').innerText = "💾 Atualizar Cliente";
+            document.getElementById('btn-cancelar-cli').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        function cancelarEdicaoCliente() {
+            document.getElementById('cli_id_edit').value = '';
+            document.querySelectorAll('[id^="cli_"]').forEach(el => { if(el.tagName === 'INPUT') el.value = ''; });
+            document.getElementById('titulo-cliente').innerText = "Cadastrar Cliente";
+            document.getElementById('btn-salvar-cli').innerText = "💾 Salvar Cliente";
+            document.getElementById('btn-cancelar-cli').style.display = 'none';
+        }
+
+        function excluirCliente(id) {
+            if(!confirm("⚠️ Tem certeza que deseja excluir este cliente?")) return;
+            clientes = clientes.filter(c => c.id !== id);
+            localStorage.setItem('tv_clientes', JSON.stringify(clientes));
+            renderizarClientes();
+        }
+
+        function renderizarClientes() {
+            const div = document.getElementById('lista-clientes');
+            if(clientes.length === 0) { div.innerHTML = '<p class="empty-msg">Nenhum cliente cadastrado.</p>'; return; }
+            div.innerHTML = clientes.map(c => `
+                <div class="lista-item">
+                    <div class="lista-header">
+                        <div class="lista-info">
+                            <strong>${c.nome} ${c.sobrenome}</strong>
+                            <small>📞 ${c.telefone} | 🖥️ ${c.servidor} | 📧 ${c.email}</small>
+                        </div>
+                        <div class="acoes">
+                            <button class="btn btn-edit" onclick="editarCliente(${c.id})">✏️ Editar</button>
+                            <button class="btn btn-del" onclick="excluirCliente(${c.id})">🗑️ Excluir</button>
+                        </div>
+                    </div>
+                    <div class="acoes">
+                        <button class="btn btn-whatsapp" onclick="enviarWhats('${c.telefone}', '${c.nome}', ${c.id})">📱 WhatsApp</button>
+                        <button class="btn btn-telegram" onclick="enviarTelegram('${c.telefone}', '${c.nome}', ${c.id})">✈️ Telegram</button>
+                        <button class="btn btn-email" onclick="enviarEmail('${c.email}', '${c.nome}', ${c.id})">📧 E-mail</button>
+                        <button class="btn btn-messenger" onclick="enviarMessenger('${c.nome}', ${c.id})">💬 Messenger</button>
+                        <button class="btn btn-telefone" onclick="ligar('${c.telefone}')">📞 Ligar</button>
+                        <button class="btn btn-foto" onclick="gerarCobranca('${c.nome}', 'foto', ${c.id})">📸 Gerar Foto</button>
+                        <button class="btn btn-pdf" onclick="gerarCobranca('${c.nome}', 'pdf', ${c.id})">📄 Gerar PDF</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- REVENDAS ---
+        function salvarRevenda() {
+            const idEdit = document.getElementById('rev_id_edit').value;
+            const nome = document.getElementById('rev_nome').value;
+            const telefone = document.getElementById('rev_telefone').value;
+            if(!nome || !telefone) return alert("⚠️ Preencha Nome e Telefone!");
+
+            const dados = {
+                id: idEdit ? parseInt(idEdit) : Date.now(),
+                nome, sobrenome: document.getElementById('rev_sobrenome').value,
+                email: document.getElementById('rev_email').value,
+                telefone, usuario: document.getElementById('rev_usuario').value,
+                senha: document.getElementById('rev_senha').value,
+                servidor: document.getElementById('rev_servidor').value,
+                data: document.getElementById('rev_data').value,
+                tipo: 'revenda'
+            };
+
+            if(idEdit) {
+                const idx = revendas.findIndex(r => r.id === parseInt(idEdit));
+                revendas[idx] = dados;
+                alert("✅ Revenda atualizada!");
+            } else {
+                revendas.push(dados);
+                alert("✅ Revenda salva!");
+            }
+            localStorage.setItem('tv_revendas', JSON.stringify(revendas));
+            renderizarRevendas();
+            cancelarEdicaoRevenda();
+        }
+
+        function editarRevenda(id) {
+            const r = revendas.find(x => x.id === id);
+            if(!r) return;
+            document.getElementById('rev_id_edit').value = r.id;
+            document.getElementById('rev_nome').value = r.nome;
+            document.getElementById('rev_sobrenome').value = r.sobrenome;
+            document.getElementById('rev_email').value = r.email;
+            document.getElementById('rev_telefone').value = r.telefone;
+            document.getElementById('rev_usuario').value = r.usuario;
+            document.getElementById('rev_senha').value = r.senha;
+            document.getElementById('rev_servidor').value = r.servidor;
+            document.getElementById('rev_data').value = r.data;
+            document.getElementById('titulo-revenda').innerText = "✏️ Editando Revenda";
+            document.getElementById('btn-salvar-rev').innerText = "💾 Atualizar Revenda";
+            document.getElementById('btn-cancelar-rev').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        function cancelarEdicaoRevenda() {
+            document.getElementById('rev_id_edit').value = '';
+            document.querySelectorAll('[id^="rev_"]').forEach(el => { if(el.tagName === 'INPUT') el.value = ''; });
+            document.getElementById('titulo-revenda').innerText = "Cadastrar Revenda";
+            document.getElementById('btn-salvar-rev').innerText = "💾 Salvar Revenda";
+            document.getElementById('btn-cancelar-rev').style.display = 'none';
+        }
+
+        function excluirRevenda(id) {
+            if(!confirm("⚠️ Tem certeza que deseja excluir esta revenda?")) return;
+            revendas = revendas.filter(r => r.id !== id);
+            localStorage.setItem('tv_revendas', JSON.stringify(revendas));
+            renderizarRevendas();
+        }
+
+        function renderizarRevendas() {
+            const div = document.getElementById('lista-revendas');
+            if(revendas.length === 0) { div.innerHTML = '<p class="empty-msg">Nenhuma revenda cadastrada.</p>'; return; }
+            div.innerHTML = revendas.map(r => `
+                <div class="lista-item revenda">
+                    <div class="lista-header">
+                        <div class="lista-info">
+                            <strong>${r.nome} ${r.sobrenome}</strong>
+                            <small>📞 ${r.telefone} | 🖥️ ${r.servidor} | 📧 ${r.email}</small>
+                        </div>
+                        <div class="acoes">
+                            <button class="btn btn-edit" onclick="editarRevenda(${r.id})">✏️ Editar</button>
+                            <button class="btn btn-del" onclick="excluirRevenda(${r.id})">🗑️ Excluir</button>
+                        </div>
+                    </div>
+                    <div class="acoes">
+                        <button class="btn btn-whatsapp" onclick="enviarWhats('${r.telefone}', '${r.nome}', ${r.id})">📱 WhatsApp</button>
+                        <button class="btn btn-telegram" onclick="enviarTelegram('${r.telefone}', '${r.nome}', ${r.id})">✈️ Telegram</button>
+                        <button class="btn btn-email" onclick="enviarEmail('${r.email}', '${r.nome}', ${r.id})">📧 E-mail</button>
+                        <button class="btn btn-messenger" onclick="enviarMessenger('${r.nome}', ${r.id})">💬 Messenger</button>
+                        <button class="btn btn-telefone" onclick="ligar('${r.telefone}')">📞 Ligar</button>
+                        <button class="btn btn-foto" onclick="gerarCobranca('${r.nome}', 'foto', ${r.id})">📸 Gerar Foto</button>
+                        <button class="btn btn-pdf" onclick="gerarCobranca('${r.nome}', 'pdf', ${r.id})">📄 Gerar PDF</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- MENSAGEM DE COBRANÇA ---
+        function getMensagem(nome) {
+            let texto = `Olá *${nome}*, tudo bem? 👋\n\nPassando para lembrar do seu pagamento referente ao serviço *TV NOVA JUAREZ*.\n\n`;
+            if(config.modo === 'simples') {
+                texto += `*Dados para Pagamento:*\n`;
+                texto += `🏦 Banco: ${config.banco_simples || 'Não informado'}\n`;
+                texto += `👤 Titular: ${config.titular_simples || 'Não informado'}\n`;
+                texto += `🔑 Chave Pix: ${config.pix_simples || 'Não informada'}\n`;
+            } else {
+                texto += `*Dados Bancários:*\n`;
+                texto += `🏦 Banco: ${config.banco || 'Não informado'}\n`;
+                texto += `📍 Agência: ${config.agencia || 'Não informada'}\n`;
+                texto += `💳 Conta: ${config.conta || 'Não informada'}\n`;
+                texto += `👤 Titular: ${config.titular || 'Não informado'}\n`;
+                texto += `🔑 Chave Pix: ${config.pix || 'Não informada'}\n`;
+            }
+            texto += `\nQualquer dúvida estou à disposição. Obrigado!`;
+            return texto;
+        }
+
+        // --- ENVIOS ---
+        function enviarWhats(telefone, nome, id) {
+            const msg = encodeURIComponent(getMensagem(nome));
+            window.open(`https://wa.me/55${telefone}?text=${msg}`, '_blank');
+            salvarHistorico(nome, 'WhatsApp', id);
+        }
+
+        function enviarTelegram(telefone, nome, id) {
+            const msg = encodeURIComponent(getMensagem(nome));
+            window.open(`https://t.me/+55${telefone}?text=${msg}`, '_blank');
+            salvarHistorico(nome, 'Telegram', id);
+        }
+
+        function enviarEmail(email, nome, id) {
+            const msg = encodeURIComponent(getMensagem(nome));
+            window.open(`mailto:${email}?subject=Cobrança TV Nova Juarez&body=${msg}`, '_blank');
+            salvarHistorico(nome, 'E-mail', id);
+        }
+
+        function enviarMessenger(nome, id) {
+            window.open(`https://m.me/`, '_blank');
+            alert(`💬 Abrindo Messenger para ${nome}.\n\nMensagem a enviar:\n\n${getMensagem(nome)}`);
+            salvarHistorico(nome, 'Messenger', id);
+        }
+
+        function ligar(telefone) {
+            window.open(`tel:${telefone}`, '_blank');
+        }
+
+        // --- GERAR COBRANÇA (FOTO E PDF) ---
+        function gerarCobranca(nome, tipo, id) {
+            const msg = getMensagem(nome);
+            
+            if(tipo === 'foto') {
+                // Cria um canvas para gerar a imagem
+                const canvas = document.createElement('canvas');
+                canvas.width = 800; canvas.height = 600;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#1a1a1a';
+                ctx.fillRect(0, 0, 800, 600);
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 40px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('TV NOVA JUAREZ', 400, 80);
+                
+                ctx.font = '24px Arial';
+                ctx.fillStyle = '#32bcad';
+                ctx.fillText('COBRANÇA', 400, 130);
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'left';
+                const linhas = msg.split('\n');
+                linhas.forEach((linha, i) => {
+                    ctx.fillText(linha.replace(/\*/g, ''), 60, 200 + (i * 35));
+                });
+
+                const dataUrl = canvas.toDataURL('image/png');
+                
+                // Salva no histórico
+                salvarHistorico(nome, 'Foto', id, dataUrl);
+                
+                // Faz o download
+                const link = document.createElement('a');
+                link.download = `cobranca_${nome.replace(/\s/g,'_')}.png`;
+                link.href = dataUrl;
+                link.click();
+                
+                alert("📸 Foto de cobrança gerada e baixada!");
+            } 
+            else if(tipo === 'pdf') {
+                // Cria um PDF simples usando janela de impressão
+                const win = window.open('', '_blank');
+                win.document.write(`
+                    <html><head><title>Cobrança - ${nome}</title>
+                    <style>
+                        body { font-family: Arial; padding: 40px; background: #fff; color: #000; }
+                        h1 { color: #1a1a1a; border-bottom: 3px solid #32bcad; padding-bottom: 10px; }
+                        .box { background: #f5f5f5; padding: 20px; border-radius: 8px; margin-top: 20px; }
+                        .box p { font-size: 16px; line-height: 1.6; white-space: pre-wrap; }
+                        .footer { margin-top: 40px; text-align: center; color: #888; font-size: 12px; }
+                    </style></head>
+                    <body>
+                        <h1>TV NOVA JUAREZ - Cobrança</h1>
+                        <h2>Cliente: ${nome}</h2>
+                        <div class="box"><p>${msg.replace(/\*/g, '')}</p></div>
+                        <div class="footer">Gerado em ${new Date().toLocaleString('pt-BR')}</div>
+                        <script>window.print();<\/script>
+                    </body></html>
+                `);
+                win.document.close();
+                
+                salvarHistorico(nome, 'PDF', id, 'PDF Gerado - Veja impressão');
+                alert("📄 PDF de cobrança gerado! Escolha 'Salvar como PDF' na janela de impressão.");
+            }
+        }
+
+        // --- HISTÓRICO ---
+        function salvarHistorico(nome, tipo, idCliente, preview) {
+            const item = {
+                id: Date.now(),
+                nome: nome,
+                tipo: tipo,
+                idCliente: idCliente,
+                data: new Date().toLocaleString('pt-BR'),
+                preview: preview || null
+            };
+            historico.unshift(item);
+            if(historico.length > 100) historico.pop(); // Limita a 100 itens
+            localStorage.setItem('tv_historico', JSON.stringify(historico));
+        }
+
+        function renderizarHistorico() {
+            const div = document.getElementById('lista-historico');
+            if(historico.length === 0) { div.innerHTML = '<p class="empty-msg">Nenhuma cobrança gerada ainda.</p>'; return; }
+            div.innerHTML = historico.map(h => `
+                <div class="lista-item historico">
+                    <div class="lista-header">
+                        <div class="lista-info">
+                            <strong>${h.nome}</strong>
+                            <small>📌 ${h.tipo} | 🕐 ${h.data}</small>
+                        </div>
+                        <div class="acoes">
+                            <button class="btn btn-edit" onclick="verHistorico(${h.id})">👁️ Ver</button>
+                            <button class="btn btn-del" onclick="excluirHistorico(${h.id})">🗑️ Excluir</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function verHistorico(id) {
+            const h = historico.find(x => x.id === id);
+            if(!h) return;
+            document.getElementById('modal-info').innerHTML = `<strong>${h.nome}</strong><br>${h.tipo} - ${h.data}`;
+            const previewDiv = document.getElementById('modal-preview');
+            if(h.preview && h.preview.startsWith('data:image')) {
+                previewDiv.innerHTML = `<img src="${h.preview}" class="historico-preview">`;
+            } else {
+                previewDiv.innerHTML = `<p style="color:#aaa;">${h.preview || 'Sem preview disponível.'}</p>`;
+            }
+            document.getElementById('modal-historico').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('modal-historico').style.display = 'none';
+        }
+
+        function excluirHistorico(id) {
+            if(!confirm("⚠️ Excluir este registro do histórico?")) return;
+            historico = historico.filter(h => h.id !== id);
+            localStorage.setItem('tv_historico', JSON.stringify(historico));
+            renderizarHistorico();
+        }
+
+        // --- INICIALIZAÇÃO ---
+        renderizarClientes();
+        renderizarRevendas();
+        renderizarHistorico();
+        carregarConfig();
+        
+        // Define data atual nos campos datetime-local
+        const agora = new Date();
+        agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
+        const dataAtual = agora.toISOString().slice(0,16);
+        document.getElementById('cli_data').value = dataAtual;
+        document.getElementById('rev_data').value = dataAtual;
+    </script>
+</body>
+</html>
