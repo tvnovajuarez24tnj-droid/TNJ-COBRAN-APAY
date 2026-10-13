@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV NOVA JUAREZ - Sistema Profissional</title>
+    <title>Sistema de Cobrança Profissional</title>
     <style>
         :root {
             --bg: #0f0f0f; --card: #1a1a1a; --card2: #222; --text: #f0f0f0; --border: #333;
@@ -22,7 +22,6 @@
         .logo-text h1 { font-size: 1.8em; letter-spacing: 4px; text-transform: uppercase; background: linear-gradient(90deg, #fff, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .logo-text span { color: #888; font-size: 0.6em; letter-spacing: 2px; }
         
-        /* PAINEL DE ESTATÍSTICAS */
         .painel { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 12px; width: 100%; max-width: 1000px; }
         .stat-card { background: linear-gradient(135deg, var(--card), var(--card2)); padding: 12px; border-radius: 8px; border-left: 4px solid var(--whatsapp); box-shadow: 0 3px 10px rgba(0,0,0,0.4); }
         .stat-card.rev { border-left-color: var(--telegram); }
@@ -120,7 +119,7 @@
 
     <div class="logo">
         <div class="logo-text">
-            <h1>TV NOVA JUAREZ</h1>
+            <h1 id="nome-empresa-header">TV NOVA JUAREZ</h1>
             <span>SISTEMA PROFISSIONAL DE COBRANÇA</span>
         </div>
     </div>
@@ -242,6 +241,12 @@
         <div class="aviso">🔒 Apenas o Dono pode ver e alterar. Tudo salvo no navegador.</div>
         
         <div class="config-box">
+            <h3>🏢 Nome da Empresa (Aparece no Sistema e nas Faturas)</h3>
+            <input type="text" id="cfg_nome_empresa" placeholder="Ex: TV NOVA JUAREZ" maxlength="50">
+            <small style="color:#888; display:block; margin-top:5px;">💡 Altere aqui para personalizar o nome que aparece em todo o sistema e nas faturas geradas.</small>
+        </div>
+
+        <div class="config-box">
             <h3>🖼️ Logo da Empresa (Aparece nas Faturas)</h3>
             <input type="file" id="cfg_logo_file" accept="image/*" onchange="carregarLogo(this)">
             <div id="logo-preview" style="text-align:center; margin-top:10px;"></div>
@@ -299,6 +304,13 @@
         let fotoCliTemp = null;
         let fotoRevTemp = null;
         let logoEmpresa = localStorage.getItem('tv_logo') || null;
+        let nomeEmpresa = localStorage.getItem('tv_nome_empresa') || 'TV NOVA JUAREZ';
+
+        // --- APLICAR NOME DA EMPRESA ---
+        function aplicarNomeEmpresa() {
+            document.getElementById('nome-empresa-header').innerText = nomeEmpresa;
+            document.title = nomeEmpresa + ' - Sistema de Cobrança';
+        }
 
         // --- NAVEGAÇÃO ---
         function abrirAba(id) {
@@ -313,7 +325,7 @@
             atualizarEstatisticas();
         }
 
-        // --- STATUS DE VENCIMENTO ---
+        // --- STATUS ---
         function getStatus(vencimento, pago) {
             if(pago) return 'pago';
             if(!vencimento) return 'dia';
@@ -343,7 +355,6 @@
             document.getElementById('stat-rev-perto').innerText = revPerto;
             document.getElementById('stat-rev-venc').innerText = revVenc;
             
-            // Valores
             const totalCli = clientes.reduce((sum, c) => sum + (parseFloat((c.valor||'0').replace(',','.')) || 0), 0);
             const totalRev = revendas.reduce((sum, r) => sum + (parseFloat((r.valor||'0').replace(',','.')) || 0), 0);
             const totalGeral = totalCli + totalRev;
@@ -406,6 +417,14 @@
 
         function salvarConfig() {
             const modo = document.querySelector('input[name="modo_banco"]:checked').value;
+            const nomeDigitado = document.getElementById('cfg_nome_empresa').value.trim();
+            
+            if(nomeDigitado) {
+                nomeEmpresa = nomeDigitado.toUpperCase();
+                localStorage.setItem('tv_nome_empresa', nomeEmpresa);
+                aplicarNomeEmpresa();
+            }
+            
             config = { modo,
                 banco: document.getElementById('cfg_banco').value,
                 agencia: document.getElementById('cfg_agencia').value,
@@ -417,7 +436,7 @@
                 pix_simples: document.getElementById('cfg_pix_simples').value
             };
             localStorage.setItem('tv_config', JSON.stringify(config));
-            alert("✅ Configurações salvas!");
+            alert("✅ Configurações salvas com sucesso!");
         }
 
         function carregarConfig() {
@@ -426,6 +445,7 @@
                 const el = document.getElementById('cfg_' + k);
                 if(el && config[k]) el.value = config[k];
             });
+            document.getElementById('cfg_nome_empresa').value = nomeEmpresa;
             if(logoEmpresa) document.getElementById('logo-preview').innerHTML = `<img src="${logoEmpresa}" style="max-height:100px; border-radius:8px; border:2px solid #444;">`;
         }
 
@@ -573,7 +593,7 @@
             }).join('');
         }
 
-        // --- REVENDAS (mesma lógica) ---
+        // --- REVENDAS ---
         function salvarRevenda() {
             const idEdit = document.getElementById('rev_id_edit').value;
             const nome = document.getElementById('rev_nome').value;
@@ -716,7 +736,7 @@
             return `${dia}/${mes}/${ano}`;
         }
 
-        // --- MENSAGEM INTELIGENTE ---
+        // --- MENSAGEM ---
         function getMensagem(item) {
             const nome = item.nome;
             const status = getStatus(item.vencimento, item.pago);
@@ -727,13 +747,13 @@
             
             let cabecalho = '';
             if(item.pago) {
-                cabecalho = `✅ *SUA ASSINATURA ESTÁ PAGA!*\n\nOlá *${nome}*, tudo bem? Passando para confirmar que sua assinatura *TV NOVA JUAREZ* está em dia. Obrigado pela preferência! 🙏\n\n`;
+                cabecalho = `✅ *SUA ASSINATURA ESTÁ PAGA!*\n\nOlá *${nome}*, tudo bem? Passando para confirmar que sua assinatura *${nomeEmpresa}* está em dia. Obrigado pela preferência! 🙏\n\n`;
             } else if(status === 'vencido') {
-                cabecalho = `❌ *SUA ASSINATURA ESTÁ VENCIDA!*\n\nOlá *${nome}*, tudo bem? Notamos que sua assinatura *TV NOVA JUAREZ* está vencida. Para evitar a interrupção do serviço, regularize o quanto antes.\n\n`;
+                cabecalho = `❌ *SUA ASSINATURA ESTÁ VENCIDA!*\n\nOlá *${nome}*, tudo bem? Notamos que sua assinatura *${nomeEmpresa}* está vencida. Para evitar a interrupção do serviço, regularize o quanto antes.\n\n`;
             } else if(status === 'perto') {
-                cabecalho = `⚠️ *SUA ASSINATURA ESTÁ PRÓXIMA DO VENCIMENTO!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *TV NOVA JUAREZ* vence em breve (${venc}). Não deixe para a última hora, renove já!\n\n`;
+                cabecalho = `⚠️ *SUA ASSINATURA ESTÁ PRÓXIMA DO VENCIMENTO!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *${nomeEmpresa}* vence em breve (${venc}). Não deixe para a última hora, renove já!\n\n`;
             } else {
-                cabecalho = `✅ *SUA ASSINATURA ESTÁ EM DIA!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *TV NOVA JUAREZ* está em dia. Agradecemos pela confiança!\n\n`;
+                cabecalho = `✅ *SUA ASSINATURA ESTÁ EM DIA!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *${nomeEmpresa}* está em dia. Agradecemos pela confiança!\n\n`;
             }
             
             let texto = cabecalho;
@@ -780,7 +800,7 @@
         }
         function enviarEmail(email, nome, id) {
             const msg = encodeURIComponent(getMensagem(buscarItem(id)));
-            window.open(`mailto:${email}?subject=Cobrança TV Nova Juarez&body=${msg}`, '_blank');
+            window.open(`mailto:${email}?subject=Cobrança ${nomeEmpresa}&body=${msg}`, '_blank');
             salvarHistorico(nome, 'E-mail', id);
         }
         function enviarMessenger(nome, id) {
@@ -790,18 +810,15 @@
         }
         function ligar(telefone) { window.open(`tel:${telefone}`, '_blank'); }
 
-        // --- GERAR FATURA PROFISSIONAL ---
+        // --- FATURAS ---
         function gerarCobranca(id, tipo) {
             const item = buscarItem(id);
             if(!item) return;
             const msg = getMensagem(item);
             const status = getStatus(item.vencimento, item.pago);
             
-            if(tipo === 'foto') {
-                gerarFaturaImagem(item, msg, status);
-            } else if(tipo === 'pdf') {
-                gerarFaturaPDF(item, msg, status);
-            }
+            if(tipo === 'foto') gerarFaturaImagem(item, msg, status);
+            else if(tipo === 'pdf') gerarFaturaPDF(item, msg, status);
         }
 
         function gerarFaturaImagem(item, msg, status) {
@@ -809,18 +826,15 @@
             canvas.width = 900; canvas.height = 750;
             const ctx = canvas.getContext('2d');
             
-            // Fundo
             const grad = ctx.createLinearGradient(0, 0, 0, 750);
             grad.addColorStop(0, '#1a1a1a');
             grad.addColorStop(1, '#0a0a0a');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 900, 750);
             
-            // Borda superior colorida
             ctx.fillStyle = item.pago ? '#27ae60' : (status === 'vencido' ? '#e74c3c' : (status === 'perto' ? '#f39c12' : '#25D366'));
             ctx.fillRect(0, 0, 900, 8);
             
-            // LOGO EMPRESA (se tiver) ou texto
             if(logoEmpresa) {
                 const logoImg = new Image();
                 logoImg.onload = () => desenharResto(logoImg);
@@ -830,29 +844,24 @@
             }
             
             function desenharResto(logoImg) {
-                // Header da empresa
-                if(logoImg) {
-                    ctx.drawImage(logoImg, 40, 30, 80, 80);
-                }
+                if(logoImg) ctx.drawImage(logoImg, 40, 30, 80, 80);
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 32px Arial';
+                ctx.font = 'bold 30px Arial';
                 ctx.textAlign = 'left';
-                ctx.fillText('TV NOVA JUAREZ', logoImg ? 140 : 40, 70);
+                ctx.fillText(nomeEmpresa, logoImg ? 140 : 40, 70);
                 ctx.font = '14px Arial';
                 ctx.fillStyle = '#888';
-                ctx.fillText('SISTEMA DE COBRANÇA', logoImg ? 140 : 40, 90);
+                ctx.fillText('SISTEMA DE COBRANÇA', logoImg ? 140 : 40, 92);
                 
-                // Status badge
-                const statusText = item.pago ? '✅ PAGO' : (status === 'vencido' ? '❌ VENCIDO' : (status === 'perto' ? '⚠️ PERTO DE VENCER' : '✅ EM DIA'));
+                const statusText = item.pago ? '✅ PAGO' : (status === 'vencido' ? '❌ VENCIDO' : (status === 'perto' ? '⚠️ PERTO' : '✅ EM DIA'));
                 const statusColor = item.pago ? '#27ae60' : (status === 'vencido' ? '#e74c3c' : (status === 'perto' ? '#f39c12' : '#27ae60'));
                 ctx.fillStyle = statusColor;
                 ctx.fillRect(700, 40, 160, 50);
                 ctx.fillStyle = '#fff';
                 ctx.font = 'bold 16px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(statusText, 780, 70);
+                ctx.fillText(statusText, 780, 72);
                 
-                // Linha divisória
                 ctx.strokeStyle = '#333';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
@@ -860,11 +869,9 @@
                 ctx.lineTo(860, 130);
                 ctx.stroke();
                 
-                // FOTO DO CLIENTE
                 if(item.foto) {
                     const fotoImg = new Image();
                     fotoImg.onload = () => {
-                        // Círculo de fundo
                         ctx.save();
                         ctx.beginPath();
                         ctx.arc(120, 230, 70, 0, Math.PI * 2);
@@ -881,7 +888,6 @@
                     };
                     fotoImg.src = item.foto;
                 } else {
-                    // Ícone padrão
                     ctx.fillStyle = '#333';
                     ctx.beginPath();
                     ctx.arc(120, 230, 70, 0, Math.PI * 2);
@@ -894,7 +900,6 @@
                 }
                 
                 function desenharTexto() {
-                    // Nome e dados
                     ctx.textAlign = 'left';
                     ctx.fillStyle = '#fff';
                     ctx.font = 'bold 24px Arial';
@@ -905,7 +910,6 @@
                     ctx.fillText('📞 ' + item.telefone, 220, 240);
                     ctx.fillText('🖥️ ' + (item.servidor || 'N/A'), 220, 265);
                     
-                    // Info de registro e vencimento
                     ctx.fillStyle = '#0f0f0f';
                     ctx.fillRect(40, 340, 820, 100);
                     ctx.strokeStyle = '#333';
@@ -925,7 +929,6 @@
                     ctx.fillStyle = '#ffd700';
                     ctx.fillText('R$ ' + (item.valor || '0,00'), 620, 405);
                     
-                    // Mensagem
                     ctx.fillStyle = '#0f0f0f';
                     ctx.fillRect(40, 460, 820, 240);
                     ctx.strokeStyle = '#333';
@@ -946,11 +949,10 @@
                         }
                     });
                     
-                    // Rodapé
                     ctx.fillStyle = '#555';
                     ctx.font = '11px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText('Gerado em ' + new Date().toLocaleString('pt-BR') + ' - TV NOVA JUAREZ', 450, 730);
+                    ctx.fillText('Gerado em ' + new Date().toLocaleString('pt-BR') + ' - ' + nomeEmpresa, 450, 730);
                     
                     const dataUrl = canvas.toDataURL('image/png');
                     salvarHistorico(item.nome, 'Foto', item.id, dataUrl);
@@ -992,7 +994,7 @@
                         <div style="display:flex; align-items:center; gap:15px;">
                             ${logoEmpresa ? `<img src="${logoEmpresa}" class="logo">` : ''}
                             <div>
-                                <h1>TV NOVA JUAREZ</h1>
+                                <h1>${nomeEmpresa}</h1>
                                 <p style="margin:0; color:#888; font-size:12px;">SISTEMA DE COBRANÇA</p>
                             </div>
                         </div>
@@ -1017,7 +1019,7 @@
                     
                     <div class="msg-box">${msg.replace(/\*/g, '')}</div>
                     
-                    <div class="footer">Gerado em ${new Date().toLocaleString('pt-BR')} - TV NOVA JUAREZ</div>
+                    <div class="footer">Gerado em ${new Date().toLocaleString('pt-BR')} - ${nomeEmpresa}</div>
                     <script>window.print();<\/script>
                 </body></html>
             `);
@@ -1070,6 +1072,7 @@
         }
 
         // --- INIT ---
+        aplicarNomeEmpresa();
         renderizarClientes();
         renderizarRevendas();
         renderizarHistorico();
