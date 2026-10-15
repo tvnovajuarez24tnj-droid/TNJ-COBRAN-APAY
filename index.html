@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Cobrança Profissional</title>
+    <title>Sistema de Cobrança Ilimitado</title>
     <style>
         :root {
             --bg: #0f0f0f; --card: #1a1a1a; --card2: #222; --text: #f0f0f0; --border: #333;
@@ -97,6 +97,7 @@
         
         .config-box { background: #0f0f0f; padding: 14px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px; }
         .aviso { background: linear-gradient(90deg, #f39c12, #e67e22); color: black; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 12px; font-size: 0.85em; font-weight: bold; }
+        .aviso-verde { background: linear-gradient(90deg, #27ae60, #2ecc71); color: white; }
         .radio-group { display: flex; gap: 15px; margin-bottom: 12px; padding: 10px; background: #1a1a1a; border-radius: 5px; flex-wrap: wrap; }
         .radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: white; font-size: 0.9em; }
         
@@ -107,6 +108,9 @@
         .empty-msg { text-align: center; color: #666; padding: 20px; font-style: italic; font-size: 0.9em; }
         
         .pagamento-toggle { display: flex; gap: 5px; align-items: center; margin-top: 5px; }
+        
+        .info-credenciais { background: #0a0a0a; padding: 8px; border-radius: 5px; margin-top: 5px; border-left: 3px solid var(--telegram); font-size: 0.78em; }
+        .info-credenciais strong { color: #32bcad; }
         
         @media (max-width: 600px) {
             .form-group, .form-group.tres { grid-template-columns: 1fr; }
@@ -120,7 +124,7 @@
     <div class="logo">
         <div class="logo-text">
             <h1 id="nome-empresa-header">TV NOVA JUAREZ</h1>
-            <span>SISTEMA PROFISSIONAL DE COBRANÇA</span>
+            <span>SISTEMA PROFISSIONAL ILIMITADO</span>
         </div>
     </div>
 
@@ -169,11 +173,16 @@
             <div><label>Sobrenome</label><input type="text" id="cli_sobrenome"></div>
             <div><label>E-mail</label><input type="email" id="cli_email"></div>
             <div><label>Telefone (WhatsApp)</label><input type="text" id="cli_telefone" placeholder="11999999999"></div>
-            <div><label>Usuário</label><input type="text" id="cli_usuario"></div>
-            <div><label>Senha</label><input type="password" id="cli_senha"></div>
             <div><label>Servidor</label><input type="text" id="cli_servidor"></div>
             <div><label>📸 Foto de Perfil</label><input type="file" id="cli_foto" accept="image/*" onchange="previewFoto(this, 'preview-cli')"></div>
         </div>
+        
+        <h3 style="color:#32bcad; margin-top:15px;">🔐 Dados de Acesso IPTV (Aparece na Fatura)</h3>
+        <div class="form-group">
+            <div><label>Usuário IPTV</label><input type="text" id="cli_usuario" placeholder="usuario_iptv"></div>
+            <div><label>Senha IPTV</label><input type="text" id="cli_senha" placeholder="senha123"></div>
+        </div>
+        
         <div class="form-group tres">
             <div><label>📅 Registro</label><input type="datetime-local" id="cli_data_registro" readonly style="background:#0a0a0a;"></div>
             <div><label>📅 Vencimento</label><input type="date" id="cli_vencimento"></div>
@@ -203,11 +212,16 @@
             <div><label>Sobrenome</label><input type="text" id="rev_sobrenome"></div>
             <div><label>E-mail</label><input type="email" id="rev_email"></div>
             <div><label>Telefone</label><input type="text" id="rev_telefone" placeholder="11999999999"></div>
-            <div><label>Usuário</label><input type="text" id="rev_usuario"></div>
-            <div><label>Senha</label><input type="password" id="rev_senha"></div>
             <div><label>Servidor</label><input type="text" id="rev_servidor"></div>
             <div><label>📸 Foto/Logo da Revenda</label><input type="file" id="rev_foto" accept="image/*" onchange="previewFoto(this, 'preview-rev')"></div>
         </div>
+        
+        <h3 style="color:#32bcad; margin-top:15px;">🔐 Dados de Acesso ao Painel (Aparece na Fatura)</h3>
+        <div class="form-group">
+            <div><label>Usuário do Painel</label><input type="text" id="rev_usuario" placeholder="usuario_painel"></div>
+            <div><label>Senha do Painel</label><input type="text" id="rev_senha" placeholder="senha_painel"></div>
+        </div>
+        
         <div class="form-group tres">
             <div><label>📅 Registro</label><input type="datetime-local" id="rev_data_registro" readonly style="background:#0a0a0a;"></div>
             <div><label>📅 Vencimento</label><input type="date" id="rev_vencimento"></div>
@@ -238,7 +252,7 @@
     <!-- CONFIGURAÇÕES -->
     <div id="config" class="container">
         <h2>⚙️ Configurações do Dono</h2>
-        <div class="aviso">🔒 Apenas o Dono pode ver e alterar. Tudo salvo no navegador.</div>
+        <div class="aviso aviso-verde">✅ SISTEMA ILIMITADO - Todos os dados são permanentes e só saem se você excluir.</div>
         
         <div class="config-box">
             <h3>🏢 Nome da Empresa (Aparece no Sistema e nas Faturas)</h3>
@@ -294,25 +308,82 @@
     </div>
 
     <script>
-        // --- DADOS ---
-        let clientes = JSON.parse(localStorage.getItem('tv_clientes')) || [];
-        let revendas = JSON.parse(localStorage.getItem('tv_revendas')) || [];
-        let historico = JSON.parse(localStorage.getItem('tv_historico')) || [];
-        let config = JSON.parse(localStorage.getItem('tv_config')) || { modo: 'completo' };
+        // ============================================
+        // SISTEMA DE ARMAZENAMENTO PERMANENTE (ILIMITADO)
+        // ============================================
+        
+        // Função que carrega dados SEM NUNCA apagar se já existirem
+        function carregarDados() {
+            // Tenta carregar do LocalStorage (principal)
+            let cli = localStorage.getItem('tv_clientes_v3');
+            let rev = localStorage.getItem('tv_revendas_v3');
+            let hist = localStorage.getItem('tv_historico_v3');
+            let cfg = localStorage.getItem('tv_config_v3');
+            let logo = localStorage.getItem('tv_logo_v3');
+            let nome = localStorage.getItem('tv_nome_empresa_v3');
+            
+            // Se não encontrar, tenta versões antigas como migração
+            if(!cli) cli = localStorage.getItem('tv_clientes');
+            if(!rev) rev = localStorage.getItem('tv_revendas');
+            if(!hist) hist = localStorage.getItem('tv_historico');
+            if(!cfg) cfg = localStorage.getItem('tv_config');
+            if(!logo) logo = localStorage.getItem('tv_logo');
+            if(!nome) nome = localStorage.getItem('tv_nome_empresa');
+            
+            return {
+                clientes: cli ? JSON.parse(cli) : [],
+                revendas: rev ? JSON.parse(rev) : [],
+                historico: hist ? JSON.parse(hist) : [],
+                config: cfg ? JSON.parse(cfg) : { modo: 'completo' },
+                logo: logo || null,
+                nome: nome || 'TV NOVA JUAREZ'
+            };
+        }
+
+        // Função que salva TUDO sem sobrescrever com vazio
+        function salvarTudo() {
+            try {
+                // Salva apenas se tiver dados ou se for para limpar explicitamente
+                localStorage.setItem('tv_clientes_v3', JSON.stringify(clientes));
+                localStorage.setItem('tv_revendas_v3', JSON.stringify(revendas));
+                localStorage.setItem('tv_historico_v3', JSON.stringify(historico));
+                localStorage.setItem('tv_config_v3', JSON.stringify(config));
+                
+                if(logoEmpresa) localStorage.setItem('tv_logo_v3', logoEmpresa);
+                if(nomeEmpresa) localStorage.setItem('tv_nome_empresa_v3', nomeEmpresa);
+                
+                // Backup em SessionStorage também
+                sessionStorage.setItem('backup_clientes', JSON.stringify(clientes));
+                sessionStorage.setItem('backup_revendas', JSON.stringify(revendas));
+                
+                console.log('✅ Dados salvos permanentemente');
+            } catch(e) {
+                console.error('❌ Erro ao salvar:', e);
+                alert('⚠️ Erro ao salvar! Verifique o espaço do navegador.');
+            }
+        }
+
+        // Carrega os dados
+        const dadosIniciais = carregarDados();
+        let clientes = dadosIniciais.clientes;
+        let revendas = dadosIniciais.revendas;
+        let historico = dadosIniciais.historico;
+        let config = dadosIniciais.config;
+        let logoEmpresa = dadosIniciais.logo;
+        let nomeEmpresa = dadosIniciais.nome;
+        
         let filtroCli = 'todos';
         let filtroRev = 'todos';
         let fotoCliTemp = null;
         let fotoRevTemp = null;
-        let logoEmpresa = localStorage.getItem('tv_logo') || null;
-        let nomeEmpresa = localStorage.getItem('tv_nome_empresa') || 'TV NOVA JUAREZ';
 
-        // --- APLICAR NOME DA EMPRESA ---
+        // ============================================
+
         function aplicarNomeEmpresa() {
             document.getElementById('nome-empresa-header').innerText = nomeEmpresa;
-            document.title = nomeEmpresa + ' - Sistema de Cobrança';
+            document.title = nomeEmpresa + ' - Sistema Ilimitado';
         }
 
-        // --- NAVEGAÇÃO ---
         function abrirAba(id) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -325,7 +396,6 @@
             atualizarEstatisticas();
         }
 
-        // --- STATUS ---
         function getStatus(vencimento, pago) {
             if(pago) return 'pago';
             if(!vencimento) return 'dia';
@@ -337,7 +407,6 @@
             return 'dia';
         }
 
-        // --- ESTATÍSTICAS ---
         function atualizarEstatisticas() {
             const cliDia = clientes.filter(c => getStatus(c.vencimento, c.pago) === 'dia').length;
             const cliPerto = clientes.filter(c => getStatus(c.vencimento, c.pago) === 'perto').length;
@@ -367,7 +436,6 @@
             document.getElementById('stat-valor-pendente').innerText = 'R$ ' + pendenteGeral.toFixed(2).replace('.',',');
         }
 
-        // --- FILTROS ---
         function filtrarClientes(tipo, btn) {
             filtroCli = tipo;
             document.querySelectorAll('#clientes .filtro-btn').forEach(b => b.classList.remove('ativo-dia','ativo-vencido','ativo-todos','ativo-perto','ativo-pago'));
@@ -381,7 +449,6 @@
             renderizarRevendas();
         }
 
-        // --- FOTO PREVIEW ---
         function previewFoto(input, divId) {
             const file = input.files[0];
             if(!file) return;
@@ -394,21 +461,19 @@
             reader.readAsDataURL(file);
         }
 
-        // --- LOGO ---
         function carregarLogo(input) {
             const file = input.files[0];
             if(!file) return;
             const reader = new FileReader();
             reader.onload = e => {
                 logoEmpresa = e.target.result;
-                localStorage.setItem('tv_logo', logoEmpresa);
+                localStorage.setItem('tv_logo_v3', logoEmpresa);
                 document.getElementById('logo-preview').innerHTML = `<img src="${logoEmpresa}" style="max-height:100px; border-radius:8px; border:2px solid #444;">`;
-                alert("✅ Logo salva! Ela vai aparecer nas faturas.");
+                alert("✅ Logo salva permanentemente!");
             };
             reader.readAsDataURL(file);
         }
 
-        // --- CONFIGURAÇÕES ---
         function mudarModoBanco() {
             const modo = document.querySelector('input[name="modo_banco"]:checked').value;
             document.getElementById('box-completo').style.display = modo === 'completo' ? 'block' : 'none';
@@ -421,7 +486,7 @@
             
             if(nomeDigitado) {
                 nomeEmpresa = nomeDigitado.toUpperCase();
-                localStorage.setItem('tv_nome_empresa', nomeEmpresa);
+                localStorage.setItem('tv_nome_empresa_v3', nomeEmpresa);
                 aplicarNomeEmpresa();
             }
             
@@ -435,8 +500,8 @@
                 titular_simples: document.getElementById('cfg_titular_simples').value,
                 pix_simples: document.getElementById('cfg_pix_simples').value
             };
-            localStorage.setItem('tv_config', JSON.stringify(config));
-            alert("✅ Configurações salvas com sucesso!");
+            salvarTudo();
+            alert("✅ Configurações salvas permanentemente!");
         }
 
         function carregarConfig() {
@@ -450,9 +515,13 @@
         }
 
         function limparTudo() {
-            if(!confirm("⚠️ ATENÇÃO! Apagar TODOS os dados permanentemente?")) return;
-            if(!confirm("🚨 ÚLTIMA CONFIRMAÇÃO!")) return;
+            if(!confirm("⚠️ ATENÇÃO! Isso vai apagar TODOS os clientes e revendas PERMANENTEMENTE!")) return;
+            if(!confirm("🚨 ÚLTIMA CONFIRMAÇÃO! Não tem como voltar atrás!")) return;
+            const senha = prompt("Digite a palavra 'APAGAR' para confirmar:");
+            if(senha !== 'APAGAR') { alert("❌ Operação cancelada."); return; }
+            
             localStorage.clear();
+            sessionStorage.clear();
             location.reload();
         }
 
@@ -474,13 +543,14 @@
                 id: idEdit ? parseInt(idEdit) : Date.now(),
                 nome, sobrenome: document.getElementById('cli_sobrenome').value,
                 email: document.getElementById('cli_email').value,
-                telefone, usuario: document.getElementById('cli_usuario').value,
-                senha: document.getElementById('cli_senha').value,
+                telefone,
                 servidor: document.getElementById('cli_servidor').value,
+                usuario: document.getElementById('cli_usuario').value,
+                senha: document.getElementById('cli_senha').value,
                 data_registro: document.getElementById('cli_data_registro').value,
                 vencimento: document.getElementById('cli_vencimento').value,
                 valor: document.getElementById('cli_valor').value,
-                foto: fotoCliTemp,
+                foto: fotoCliTemp || (idEdit ? clientes.find(c=>c.id===parseInt(idEdit)).foto : null),
                 pago: idEdit ? clientes.find(c=>c.id===parseInt(idEdit)).pago : false,
                 tipo: 'cliente'
             };
@@ -488,12 +558,12 @@
             if(idEdit) {
                 const idx = clientes.findIndex(c => c.id === parseInt(idEdit));
                 clientes[idx] = dados;
-                alert("✅ Cliente atualizado!");
+                alert("✅ Cliente atualizado permanentemente!");
             } else {
                 clientes.push(dados);
-                alert("✅ Cliente salvo!");
+                alert("✅ Cliente salvo permanentemente!");
             }
-            localStorage.setItem('tv_clientes', JSON.stringify(clientes));
+            salvarTudo();
             renderizarClientes(); atualizarEstatisticas(); cancelarEdicaoCliente();
         }
 
@@ -505,9 +575,9 @@
             document.getElementById('cli_sobrenome').value = c.sobrenome;
             document.getElementById('cli_email').value = c.email;
             document.getElementById('cli_telefone').value = c.telefone;
+            document.getElementById('cli_servidor').value = c.servidor;
             document.getElementById('cli_usuario').value = c.usuario;
             document.getElementById('cli_senha').value = c.senha;
-            document.getElementById('cli_servidor').value = c.servidor;
             document.getElementById('cli_data_registro').value = c.data_registro;
             document.getElementById('cli_vencimento').value = c.vencimento;
             document.getElementById('cli_valor').value = c.valor || '';
@@ -531,15 +601,15 @@
         }
 
         function excluirCliente(id) {
-            if(!confirm("⚠️ Excluir este cliente?")) return;
+            if(!confirm("⚠️ Excluir este cliente PERMANENTEMENTE?")) return;
             clientes = clientes.filter(c => c.id !== id);
-            localStorage.setItem('tv_clientes', JSON.stringify(clientes));
+            salvarTudo();
             renderizarClientes(); atualizarEstatisticas();
         }
 
         function togglePagoCliente(id) {
             const c = clientes.find(x => x.id === id);
-            if(c) { c.pago = !c.pago; localStorage.setItem('tv_clientes', JSON.stringify(clientes)); renderizarClientes(); atualizarEstatisticas(); }
+            if(c) { c.pago = !c.pago; salvarTudo(); renderizarClientes(); atualizarEstatisticas(); }
         }
 
         function renderizarClientes() {
@@ -556,7 +626,7 @@
                 const status = getStatus(c.vencimento, c.pago);
                 const badge = status === 'pago' ? '<span class="badge pago">💰 PAGO</span>' :
                               status === 'vencido' ? '<span class="badge venc">❌ VENCIDO</span>' :
-                              status === 'perto' ? '<span class="badge perto">⚠️ PERTO DE VENCER</span>' :
+                              status === 'perto' ? '<span class="badge perto">⚠️ PERTO</span>' :
                               '<span class="badge dia">✅ EM DIA</span>';
                 const fotoHtml = c.foto ? `<img src="${c.foto}" class="perfil-foto">` : `<div class="perfil-foto-vazia">👤</div>`;
                 return `
@@ -568,6 +638,9 @@
                                 <strong>${c.nome} ${c.sobrenome} ${badge}</strong>
                                 <small>📞 ${c.telefone} | 🖥️ ${c.servidor}</small>
                                 <small>📅 Reg: ${formatarData(c.data_registro)} | Venc: ${formatarDataSimples(c.vencimento)} ${c.valor ? '| R$ ' + c.valor : ''}</small>
+                                <div class="info-credenciais">
+                                    🔐 <strong>IPTV:</strong> Usuário: ${c.usuario || 'N/A'} | Senha: ${c.senha || 'N/A'}
+                                </div>
                             </div>
                         </div>
                         <div class="acoes">
@@ -605,13 +678,14 @@
                 id: idEdit ? parseInt(idEdit) : Date.now(),
                 nome, sobrenome: document.getElementById('rev_sobrenome').value,
                 email: document.getElementById('rev_email').value,
-                telefone, usuario: document.getElementById('rev_usuario').value,
-                senha: document.getElementById('rev_senha').value,
+                telefone,
                 servidor: document.getElementById('rev_servidor').value,
+                usuario: document.getElementById('rev_usuario').value,
+                senha: document.getElementById('rev_senha').value,
                 data_registro: document.getElementById('rev_data_registro').value,
                 vencimento: document.getElementById('rev_vencimento').value,
                 valor: document.getElementById('rev_valor').value,
-                foto: fotoRevTemp,
+                foto: fotoRevTemp || (idEdit ? revendas.find(r=>r.id===parseInt(idEdit)).foto : null),
                 pago: idEdit ? revendas.find(r=>r.id===parseInt(idEdit)).pago : false,
                 tipo: 'revenda'
             };
@@ -619,12 +693,12 @@
             if(idEdit) {
                 const idx = revendas.findIndex(r => r.id === parseInt(idEdit));
                 revendas[idx] = dados;
-                alert("✅ Revenda atualizada!");
+                alert("✅ Revenda atualizada permanentemente!");
             } else {
                 revendas.push(dados);
-                alert("✅ Revenda salva!");
+                alert("✅ Revenda salva permanentemente!");
             }
-            localStorage.setItem('tv_revendas', JSON.stringify(revendas));
+            salvarTudo();
             renderizarRevendas(); atualizarEstatisticas(); cancelarEdicaoRevenda();
         }
 
@@ -636,9 +710,9 @@
             document.getElementById('rev_sobrenome').value = r.sobrenome;
             document.getElementById('rev_email').value = r.email;
             document.getElementById('rev_telefone').value = r.telefone;
+            document.getElementById('rev_servidor').value = r.servidor;
             document.getElementById('rev_usuario').value = r.usuario;
             document.getElementById('rev_senha').value = r.senha;
-            document.getElementById('rev_servidor').value = r.servidor;
             document.getElementById('rev_data_registro').value = r.data_registro;
             document.getElementById('rev_vencimento').value = r.vencimento;
             document.getElementById('rev_valor').value = r.valor || '';
@@ -662,15 +736,15 @@
         }
 
         function excluirRevenda(id) {
-            if(!confirm("⚠️ Excluir esta revenda?")) return;
+            if(!confirm("⚠️ Excluir esta revenda PERMANENTEMENTE?")) return;
             revendas = revendas.filter(r => r.id !== id);
-            localStorage.setItem('tv_revendas', JSON.stringify(revendas));
+            salvarTudo();
             renderizarRevendas(); atualizarEstatisticas();
         }
 
         function togglePagoRevenda(id) {
             const r = revendas.find(x => x.id === id);
-            if(r) { r.pago = !r.pago; localStorage.setItem('tv_revendas', JSON.stringify(revendas)); renderizarRevendas(); atualizarEstatisticas(); }
+            if(r) { r.pago = !r.pago; salvarTudo(); renderizarRevendas(); atualizarEstatisticas(); }
         }
 
         function renderizarRevendas() {
@@ -687,7 +761,7 @@
                 const status = getStatus(r.vencimento, r.pago);
                 const badge = status === 'pago' ? '<span class="badge pago">💰 PAGO</span>' :
                               status === 'vencido' ? '<span class="badge venc">❌ VENCIDO</span>' :
-                              status === 'perto' ? '<span class="badge perto">⚠️ PERTO DE VENCER</span>' :
+                              status === 'perto' ? '<span class="badge perto">⚠️ PERTO</span>' :
                               '<span class="badge dia">✅ EM DIA</span>';
                 const fotoHtml = r.foto ? `<img src="${r.foto}" class="perfil-foto">` : `<div class="perfil-foto-vazia">🏢</div>`;
                 return `
@@ -699,6 +773,9 @@
                                 <strong>${r.nome} ${r.sobrenome} ${badge}</strong>
                                 <small>📞 ${r.telefone} | 🖥️ ${r.servidor}</small>
                                 <small>📅 Reg: ${formatarData(r.data_registro)} | Venc: ${formatarDataSimples(r.vencimento)} ${r.valor ? '| R$ ' + r.valor : ''}</small>
+                                <div class="info-credenciais">
+                                    🔐 <strong>Painel:</strong> Usuário: ${r.usuario || 'N/A'} | Senha: ${r.senha || 'N/A'}
+                                </div>
                             </div>
                         </div>
                         <div class="acoes">
@@ -724,7 +801,6 @@
             }).join('');
         }
 
-        // --- FORMATAÇÃO ---
         function formatarData(dataISO) {
             if(!dataISO) return 'N/A';
             const d = new Date(dataISO);
@@ -747,13 +823,13 @@
             
             let cabecalho = '';
             if(item.pago) {
-                cabecalho = `✅ *SUA ASSINATURA ESTÁ PAGA!*\n\nOlá *${nome}*, tudo bem? Passando para confirmar que sua assinatura *${nomeEmpresa}* está em dia. Obrigado pela preferência! 🙏\n\n`;
+                cabecalho = `✅ *SUA ASSINATURA ESTÁ PAGA!*\n\nOlá *${nome}*, tudo bem? Passando para confirmar que sua assinatura *${nomeEmpresa}* está em dia. Obrigado! 🙏\n\n`;
             } else if(status === 'vencido') {
-                cabecalho = `❌ *SUA ASSINATURA ESTÁ VENCIDA!*\n\nOlá *${nome}*, tudo bem? Notamos que sua assinatura *${nomeEmpresa}* está vencida. Para evitar a interrupção do serviço, regularize o quanto antes.\n\n`;
+                cabecalho = `❌ *SUA ASSINATURA ESTÁ VENCIDA!*\n\nOlá *${nome}*, tudo bem? Notamos que sua assinatura *${nomeEmpresa}* está vencida. Regularize o quanto antes.\n\n`;
             } else if(status === 'perto') {
-                cabecalho = `⚠️ *SUA ASSINATURA ESTÁ PRÓXIMA DO VENCIMENTO!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *${nomeEmpresa}* vence em breve (${venc}). Não deixe para a última hora, renove já!\n\n`;
+                cabecalho = `⚠️ *SUA ASSINATURA ESTÁ PRÓXIMA DO VENCIMENTO!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *${nomeEmpresa}* vence em breve (${venc}). Renove já!\n\n`;
             } else {
-                cabecalho = `✅ *SUA ASSINATURA ESTÁ EM DIA!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *${nomeEmpresa}* está em dia. Agradecemos pela confiança!\n\n`;
+                cabecalho = `✅ *SUA ASSINATURA ESTÁ EM DIA!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *${nomeEmpresa}* está em dia. Obrigado!\n\n`;
             }
             
             let texto = cabecalho;
@@ -763,6 +839,18 @@
             texto += `💰 Valor: R$ ${valor}\n`;
             if(servidor) texto += `🖥️ Servidor: ${servidor}\n`;
             texto += `\n`;
+            
+            // 🔐 Credenciais de acesso
+            if(item.tipo === 'cliente' && (item.usuario || item.senha)) {
+                texto += `🔐 *ACESSO IPTV:*\n`;
+                texto += `👤 Usuário: ${item.usuario || 'N/A'}\n`;
+                texto += `🔑 Senha: ${item.senha || 'N/A'}\n\n`;
+            }
+            if(item.tipo === 'revenda' && (item.usuario || item.senha)) {
+                texto += `🔐 *ACESSO AO PAINEL:*\n`;
+                texto += `👤 Usuário: ${item.usuario || 'N/A'}\n`;
+                texto += `🔑 Senha: ${item.senha || 'N/A'}\n\n`;
+            }
             
             if(!item.pago) {
                 if(config.modo === 'simples') {
@@ -785,7 +873,6 @@
             return texto;
         }
 
-        // --- ENVIOS ---
         function buscarItem(id) { return clientes.find(c => c.id === id) || revendas.find(r => r.id === id); }
 
         function enviarWhats(telefone, nome, id) {
@@ -823,17 +910,17 @@
 
         function gerarFaturaImagem(item, msg, status) {
             const canvas = document.createElement('canvas');
-            canvas.width = 900; canvas.height = 750;
+            canvas.width = 950; canvas.height = 850;
             const ctx = canvas.getContext('2d');
             
-            const grad = ctx.createLinearGradient(0, 0, 0, 750);
+            const grad = ctx.createLinearGradient(0, 0, 0, 850);
             grad.addColorStop(0, '#1a1a1a');
             grad.addColorStop(1, '#0a0a0a');
             ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 900, 750);
+            ctx.fillRect(0, 0, 950, 850);
             
             ctx.fillStyle = item.pago ? '#27ae60' : (status === 'vencido' ? '#e74c3c' : (status === 'perto' ? '#f39c12' : '#25D366'));
-            ctx.fillRect(0, 0, 900, 8);
+            ctx.fillRect(0, 0, 950, 8);
             
             if(logoEmpresa) {
                 const logoImg = new Image();
@@ -856,17 +943,17 @@
                 const statusText = item.pago ? '✅ PAGO' : (status === 'vencido' ? '❌ VENCIDO' : (status === 'perto' ? '⚠️ PERTO' : '✅ EM DIA'));
                 const statusColor = item.pago ? '#27ae60' : (status === 'vencido' ? '#e74c3c' : (status === 'perto' ? '#f39c12' : '#27ae60'));
                 ctx.fillStyle = statusColor;
-                ctx.fillRect(700, 40, 160, 50);
+                ctx.fillRect(750, 40, 160, 50);
                 ctx.fillStyle = '#fff';
                 ctx.font = 'bold 16px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(statusText, 780, 72);
+                ctx.fillText(statusText, 830, 72);
                 
                 ctx.strokeStyle = '#333';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(40, 130);
-                ctx.lineTo(860, 130);
+                ctx.lineTo(910, 130);
                 ctx.stroke();
                 
                 if(item.foto) {
@@ -874,15 +961,15 @@
                     fotoImg.onload = () => {
                         ctx.save();
                         ctx.beginPath();
-                        ctx.arc(120, 230, 70, 0, Math.PI * 2);
+                        ctx.arc(120, 220, 70, 0, Math.PI * 2);
                         ctx.closePath();
                         ctx.clip();
-                        ctx.drawImage(fotoImg, 50, 160, 140, 140);
+                        ctx.drawImage(fotoImg, 50, 150, 140, 140);
                         ctx.restore();
                         ctx.strokeStyle = statusColor;
                         ctx.lineWidth = 3;
                         ctx.beginPath();
-                        ctx.arc(120, 230, 70, 0, Math.PI * 2);
+                        ctx.arc(120, 220, 70, 0, Math.PI * 2);
                         ctx.stroke();
                         desenharTexto();
                     };
@@ -890,12 +977,12 @@
                 } else {
                     ctx.fillStyle = '#333';
                     ctx.beginPath();
-                    ctx.arc(120, 230, 70, 0, Math.PI * 2);
+                    ctx.arc(120, 220, 70, 0, Math.PI * 2);
                     ctx.fill();
                     ctx.fillStyle = '#888';
                     ctx.font = '60px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText(item.tipo === 'revenda' ? '🏢' : '👤', 120, 250);
+                    ctx.fillText(item.tipo === 'revenda' ? '🏢' : '👤', 120, 240);
                     desenharTexto();
                 }
                 
@@ -903,56 +990,76 @@
                     ctx.textAlign = 'left';
                     ctx.fillStyle = '#fff';
                     ctx.font = 'bold 24px Arial';
-                    ctx.fillText(item.nome + ' ' + item.sobrenome, 220, 210);
+                    ctx.fillText(item.nome + ' ' + item.sobrenome, 220, 200);
                     
-                    ctx.font = '16px Arial';
+                    ctx.font = '15px Arial';
                     ctx.fillStyle = '#aaa';
-                    ctx.fillText('📞 ' + item.telefone, 220, 240);
-                    ctx.fillText('🖥️ ' + (item.servidor || 'N/A'), 220, 265);
+                    ctx.fillText('📞 ' + item.telefone, 220, 228);
+                    ctx.fillText('🖥️ Servidor: ' + (item.servidor || 'N/A'), 220, 250);
                     
+                    // BLOCO DE CREDENCIAIS
                     ctx.fillStyle = '#0f0f0f';
-                    ctx.fillRect(40, 340, 820, 100);
-                    ctx.strokeStyle = '#333';
-                    ctx.strokeRect(40, 340, 820, 100);
+                    ctx.fillRect(40, 310, 870, 90);
+                    ctx.strokeStyle = '#32bcad';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(40, 310, 870, 90);
+                    
+                    ctx.fillStyle = '#32bcad';
+                    ctx.font = 'bold 16px Arial';
+                    const tituloCred = item.tipo === 'revenda' ? '🔐 ACESSO AO PAINEL' : '🔐 ACESSO IPTV';
+                    ctx.fillText(tituloCred, 60, 340);
                     
                     ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 16px Arial';
-                    ctx.fillText('📅 REGISTRO:', 60, 375);
-                    ctx.fillText('⏰ VENCIMENTO:', 340, 375);
-                    ctx.fillText('💰 VALOR:', 620, 375);
+                    ctx.font = 'bold 18px Arial';
+                    ctx.fillText('Usuário: ' + (item.usuario || 'N/A'), 60, 370);
+                    ctx.fillText('Senha: ' + (item.senha || 'N/A'), 500, 370);
                     
-                    ctx.font = '18px Arial';
-                    ctx.fillStyle = '#32bcad';
-                    ctx.fillText(formatarData(item.data_registro), 60, 405);
-                    ctx.fillStyle = status === 'vencido' ? '#e74c3c' : '#fff';
-                    ctx.fillText(formatarDataSimples(item.vencimento), 340, 405);
-                    ctx.fillStyle = '#ffd700';
-                    ctx.fillText('R$ ' + (item.valor || '0,00'), 620, 405);
-                    
+                    // REGISTRO E VENCIMENTO
                     ctx.fillStyle = '#0f0f0f';
-                    ctx.fillRect(40, 460, 820, 240);
+                    ctx.fillRect(40, 420, 870, 90);
                     ctx.strokeStyle = '#333';
-                    ctx.strokeRect(40, 460, 820, 240);
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(40, 420, 870, 90);
                     
                     ctx.fillStyle = '#fff';
                     ctx.font = 'bold 14px Arial';
-                    ctx.fillText('💬 MENSAGEM:', 60, 490);
+                    ctx.fillText('📅 REGISTRO:', 60, 450);
+                    ctx.fillText('⏰ VENCIMENTO:', 350, 450);
+                    ctx.fillText('💰 VALOR:', 650, 450);
                     
-                    ctx.font = '13px Arial';
+                    ctx.font = '16px Arial';
+                    ctx.fillStyle = '#32bcad';
+                    ctx.fillText(formatarData(item.data_registro), 60, 485);
+                    ctx.fillStyle = status === 'vencido' ? '#e74c3c' : '#fff';
+                    ctx.fillText(formatarDataSimples(item.vencimento), 350, 485);
+                    ctx.fillStyle = '#ffd700';
+                    ctx.fillText('R$ ' + (item.valor || '0,00'), 650, 485);
+                    
+                    // MENSAGEM
+                    ctx.fillStyle = '#0f0f0f';
+                    ctx.fillRect(40, 530, 870, 280);
+                    ctx.strokeStyle = '#333';
+                    ctx.strokeRect(40, 530, 870, 280);
+                    
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.fillText('💬 MENSAGEM:', 60, 560);
+                    
+                    ctx.font = '12px Arial';
                     ctx.fillStyle = '#ccc';
                     const linhas = msg.split('\n');
-                    let y = 515;
+                    let y = 585;
                     linhas.forEach(linha => {
-                        if(y < 690) {
-                            ctx.fillText(linha.replace(/\*/g, '').substring(0, 90), 60, y);
-                            y += 20;
+                        if(y < 800) {
+                            ctx.fillText(linha.replace(/\*/g, '').substring(0, 100), 60, y);
+                            y += 17;
                         }
                     });
                     
                     ctx.fillStyle = '#555';
                     ctx.font = '11px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText('Gerado em ' + new Date().toLocaleString('pt-BR') + ' - ' + nomeEmpresa, 450, 730);
+                    ctx.fillText('Gerado em ' + new Date().toLocaleString('pt-BR') + ' - ' + nomeEmpresa, 475, 830);
                     
                     const dataUrl = canvas.toDataURL('image/png');
                     salvarHistorico(item.nome, 'Foto', item.id, dataUrl);
@@ -969,6 +1076,7 @@
         function gerarFaturaPDF(item, msg, status) {
             const statusText = item.pago ? '✅ PAGO' : (status === 'vencido' ? '❌ VENCIDO' : (status === 'perto' ? '⚠️ PERTO DE VENCER' : '✅ EM DIA'));
             const statusColor = item.pago ? '#27ae60' : (status === 'vencido' ? '#e74c3c' : (status === 'perto' ? '#f39c12' : '#27ae60'));
+            const tituloCred = item.tipo === 'revenda' ? '🔐 ACESSO AO PAINEL' : '🔐 ACESSO IPTV';
             
             const win = window.open('', '_blank');
             win.document.write(`
@@ -982,6 +1090,11 @@
                     .perfil { display: flex; align-items: center; gap: 20px; margin: 25px 0; }
                     .foto { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid ${statusColor}; }
                     .foto-vazia { width: 100px; height: 100px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+                    .credenciais { background: #1a1a1a; color: #fff; padding: 20px; border-radius: 10px; margin: 15px 0; border-left: 5px solid #32bcad; }
+                    .credenciais h3 { margin: 0 0 15px 0; color: #32bcad; }
+                    .credenciais .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #333; }
+                    .credenciais .row:last-child { border-bottom: none; }
+                    .credenciais strong { color: #ffd700; }
                     .info-box { background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 15px 0; }
                     .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ddd; }
                     .info-row:last-child { border-bottom: none; }
@@ -1010,6 +1123,12 @@
                         </div>
                     </div>
                     
+                    <div class="credenciais">
+                        <h3>${tituloCred}</h3>
+                        <div class="row"><span>👤 Usuário:</span><strong>${item.usuario || 'N/A'}</strong></div>
+                        <div class="row"><span>🔑 Senha:</span><strong>${item.senha || 'N/A'}</strong></div>
+                    </div>
+                    
                     <div class="info-box">
                         <div class="info-row"><span>📅 Data de Registro:</span><strong>${formatarData(item.data_registro)}</strong></div>
                         <div class="info-row"><span>⏰ Data de Vencimento:</span><strong style="color:${statusColor};">${formatarDataSimples(item.vencimento)}</strong></div>
@@ -1030,8 +1149,8 @@
         // --- HISTÓRICO ---
         function salvarHistorico(nome, tipo, idCliente, preview) {
             historico.unshift({ id: Date.now(), nome, tipo, idCliente, data: new Date().toLocaleString('pt-BR'), preview: preview || null });
-            if(historico.length > 100) historico.pop();
-            localStorage.setItem('tv_historico', JSON.stringify(historico));
+            if(historico.length > 200) historico.pop();
+            salvarTudo();
         }
 
         function renderizarHistorico() {
@@ -1067,7 +1186,7 @@
         function excluirHistorico(id) {
             if(!confirm("⚠️ Excluir este registro?")) return;
             historico = historico.filter(h => h.id !== id);
-            localStorage.setItem('tv_historico', JSON.stringify(historico));
+            salvarTudo();
             renderizarHistorico();
         }
 
@@ -1080,6 +1199,14 @@
         atualizarEstatisticas();
         document.getElementById('cli_data_registro').value = getDataAtual();
         document.getElementById('rev_data_registro').value = getDataAtual();
+        
+        // Proteção: impede que o sistema apague dados ao recarregar
+        window.addEventListener('beforeunload', function() {
+            salvarTudo();
+        });
+        
+        console.log('✅ Sistema Ilimitado carregado!');
+        console.log('📊 Clientes:', clientes.length, '| Revendas:', revendas.length);
     </script>
 </body>
 </html>
