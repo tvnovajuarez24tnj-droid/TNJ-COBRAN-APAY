@@ -10,8 +10,9 @@
             --bg: #0f0f0f; --card: #1a1a1a; --card2: #222; --text: #f0f0f0; --border: #333;
             --primary: #ffffff; --whatsapp: #25D366; --telegram: #0088cc;
             --foto: #9b59b6; --pdf: #e74c3c; --email: #3498db; --messenger: #0084FF;
-            --telefone: #f1c40f; --danger: #c0392b; --edit: #f39c12;
+            --telefone: #f1c40f; --danger: #8B0000; --danger2: #c0392b; --edit: #f39c12;
             --emdia: #27ae60; --vencido: #e74c3c; --perto: #f39c12;
+            --naopago: #8B0000;
             --gold: #ffd700;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -19,7 +20,6 @@
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         h1, h2, h3, h4 { margin: 5px 0; }
         
-        /* INDICADOR DE SINCRONIZAÇÃO */
         .sync-status { position: fixed; top: 5px; right: 5px; background: #27ae60; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.7em; font-weight: bold; z-index: 9999; transition: 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
         .sync-status.salvando { background: #f39c12; }
         .sync-status.erro { background: #e74c3c; }
@@ -35,6 +35,7 @@
         .stat-card.dinheiro { border-left-color: var(--gold); }
         .stat-card.pago { border-left-color: var(--emdia); }
         .stat-card.pendente { border-left-color: var(--vencido); }
+        .stat-card.naopago { border-left-color: var(--naopago); }
         .stat-card h4 { margin: 0; font-size: 0.68em; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
         .stat-card .num { font-size: 1.5em; font-weight: bold; color: white; margin: 3px 0; }
         .stat-card .sub { font-size: 0.68em; color: #999; }
@@ -54,6 +55,7 @@
         .filtro-btn.ativo-perto { background: var(--perto); border-color: var(--perto); color: black; }
         .filtro-btn.ativo-todos { background: var(--primary); border-color: var(--primary); color: black; }
         .filtro-btn.ativo-pago { background: var(--gold); border-color: var(--gold); color: black; }
+        .filtro-btn.ativo-naopago { background: var(--naopago); border-color: var(--naopago); }
         
         .form-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .form-group.tres { grid-template-columns: 1fr 1fr 1fr; }
@@ -66,7 +68,7 @@
         .btn:hover { opacity: 0.85; transform: scale(1.03); }
         .btn-salvar { background: #27ae60; width: 100%; margin-top: 8px; padding: 10px; font-size: 0.9em;}
         .btn-edit { background: var(--edit); color: black; }
-        .btn-del { background: var(--danger); }
+        .btn-del { background: var(--danger2); }
         .btn-whatsapp { background: var(--whatsapp); }
         .btn-telegram { background: var(--telegram); }
         .btn-foto { background: var(--foto); }
@@ -75,7 +77,8 @@
         .btn-messenger { background: var(--messenger); }
         .btn-telefone { background: var(--telefone); color: black; }
         .btn-pago { background: var(--emdia); }
-        .btn-pendente { background: var(--vencido); }
+        .btn-pendente { background: var(--perto); color: black; }
+        .btn-naopago { background: var(--naopago); border: 2px solid #ff0000; }
         .btn-cancelar { background: #555; width: 100%; margin-top: 5px; }
         .btn-export { background: #3498db; }
         .btn-import { background: #9b59b6; }
@@ -83,6 +86,7 @@
         .lista-item { background: #252525; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; border-left: 4px solid var(--emdia); position: relative; }
         .lista-item.vencido { border-left-color: var(--vencido); background: #2e1e1e; }
         .lista-item.perto { border-left-color: var(--perto); background: #2e2a1e; }
+        .lista-item.naopago { border-left-color: var(--naopago); background: #2e0e0e; }
         .lista-item.revenda { border-left-color: var(--telegram); }
         .lista-item.historico { border-left-color: var(--foto); }
         .lista-item.pago-ok { border-left-color: var(--gold); background: #2a2a1a; }
@@ -99,6 +103,7 @@
         .badge.venc { background: var(--vencido); color: white; }
         .badge.perto { background: var(--perto); color: black; }
         .badge.pago { background: var(--gold); color: black; }
+        .badge.naopago { background: var(--naopago); color: white; border: 1px solid #ff0000; }
         
         .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
         
@@ -114,7 +119,22 @@
         .historico-preview { width: 100%; border-radius: 5px; margin-top: 10px; border: 1px solid #444; }
         .empty-msg { text-align: center; color: #666; padding: 20px; font-style: italic; font-size: 0.88em; }
         
-        .pagamento-toggle { display: flex; gap: 5px; align-items: center; margin-top: 5px; }
+        /* SELETOR DE STATUS (3 BOTÕES) */
+        .status-selector {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+            padding: 10px;
+            background: #0a0a0a;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .status-selector .btn { flex: 1; min-width: 110px; padding: 10px 8px; font-size: 0.8em; }
+        .status-ativo-dia { background: var(--emdia) !important; box-shadow: 0 0 0 3px rgba(39,174,96,0.3); }
+        .status-ativo-pago { background: var(--gold) !important; color: black !important; box-shadow: 0 0 0 3px rgba(255,215,0,0.3); }
+        .status-ativo-naopago { background: var(--naopago) !important; border: 2px solid #ff0000 !important; box-shadow: 0 0 0 3px rgba(139,0,0,0.5); }
+        .status-ativo-naopago::before { content: '⚠️ '; }
         
         .info-credenciais { background: #0a0a0a; padding: 8px; border-radius: 5px; margin-top: 5px; border-left: 3px solid var(--telegram); font-size: 0.75em; }
         .info-credenciais strong { color: #32bcad; }
@@ -122,56 +142,27 @@
         .diagnostico { background: #0a0a0a; padding: 10px; border-radius: 5px; border: 1px solid #333; font-size: 0.8em; color: #888; margin-top: 10px; }
         .diagnostico span { color: #32bcad; font-weight: bold; }
         
-        /* ============================================ */
-        /* RESPONSIVO PARA TODOS OS APARELHOS */
-        /* ============================================ */
-        
-        /* Tablets */
-        @media (max-width: 900px) {
-            .logo-text h1 { font-size: 1.5em; letter-spacing: 3px; }
-        }
-        
-        /* Celulares grandes */
+        @media (max-width: 900px) { .logo-text h1 { font-size: 1.5em; } }
         @media (max-width: 700px) {
             body { padding: 8px; }
             .form-group, .form-group.tres { grid-template-columns: 1fr; }
-            .logo-text h1 { font-size: 1.3em; letter-spacing: 2px; }
+            .logo-text h1 { font-size: 1.3em; }
             .stat-card .num { font-size: 1.3em; }
-            .tab-btn { font-size: 0.75em; padding: 7px 10px; min-width: 80px; }
+            .tab-btn { font-size: 0.75em; padding: 7px 10px; }
             .btn { padding: 6px 9px; font-size: 0.72em; }
             .painel { grid-template-columns: repeat(2, 1fr); }
             .perfil-box { min-width: 100%; }
-            .lista-item { padding: 10px; }
-            .sync-status { font-size: 0.65em; padding: 4px 8px; }
+            .status-selector .btn { min-width: 90px; font-size: 0.72em; }
         }
-        
-        /* Celulares pequenos */
         @media (max-width: 500px) {
             .logo-text h1 { font-size: 1.1em; }
-            .stat-card { padding: 8px; }
             .stat-card .num { font-size: 1.1em; }
-            .stat-card h4 { font-size: 0.6em; }
-            .stat-card .sub { font-size: 0.6em; }
-            .acoes { width: 100%; }
             .acoes .btn { flex: 1; min-width: 70px; font-size: 0.68em; padding: 6px 4px; }
-            .tab-btn { font-size: 0.7em; }
+            .status-selector { flex-direction: column; }
+            .status-selector .btn { width: 100%; min-width: auto; }
         }
-        
-        /* Desktop grande */
-        @media (min-width: 1200px) {
-            .painel { grid-template-columns: repeat(5, 1fr); }
-        }
-        
-        /* Melhorias para toque */
-        @media (hover: none) {
-            .btn:active { transform: scale(0.95); }
-            .tab-btn:active { background: var(--primary); color: black; }
-        }
-        
-        /* Impressão */
-        @media print {
-            .tabs, .btn, .sync-status, .painel { display: none !important; }
-        }
+        @media (min-width: 1200px) { .painel { grid-template-columns: repeat(6, 1fr); } }
+        @media (hover: none) { .btn:active { transform: scale(0.95); } }
     </style>
 </head>
 <body>
@@ -190,12 +181,12 @@
         <div class="stat-card">
             <h4>👤 Total Clientes</h4>
             <div class="num" id="stat-cli-total">0</div>
-            <div class="sub"><span style="color:#27ae60;" id="stat-cli-dia">0</span> dia · <span style="color:#f39c12;" id="stat-cli-perto">0</span> perto · <span style="color:#e74c3c;" id="stat-cli-venc">0</span> venc</div>
+            <div class="sub"><span style="color:#27ae60;" id="stat-cli-dia">0</span> dia · <span style="color:#ffd700;" id="stat-cli-pago">0</span> pago · <span style="color:#8B0000;" id="stat-cli-naopago">0</span> ñ pago</div>
         </div>
         <div class="stat-card rev">
             <h4>🏢 Total Revendas</h4>
             <div class="num" id="stat-rev-total">0</div>
-            <div class="sub"><span style="color:#27ae60;" id="stat-rev-dia">0</span> dia · <span style="color:#f39c12;" id="stat-rev-perto">0</span> perto · <span style="color:#e74c3c;" id="stat-rev-venc">0</span> venc</div>
+            <div class="sub"><span style="color:#27ae60;" id="stat-rev-dia">0</span> dia · <span style="color:#ffd700;" id="stat-rev-pago">0</span> pago · <span style="color:#8B0000;" id="stat-rev-naopago">0</span> ñ pago</div>
         </div>
         <div class="stat-card dinheiro">
             <h4>💰 Total a Receber</h4>
@@ -209,8 +200,13 @@
         </div>
         <div class="stat-card pendente">
             <h4>⏳ Pendente</h4>
-            <div class="num" id="stat-valor-pendente" style="color:#e74c3c;">R$ 0,00</div>
-            <div class="sub">Não pagos</div>
+            <div class="num" id="stat-valor-pendente" style="color:#f39c12;">R$ 0,00</div>
+            <div class="sub">Em dia</div>
+        </div>
+        <div class="stat-card naopago">
+            <h4>⚠️ Não Pago</h4>
+            <div class="num" id="stat-valor-naopago" style="color:#ff6666;">R$ 0,00</div>
+            <div class="sub">Atrasado</div>
         </div>
     </div>
 
@@ -245,6 +241,14 @@
             <div><label>📅 Vencimento</label><input type="date" id="cli_vencimento"></div>
             <div><label>💰 Valor (R$)</label><input type="text" id="cli_valor" placeholder="49,90" inputmode="decimal"></div>
         </div>
+        
+        <h3 style="color:#ffd700; margin-top:15px;">📊 Status do Cliente</h3>
+        <div class="status-selector" id="status-selector-cli">
+            <button type="button" class="btn btn-pago" onclick="selecionarStatus('cli', 'dia')" id="status-cli-dia">✅ Em Dia</button>
+            <button type="button" class="btn btn-pendente" onclick="selecionarStatus('cli', 'naopago')" id="status-cli-naopago">⚠️ Não Foi Pago</button>
+            <button type="button" class="btn btn-pago" onclick="selecionarStatus('cli', 'pago')" id="status-cli-pago">💰 Pago</button>
+        </div>
+        
         <div id="preview-cli" style="text-align:center;"></div>
         <button class="btn btn-salvar" onclick="salvarCliente()" id="btn-salvar-cli">💾 Salvar Cliente</button>
         <button class="btn btn-cancelar" onclick="cancelarEdicaoCliente()" id="btn-cancelar-cli" style="display:none;">❌ Cancelar Edição</button>
@@ -253,8 +257,7 @@
         <div class="filtros">
             <button class="filtro-btn ativo-todos" onclick="filtrarClientes('todos', this)">📋 Todos</button>
             <button class="filtro-btn" onclick="filtrarClientes('dia', this)">✅ Em Dia</button>
-            <button class="filtro-btn" onclick="filtrarClientes('perto', this)">⚠️ Perto</button>
-            <button class="filtro-btn" onclick="filtrarClientes('vencido', this)">❌ Vencidos</button>
+            <button class="filtro-btn" onclick="filtrarClientes('naopago', this)">⚠️ Não Pago</button>
             <button class="filtro-btn" onclick="filtrarClientes('pago', this)">💰 Pagos</button>
         </div>
         <div id="lista-clientes"></div>
@@ -284,6 +287,14 @@
             <div><label>📅 Vencimento</label><input type="date" id="rev_vencimento"></div>
             <div><label>💰 Valor (R$)</label><input type="text" id="rev_valor" placeholder="99,90" inputmode="decimal"></div>
         </div>
+        
+        <h3 style="color:#ffd700; margin-top:15px;">📊 Status da Revenda</h3>
+        <div class="status-selector" id="status-selector-rev">
+            <button type="button" class="btn btn-pago" onclick="selecionarStatus('rev', 'dia')" id="status-rev-dia">✅ Em Dia</button>
+            <button type="button" class="btn btn-pendente" onclick="selecionarStatus('rev', 'naopago')" id="status-rev-naopago">⚠️ Não Foi Pago</button>
+            <button type="button" class="btn btn-pago" onclick="selecionarStatus('rev', 'pago')" id="status-rev-pago">💰 Pago</button>
+        </div>
+        
         <div id="preview-rev" style="text-align:center;"></div>
         <button class="btn btn-salvar" onclick="salvarRevenda()" id="btn-salvar-rev">💾 Salvar Revenda</button>
         <button class="btn btn-cancelar" onclick="cancelarEdicaoRevenda()" id="btn-cancelar-rev" style="display:none;">❌ Cancelar Edição</button>
@@ -292,8 +303,7 @@
         <div class="filtros">
             <button class="filtro-btn ativo-todos" onclick="filtrarRevendas('todos', this)">📋 Todas</button>
             <button class="filtro-btn" onclick="filtrarRevendas('dia', this)">✅ Em Dia</button>
-            <button class="filtro-btn" onclick="filtrarRevendas('perto', this)">⚠️ Perto</button>
-            <button class="filtro-btn" onclick="filtrarRevendas('vencido', this)">❌ Vencidas</button>
+            <button class="filtro-btn" onclick="filtrarRevendas('naopago', this)">⚠️ Não Pago</button>
             <button class="filtro-btn" onclick="filtrarRevendas('pago', this)">💰 Pagas</button>
         </div>
         <div id="lista-revendas"></div>
@@ -302,7 +312,6 @@
     <!-- HISTÓRICO -->
     <div id="historico" class="container">
         <h2>📂 Histórico de Cobranças</h2>
-        <p style="color:#aaa; font-size:0.85em;">Todas as faturas e mensagens geradas ficam salvas aqui.</p>
         <div id="lista-historico"></div>
     </div>
 
@@ -352,7 +361,6 @@
 
         <div class="config-box">
             <h3>💾 Backup e Restauração</h3>
-            <p style="color:#aaa; font-size:0.85em;">Exporte ou importe todos os dados do sistema.</p>
             <button class="btn btn-export" onclick="exportarBackup()" style="width:100%; margin-top:8px;">📥 Exportar Backup (JSON)</button>
             <label style="display:block; margin-top:10px; cursor:pointer; padding:10px; background:#9b59b6; border-radius:5px; text-align:center; font-weight:bold; color:white; font-size:0.85em;">
                 📤 Importar Backup
@@ -361,7 +369,7 @@
         </div>
 
         <div class="diagnostico" id="diagnostico">
-            🔍 Diagnóstico: <span id="diag-clientes">0</span> clientes · <span id="diag-revendas">0</span> revendas · <span id="diag-historico">0</span> no histórico
+            🔍 <span id="diag-clientes">0</span> clientes · <span id="diag-revendas">0</span> revendas · <span id="diag-historico">0</span> histórico
         </div>
 
         <button class="btn btn-salvar" onclick="salvarConfig()">💾 Salvar Configurações</button>
@@ -379,14 +387,12 @@
 
     <script>
         // ==================================================
-        // SISTEMA DE ARMAZENAMENTO PERMANENTE E SINCRONIZADO
+        // SISTEMA DE ARMAZENAMENTO PERMANENTE
         // ==================================================
-        
         const DB_NAME = 'TVNovaJuarezDB';
         const DB_VERSION = 1;
         let db = null;
 
-        // Abrir IndexedDB (banco de dados nativo do navegador)
         function abrirIndexedDB() {
             return new Promise((resolve, reject) => {
                 const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -401,35 +407,30 @@
             });
         }
 
-        // Salvar no IndexedDB
         async function salvarIndexedDB(chave, valor) {
             try {
                 if(!db) await abrirIndexedDB();
                 return new Promise((resolve, reject) => {
                     const transaction = db.transaction(['dados'], 'readwrite');
-                    const store = transaction.objectStore('dados');
-                    store.put({ chave, valor, timestamp: Date.now() });
+                    transaction.objectStore('dados').put({ chave, valor, timestamp: Date.now() });
                     transaction.oncomplete = () => resolve();
                     transaction.onerror = () => reject(transaction.error);
                 });
             } catch(e) { console.error('Erro IndexedDB:', e); }
         }
 
-        // Carregar do IndexedDB
         async function carregarIndexedDB(chave) {
             try {
                 if(!db) await abrirIndexedDB();
                 return new Promise((resolve, reject) => {
                     const transaction = db.transaction(['dados'], 'readonly');
-                    const store = transaction.objectStore('dados');
-                    const request = store.get(chave);
+                    const request = transaction.objectStore('dados').get(chave);
                     request.onsuccess = () => resolve(request.result ? request.result.valor : null);
                     request.onerror = () => reject(request.error);
                 });
             } catch(e) { return null; }
         }
 
-        // Mostrar status de sincronização
         function mostrarStatus(texto, tipo = 'ok') {
             const el = document.getElementById('sync-status');
             el.innerText = texto;
@@ -449,12 +450,14 @@
         let filtroRev = 'todos';
         let fotoCliTemp = null;
         let fotoRevTemp = null;
+        // Status temporário no formulário
+        let statusCliTemp = 'dia';   // 'dia', 'naopago', 'pago'
+        let statusRevTemp = 'dia';
 
         // ==================================================
-        // CARREGAMENTO SEGURO (MULTI-CAMADAS)
+        // CARREGAMENTO
         // ==================================================
         async function carregarTudo() {
-            // 1) Tenta IndexedDB primeiro (mais seguro)
             let cliIDB = await carregarIndexedDB('clientes');
             let revIDB = await carregarIndexedDB('revendas');
             let histIDB = await carregarIndexedDB('historico');
@@ -462,7 +465,6 @@
             let logoIDB = await carregarIndexedDB('logo');
             let nomeIDB = await carregarIndexedDB('nome_empresa');
 
-            // 2) Se IndexedDB vazio, tenta localStorage
             let cliLS = localStorage.getItem('tv_clientes_v3') || localStorage.getItem('tv_clientes');
             let revLS = localStorage.getItem('tv_revendas_v3') || localStorage.getItem('tv_revendas');
             let histLS = localStorage.getItem('tv_historico_v3') || localStorage.getItem('tv_historico');
@@ -470,7 +472,6 @@
             let logoLS = localStorage.getItem('tv_logo_v3') || localStorage.getItem('tv_logo');
             let nomeLS = localStorage.getItem('tv_nome_empresa_v3') || localStorage.getItem('tv_nome_empresa');
 
-            // 3) Mescla os dados (prioriza o que tiver mais registros)
             const cliIDBArr = cliIDB || [];
             const cliLSArr = cliLS ? JSON.parse(cliLS) : [];
             clientes = cliIDBArr.length >= cliLSArr.length ? cliIDBArr : cliLSArr;
@@ -487,17 +488,29 @@
             logoEmpresa = logoIDB || logoLS || null;
             nomeEmpresa = nomeIDB || nomeLS || 'TV NOVA JUAREZ';
 
-            console.log('✅ Carregado:', clientes.length, 'clientes,', revendas.length, 'revendas');
+            // MIGRAÇÃO DE STATUS ANTIGO (se existir "pago: true/false")
+            clientes = clientes.map(c => {
+                if(c.status === undefined) {
+                    c.status = c.pago ? 'pago' : 'dia';
+                }
+                return c;
+            });
+            revendas = revendas.map(r => {
+                if(r.status === undefined) {
+                    r.status = r.pago ? 'pago' : 'dia';
+                }
+                return r;
+            });
+
             atualizarDiagnostico();
         }
 
         // ==================================================
-        // SALVAMENTO TRIPLO (NUNCA PERDE DADOS)
+        // SALVAMENTO
         // ==================================================
         async function salvarTudo() {
             mostrarStatus('💾 Salvando...', 'salvando');
             try {
-                // LocalStorage
                 localStorage.setItem('tv_clientes_v3', JSON.stringify(clientes));
                 localStorage.setItem('tv_revendas_v3', JSON.stringify(revendas));
                 localStorage.setItem('tv_historico_v3', JSON.stringify(historico));
@@ -505,7 +518,6 @@
                 if(logoEmpresa) localStorage.setItem('tv_logo_v3', logoEmpresa);
                 if(nomeEmpresa) localStorage.setItem('tv_nome_empresa_v3', nomeEmpresa);
 
-                // IndexedDB
                 await salvarIndexedDB('clientes', clientes);
                 await salvarIndexedDB('revendas', revendas);
                 await salvarIndexedDB('historico', historico);
@@ -513,14 +525,13 @@
                 if(logoEmpresa) await salvarIndexedDB('logo', logoEmpresa);
                 if(nomeEmpresa) await salvarIndexedDB('nome_empresa', nomeEmpresa);
 
-                // Backup em SessionStorage
                 sessionStorage.setItem('backup_clientes', JSON.stringify(clientes));
                 sessionStorage.setItem('backup_revendas', JSON.stringify(revendas));
 
                 setTimeout(() => mostrarStatus('💾 Salvo'), 500);
                 atualizarDiagnostico();
             } catch(e) {
-                console.error('❌ Erro ao salvar:', e);
+                console.error('❌ Erro:', e);
                 mostrarStatus('❌ Erro', 'erro');
             }
         }
@@ -534,9 +545,6 @@
             }
         }
 
-        // ==================================================
-        // AUTO-SAVE A CADA 30 SEGUNDOS
-        // ==================================================
         setInterval(() => { salvarTudo(); }, 30000);
 
         // ==================================================
@@ -553,6 +561,8 @@
             atualizarEstatisticas();
             document.getElementById('cli_data_registro').value = getDataAtual();
             document.getElementById('rev_data_registro').value = getDataAtual();
+            selecionarStatus('cli', 'dia');
+            selecionarStatus('rev', 'dia');
             mostrarStatus('💾 Salvo');
             console.log('🚀 Sistema iniciado!');
         }
@@ -577,55 +587,98 @@
             atualizarEstatisticas();
         }
 
-        function getStatus(vencimento, pago) {
-            if(pago) return 'pago';
-            if(!vencimento) return 'dia';
+        // ==================================================
+        // NOVO SISTEMA DE STATUS (3 opções)
+        // ==================================================
+        function selecionarStatus(tipo, valor) {
+            if(tipo === 'cli') {
+                statusCliTemp = valor;
+                document.getElementById('status-cli-dia').classList.remove('status-ativo-dia');
+                document.getElementById('status-cli-naopago').classList.remove('status-ativo-naopago');
+                document.getElementById('status-cli-pago').classList.remove('status-ativo-pago');
+                
+                if(valor === 'dia') document.getElementById('status-cli-dia').classList.add('status-ativo-dia');
+                if(valor === 'naopago') document.getElementById('status-cli-naopago').classList.add('status-ativo-naopago');
+                if(valor === 'pago') document.getElementById('status-cli-pago').classList.add('status-ativo-pago');
+            }
+            if(tipo === 'rev') {
+                statusRevTemp = valor;
+                document.getElementById('status-rev-dia').classList.remove('status-ativo-dia');
+                document.getElementById('status-rev-naopago').classList.remove('status-ativo-naopago');
+                document.getElementById('status-rev-pago').classList.remove('status-ativo-pago');
+                
+                if(valor === 'dia') document.getElementById('status-rev-dia').classList.add('status-ativo-dia');
+                if(valor === 'naopago') document.getElementById('status-rev-naopago').classList.add('status-ativo-naopago');
+                if(valor === 'pago') document.getElementById('status-rev-pago').classList.add('status-ativo-pago');
+            }
+        }
+
+        // ==================================================
+        // VERIFICAR STATUS FINAL
+        // ==================================================
+        function getStatusFinal(item) {
+            // Prioridade: status explícito > vencimento
+            if(item.status === 'pago') return 'pago';
+            if(item.status === 'naopago') return 'naopago';
+            if(item.status === 'dia') {
+                // Verifica se o vencimento já passou (pode virar não pago)
+                if(item.vencimento) {
+                    const hoje = new Date(); hoje.setHours(0,0,0,0);
+                    const venc = new Date(item.vencimento + 'T00:00:00');
+                    if(venc < hoje) return 'naopago'; // venceu e não foi pago
+                }
+                return 'dia';
+            }
+            // Fallback para registros antigos
+            if(item.pago) return 'pago';
+            if(!item.vencimento) return 'dia';
             const hoje = new Date(); hoje.setHours(0,0,0,0);
-            const venc = new Date(vencimento + 'T00:00:00');
-            const diffDias = Math.ceil((venc - hoje) / (1000 * 60 * 60 * 24));
-            if(diffDias < 0) return 'vencido';
-            if(diffDias <= 7) return 'perto';
+            const venc = new Date(item.vencimento + 'T00:00:00');
+            if(venc < hoje) return 'naopago';
             return 'dia';
         }
 
         function atualizarEstatisticas() {
-            const cliDia = clientes.filter(c => getStatus(c.vencimento, c.pago) === 'dia').length;
-            const cliPerto = clientes.filter(c => getStatus(c.vencimento, c.pago) === 'perto').length;
-            const cliVenc = clientes.filter(c => getStatus(c.vencimento, c.pago) === 'vencido').length;
-            const revDia = revendas.filter(r => getStatus(r.vencimento, r.pago) === 'dia').length;
-            const revPerto = revendas.filter(r => getStatus(r.vencimento, r.pago) === 'perto').length;
-            const revVenc = revendas.filter(r => getStatus(r.vencimento, r.pago) === 'vencido').length;
+            const cliDia = clientes.filter(c => getStatusFinal(c) === 'dia').length;
+            const cliPago = clientes.filter(c => getStatusFinal(c) === 'pago').length;
+            const cliNaoPago = clientes.filter(c => getStatusFinal(c) === 'naopago').length;
+            const revDia = revendas.filter(r => getStatusFinal(r) === 'dia').length;
+            const revPago = revendas.filter(r => getStatusFinal(r) === 'pago').length;
+            const revNaoPago = revendas.filter(r => getStatusFinal(r) === 'naopago').length;
             
             document.getElementById('stat-cli-total').innerText = clientes.length;
             document.getElementById('stat-cli-dia').innerText = cliDia;
-            document.getElementById('stat-cli-perto').innerText = cliPerto;
-            document.getElementById('stat-cli-venc').innerText = cliVenc;
+            document.getElementById('stat-cli-pago').innerText = cliPago;
+            document.getElementById('stat-cli-naopago').innerText = cliNaoPago;
             document.getElementById('stat-rev-total').innerText = revendas.length;
             document.getElementById('stat-rev-dia').innerText = revDia;
-            document.getElementById('stat-rev-perto').innerText = revPerto;
-            document.getElementById('stat-rev-venc').innerText = revVenc;
+            document.getElementById('stat-rev-pago').innerText = revPago;
+            document.getElementById('stat-rev-naopago').innerText = revNaoPago;
             
             const totalCli = clientes.reduce((sum, c) => sum + (parseFloat((c.valor||'0').replace(',','.')) || 0), 0);
             const totalRev = revendas.reduce((sum, r) => sum + (parseFloat((r.valor||'0').replace(',','.')) || 0), 0);
             const totalGeral = totalCli + totalRev;
-            const pagoGeral = clientes.filter(c=>c.pago).reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0) 
-                             + revendas.filter(r=>r.pago).reduce((s,r)=>s+(parseFloat((r.valor||'0').replace(',','.'))||0),0);
-            const pendenteGeral = totalGeral - pagoGeral;
+            const pagoGeral = clientes.filter(c=>getStatusFinal(c)==='pago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0) 
+                             + revendas.filter(r=>getStatusFinal(r)==='pago').reduce((s,r)=>s+(parseFloat((r.valor||'0').replace(',','.'))||0),0);
+            const naoPagoGeral = clientes.filter(c=>getStatusFinal(c)==='naopago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0) 
+                             + revendas.filter(r=>getStatusFinal(r)==='naopago').reduce((s,r)=>s+(parseFloat((r.valor||'0').replace(',','.'))||0),0);
+            const pendenteGeral = totalGeral - pagoGeral - naoPagoGeral;
             
             document.getElementById('stat-total-valor').innerText = 'R$ ' + totalGeral.toFixed(2).replace('.',',');
             document.getElementById('stat-valor-pago').innerText = 'R$ ' + pagoGeral.toFixed(2).replace('.',',');
             document.getElementById('stat-valor-pendente').innerText = 'R$ ' + pendenteGeral.toFixed(2).replace('.',',');
+            document.getElementById('stat-valor-naopago').innerText = 'R$ ' + naoPagoGeral.toFixed(2).replace('.',',');
         }
 
         function filtrarClientes(tipo, btn) {
             filtroCli = tipo;
-            document.querySelectorAll('#clientes .filtro-btn').forEach(b => b.classList.remove('ativo-dia','ativo-vencido','ativo-todos','ativo-perto','ativo-pago'));
+            document.querySelectorAll('#clientes .filtro-btn').forEach(b => b.classList.remove('ativo-dia','ativo-vencido','ativo-todos','ativo-perto','ativo-pago','ativo-naopago'));
             btn.classList.add('ativo-' + (tipo === 'todos' ? 'todos' : tipo));
             renderizarClientes();
         }
         function filtrarRevendas(tipo, btn) {
             filtroRev = tipo;
-            document.querySelectorAll('#revendas .filtro-btn').forEach(b => b.classList.remove('ativo-dia','ativo-vencido','ativo-todos','ativo-perto','ativo-pago'));
+            document.querySelectorAll('#revendas .filtro-btn').forEach(b => b.classList.remove('ativo-dia','ativo-vencido','ativo-todos','ativo-perto','ativo-pago','ativo-naopago'));
             btn.classList.add('ativo-' + (tipo === 'todos' ? 'todos' : tipo));
             renderizarRevendas();
         }
@@ -664,12 +717,7 @@
         function salvarConfig() {
             const modo = document.querySelector('input[name="modo_banco"]:checked').value;
             const nomeDigitado = document.getElementById('cfg_nome_empresa').value.trim();
-            
-            if(nomeDigitado) {
-                nomeEmpresa = nomeDigitado.toUpperCase();
-                aplicarNomeEmpresa();
-            }
-            
+            if(nomeDigitado) { nomeEmpresa = nomeDigitado.toUpperCase(); aplicarNomeEmpresa(); }
             config = { modo,
                 banco: document.getElementById('cfg_banco').value,
                 agencia: document.getElementById('cfg_agencia').value,
@@ -722,7 +770,7 @@
                 vencimento: document.getElementById('cli_vencimento').value,
                 valor: document.getElementById('cli_valor').value,
                 foto: fotoCliTemp || (idEdit ? clientes.find(c=>c.id===parseInt(idEdit)).foto : null),
-                pago: idEdit ? clientes.find(c=>c.id===parseInt(idEdit)).pago : false,
+                status: statusCliTemp,
                 tipo: 'cliente'
             };
 
@@ -732,7 +780,7 @@
                 alert("✅ Cliente atualizado!");
             } else {
                 clientes.push(dados);
-                alert("✅ Cliente salvo permanentemente!");
+                alert("✅ Cliente salvo!");
             }
             await salvarTudo();
             renderizarClientes(); atualizarEstatisticas(); cancelarEdicaoCliente();
@@ -754,6 +802,11 @@
             document.getElementById('cli_valor').value = c.valor || '';
             fotoCliTemp = c.foto;
             if(c.foto) document.getElementById('preview-cli').innerHTML = `<img src="${c.foto}" style="max-height:80px; border-radius:8px; margin-top:8px;">`;
+            
+            // Seleciona o status atual
+            const statusAtual = c.status || (c.pago ? 'pago' : 'dia');
+            selecionarStatus('cli', statusAtual);
+            
             document.getElementById('titulo-cliente').innerText = "✏️ Editando Cliente";
             document.getElementById('btn-salvar-cli').innerText = "💾 Atualizar Cliente";
             document.getElementById('btn-cancelar-cli').style.display = 'block';
@@ -766,6 +819,7 @@
             document.getElementById('cli_data_registro').value = getDataAtual();
             document.getElementById('preview-cli').innerHTML = '';
             fotoCliTemp = null;
+            selecionarStatus('cli', 'dia');
             document.getElementById('titulo-cliente').innerText = "Cadastrar Cliente";
             document.getElementById('btn-salvar-cli').innerText = "💾 Salvar Cliente";
             document.getElementById('btn-cancelar-cli').style.display = 'none';
@@ -778,30 +832,33 @@
             renderizarClientes(); atualizarEstatisticas();
         }
 
-        async function togglePagoCliente(id) {
+        async function mudarStatusCliente(id, novoStatus) {
             const c = clientes.find(x => x.id === id);
-            if(c) { c.pago = !c.pago; await salvarTudo(); renderizarClientes(); atualizarEstatisticas(); }
+            if(c) { 
+                c.status = novoStatus; 
+                await salvarTudo(); 
+                renderizarClientes(); 
+                atualizarEstatisticas(); 
+            }
         }
 
         function renderizarClientes() {
             const div = document.getElementById('lista-clientes');
             let lista = clientes;
-            if(filtroCli === 'dia') lista = clientes.filter(c => getStatus(c.vencimento, c.pago) === 'dia');
-            if(filtroCli === 'perto') lista = clientes.filter(c => getStatus(c.vencimento, c.pago) === 'perto');
-            if(filtroCli === 'vencido') lista = clientes.filter(c => getStatus(c.vencimento, c.pago) === 'vencido');
-            if(filtroCli === 'pago') lista = clientes.filter(c => c.pago);
+            if(filtroCli === 'dia') lista = clientes.filter(c => getStatusFinal(c) === 'dia');
+            if(filtroCli === 'naopago') lista = clientes.filter(c => getStatusFinal(c) === 'naopago');
+            if(filtroCli === 'pago') lista = clientes.filter(c => getStatusFinal(c) === 'pago');
             
             if(lista.length === 0) { div.innerHTML = '<p class="empty-msg">Nenhum cliente encontrado.</p>'; return; }
             
             div.innerHTML = lista.map(c => {
-                const status = getStatus(c.vencimento, c.pago);
+                const status = getStatusFinal(c);
                 const badge = status === 'pago' ? '<span class="badge pago">💰 PAGO</span>' :
-                              status === 'vencido' ? '<span class="badge venc">❌ VENCIDO</span>' :
-                              status === 'perto' ? '<span class="badge perto">⚠️ PERTO</span>' :
+                              status === 'naopago' ? '<span class="badge naopago">⚠️ NÃO PAGO</span>' :
                               '<span class="badge dia">✅ EM DIA</span>';
                 const fotoHtml = c.foto ? `<img src="${c.foto}" class="perfil-foto">` : `<div class="perfil-foto-vazia">👤</div>`;
                 return `
-                <div class="lista-item ${status} ${c.pago ? 'pago-ok' : ''}">
+                <div class="lista-item ${status} ${status === 'pago' ? 'pago-ok' : ''}">
                     <div class="lista-header">
                         <div class="perfil-box">
                             ${fotoHtml}
@@ -817,10 +874,10 @@
                             <button class="btn btn-del" onclick="excluirCliente(${c.id})">🗑️</button>
                         </div>
                     </div>
-                    <div class="pagamento-toggle">
-                        <button class="btn ${c.pago ? 'btn-pendente' : 'btn-pago'}" onclick="togglePagoCliente(${c.id})">
-                            ${c.pago ? '❌ Não Pago' : '✅ Marcar Pago'}
-                        </button>
+                    <div class="status-selector">
+                        <button class="btn btn-pago ${status === 'dia' ? 'status-ativo-dia' : ''}" onclick="mudarStatusCliente(${c.id}, 'dia')">✅ Em Dia</button>
+                        <button class="btn btn-naopago ${status === 'naopago' ? 'status-ativo-naopago' : ''}" onclick="mudarStatusCliente(${c.id}, 'naopago')">⚠️ Não Foi Pago</button>
+                        <button class="btn btn-pago ${status === 'pago' ? 'status-ativo-pago' : ''}" onclick="mudarStatusCliente(${c.id}, 'pago')">💰 Pago</button>
                     </div>
                     <div class="acoes">
                         <button class="btn btn-whatsapp" onclick="enviarWhats('${c.telefone}', '${c.nome}', ${c.id})">📱 Zap</button>
@@ -857,7 +914,7 @@
                 vencimento: document.getElementById('rev_vencimento').value,
                 valor: document.getElementById('rev_valor').value,
                 foto: fotoRevTemp || (idEdit ? revendas.find(r=>r.id===parseInt(idEdit)).foto : null),
-                pago: idEdit ? revendas.find(r=>r.id===parseInt(idEdit)).pago : false,
+                status: statusRevTemp,
                 tipo: 'revenda'
             };
 
@@ -867,7 +924,7 @@
                 alert("✅ Revenda atualizada!");
             } else {
                 revendas.push(dados);
-                alert("✅ Revenda salva permanentemente!");
+                alert("✅ Revenda salva!");
             }
             await salvarTudo();
             renderizarRevendas(); atualizarEstatisticas(); cancelarEdicaoRevenda();
@@ -889,6 +946,10 @@
             document.getElementById('rev_valor').value = r.valor || '';
             fotoRevTemp = r.foto;
             if(r.foto) document.getElementById('preview-rev').innerHTML = `<img src="${r.foto}" style="max-height:80px; border-radius:8px; margin-top:8px;">`;
+            
+            const statusAtual = r.status || (r.pago ? 'pago' : 'dia');
+            selecionarStatus('rev', statusAtual);
+            
             document.getElementById('titulo-revenda').innerText = "✏️ Editando Revenda";
             document.getElementById('btn-salvar-rev').innerText = "💾 Atualizar Revenda";
             document.getElementById('btn-cancelar-rev').style.display = 'block';
@@ -901,6 +962,7 @@
             document.getElementById('rev_data_registro').value = getDataAtual();
             document.getElementById('preview-rev').innerHTML = '';
             fotoRevTemp = null;
+            selecionarStatus('rev', 'dia');
             document.getElementById('titulo-revenda').innerText = "Cadastrar Revenda";
             document.getElementById('btn-salvar-rev').innerText = "💾 Salvar Revenda";
             document.getElementById('btn-cancelar-rev').style.display = 'none';
@@ -913,30 +975,33 @@
             renderizarRevendas(); atualizarEstatisticas();
         }
 
-        async function togglePagoRevenda(id) {
+        async function mudarStatusRevenda(id, novoStatus) {
             const r = revendas.find(x => x.id === id);
-            if(r) { r.pago = !r.pago; await salvarTudo(); renderizarRevendas(); atualizarEstatisticas(); }
+            if(r) { 
+                r.status = novoStatus; 
+                await salvarTudo(); 
+                renderizarRevendas(); 
+                atualizarEstatisticas(); 
+            }
         }
 
         function renderizarRevendas() {
             const div = document.getElementById('lista-revendas');
             let lista = revendas;
-            if(filtroRev === 'dia') lista = revendas.filter(r => getStatus(r.vencimento, r.pago) === 'dia');
-            if(filtroRev === 'perto') lista = revendas.filter(r => getStatus(r.vencimento, r.pago) === 'perto');
-            if(filtroRev === 'vencido') lista = revendas.filter(r => getStatus(r.vencimento, r.pago) === 'vencido');
-            if(filtroRev === 'pago') lista = revendas.filter(r => r.pago);
+            if(filtroRev === 'dia') lista = revendas.filter(r => getStatusFinal(r) === 'dia');
+            if(filtroRev === 'naopago') lista = revendas.filter(r => getStatusFinal(r) === 'naopago');
+            if(filtroRev === 'pago') lista = revendas.filter(r => getStatusFinal(r) === 'pago');
             
             if(lista.length === 0) { div.innerHTML = '<p class="empty-msg">Nenhuma revenda encontrada.</p>'; return; }
             
             div.innerHTML = lista.map(r => {
-                const status = getStatus(r.vencimento, r.pago);
+                const status = getStatusFinal(r);
                 const badge = status === 'pago' ? '<span class="badge pago">💰 PAGO</span>' :
-                              status === 'vencido' ? '<span class="badge venc">❌ VENCIDO</span>' :
-                              status === 'perto' ? '<span class="badge perto">⚠️ PERTO</span>' :
+                              status === 'naopago' ? '<span class="badge naopago">⚠️ NÃO PAGO</span>' :
                               '<span class="badge dia">✅ EM DIA</span>';
                 const fotoHtml = r.foto ? `<img src="${r.foto}" class="perfil-foto">` : `<div class="perfil-foto-vazia">🏢</div>`;
                 return `
-                <div class="lista-item revenda ${status} ${r.pago ? 'pago-ok' : ''}">
+                <div class="lista-item revenda ${status} ${status === 'pago' ? 'pago-ok' : ''}">
                     <div class="lista-header">
                         <div class="perfil-box">
                             ${fotoHtml}
@@ -952,10 +1017,10 @@
                             <button class="btn btn-del" onclick="excluirRevenda(${r.id})">🗑️</button>
                         </div>
                     </div>
-                    <div class="pagamento-toggle">
-                        <button class="btn ${r.pago ? 'btn-pendente' : 'btn-pago'}" onclick="togglePagoRevenda(${r.id})">
-                            ${r.pago ? '❌ Não Pago' : '✅ Marcar Pago'}
-                        </button>
+                    <div class="status-selector">
+                        <button class="btn btn-pago ${status === 'dia' ? 'status-ativo-dia' : ''}" onclick="mudarStatusRevenda(${r.id}, 'dia')">✅ Em Dia</button>
+                        <button class="btn btn-naopago ${status === 'naopago' ? 'status-ativo-naopago' : ''}" onclick="mudarStatusRevenda(${r.id}, 'naopago')">⚠️ Não Foi Pago</button>
+                        <button class="btn btn-pago ${status === 'pago' ? 'status-ativo-pago' : ''}" onclick="mudarStatusRevenda(${r.id}, 'pago')">💰 Pago</button>
                     </div>
                     <div class="acoes">
                         <button class="btn btn-whatsapp" onclick="enviarWhats('${r.telefone}', '${r.nome}', ${r.id})">📱 Zap</button>
@@ -982,51 +1047,71 @@
         }
 
         // ==================================================
-        // MENSAGEM
+        // MENSAGEM PERSONALIZADA POR STATUS E TIPO
         // ==================================================
         function getMensagem(item) {
             const nome = item.nome;
-            const status = getStatus(item.vencimento, item.pago);
+            const status = getStatusFinal(item);
             const dataReg = formatarData(item.data_registro);
             const venc = formatarDataSimples(item.vencimento);
             const valor = item.valor || 'Não informado';
             const servidor = item.servidor || '';
             
+            // 🔑 Termo correto: PAINEL para revenda, IPTV para cliente
+            const termoServico = item.tipo === 'revenda' ? 'painel' : 'acesso IPTV';
+            const termoMaiusculo = item.tipo === 'revenda' ? 'PAINEL' : 'ACESSO IPTV';
+            
             let cabecalho = '';
-            if(item.pago) {
-                cabecalho = `✅ *SUA ASSINATURA ESTÁ PAGA!*\n\nOlá *${nome}*, sua assinatura *${nomeEmpresa}* está em dia. Obrigado! 🙏\n\n`;
-            } else if(status === 'vencido') {
-                cabecalho = `❌ *SUA ASSINATURA ESTÁ VENCIDA!*\n\nOlá *${nome}*, sua assinatura *${nomeEmpresa}* está vencida. Regularize!\n\n`;
-            } else if(status === 'perto') {
-                cabecalho = `⚠️ *PRÓXIMA DO VENCIMENTO!*\n\nOlá *${nome}*, sua assinatura *${nomeEmpresa}* vence em breve (${venc}). Renove!\n\n`;
-            } else {
-                cabecalho = `✅ *SUA ASSINATURA ESTÁ EM DIA!*\n\nOlá *${nome}*, sua assinatura *${nomeEmpresa}* está em dia!\n\n`;
+            
+            if(status === 'pago') {
+                cabecalho = `✅ *PAGAMENTO CONFIRMADO!*\n\nOlá *${nome}*, tudo bem? Recebemos seu pagamento referente ao serviço *${nomeEmpresa}*. Sua assinatura está ativa e em dia! 🎉\n\n`;
+            } 
+            else if(status === 'naopago') {
+                cabecalho = `⚠️ *ATENÇÃO - PAGAMENTO PENDENTE!*\n\nOlá *${nome}*, tudo bem?\n\n`;
+                cabecalho += `❌ Identificamos que seu plano *${nomeEmpresa}* está *EM ATRASO*.\n\n`;
+                cabecalho += `🚨 *PAGUE SEU PLANO ANTES DE 24 HORAS, POIS SEU ${termoMaiusculo} SERÁ SUSPENSO!*\n\n`;
+                cabecalho += `Para regularizar, utilize os dados abaixo:\n\n`;
+            } 
+            else {
+                cabecalho = `✅ *SUA ASSINATURA ESTÁ EM DIA!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *${nomeEmpresa}* está ativa. Obrigado pela preferência! 🙏\n\n`;
             }
             
             let texto = cabecalho;
-            texto += `📋 *DADOS:*\n`;
-            texto += `📅 Reg: ${dataReg}\n`;
-            texto += `⏰ Venc: ${venc}\n`;
+            texto += `📋 *DADOS DO REGISTRO:*\n`;
+            texto += `📅 Registro: ${dataReg}\n`;
+            texto += `⏰ Vencimento: ${venc}\n`;
             texto += `💰 Valor: R$ ${valor}\n`;
             if(servidor) texto += `🖥️ Servidor: ${servidor}\n`;
             texto += `\n`;
             
             if(item.tipo === 'cliente' && (item.usuario || item.senha)) {
-                texto += `🔐 *ACESSO IPTV:*\n👤 ${item.usuario || 'N/A'}\n🔑 ${item.senha || 'N/A'}\n\n`;
+                texto += `🔐 *ACESSO IPTV:*\n👤 Usuário: ${item.usuario || 'N/A'}\n🔑 Senha: ${item.senha || 'N/A'}\n\n`;
             }
             if(item.tipo === 'revenda' && (item.usuario || item.senha)) {
-                texto += `🔐 *ACESSO PAINEL:*\n👤 ${item.usuario || 'N/A'}\n🔑 ${item.senha || 'N/A'}\n\n`;
+                texto += `🔐 *ACESSO AO PAINEL:*\n👤 Usuário: ${item.usuario || 'N/A'}\n🔑 Senha: ${item.senha || 'N/A'}\n\n`;
             }
             
-            if(!item.pago) {
+            if(status === 'naopago') {
                 if(config.modo === 'simples') {
-                    texto += `💳 *PAGAMENTO:*\n🏦 ${config.banco_simples || 'N/I'}\n👤 ${config.titular_simples || 'N/I'}\n🔑 Pix: ${config.pix_simples || 'N/I'}\n`;
+                    texto += `💳 *PAGUE AGORA - DADOS PARA PAGAMENTO:*\n`;
+                    texto += `🏦 Banco: ${config.banco_simples || 'Não informado'}\n`;
+                    texto += `👤 Titular: ${config.titular_simples || 'Não informado'}\n`;
+                    texto += `🔑 Chave Pix: ${config.pix_simples || 'Não informada'}\n`;
                 } else {
-                    texto += `💳 *BANCÁRIOS:*\n🏦 ${config.banco || 'N/I'}\n📍 Ag: ${config.agencia || 'N/I'}\n💳 Cc: ${config.conta || 'N/I'}\n👤 ${config.titular || 'N/I'}\n🔑 Pix: ${config.pix || 'N/I'}\n`;
+                    texto += `💳 *PAGUE AGORA - DADOS BANCÁRIOS:*\n`;
+                    texto += `🏦 Banco: ${config.banco || 'Não informado'}\n`;
+                    texto += `📍 Agência: ${config.agencia || 'Não informada'}\n`;
+                    texto += `💳 Conta: ${config.conta || 'Não informada'}\n`;
+                    texto += `👤 Titular: ${config.titular || 'Não informado'}\n`;
+                    texto += `🔑 Chave Pix: ${config.pix || 'Não informada'}\n`;
                 }
-            } else {
-                texto += `✅ *Pagamento Confirmado!* 🎉\n`;
+                texto += `\n⏰ *PRAZO: 24 HORAS*\n`;
+                texto += `🚨 Após este prazo, o ${termoServico} será suspenso automaticamente.\n`;
+            } else if(status === 'pago') {
+                texto += `✅ *Pagamento confirmado!* Obrigado! 🎉\n`;
             }
+            
+            texto += `\nQualquer dúvida estou à disposição! 🙏`;
             return texto;
         }
 
@@ -1061,7 +1146,7 @@
             const item = buscarItem(id);
             if(!item) return;
             const msg = getMensagem(item);
-            const status = getStatus(item.vencimento, item.pago);
+            const status = getStatusFinal(item);
             
             if(tipo === 'foto') gerarFaturaImagem(item, msg, status);
             else if(tipo === 'pdf') gerarFaturaPDF(item, msg, status);
@@ -1069,16 +1154,17 @@
 
         function gerarFaturaImagem(item, msg, status) {
             const canvas = document.createElement('canvas');
-            canvas.width = 950; canvas.height = 850;
+            canvas.width = 950; canvas.height = 950;
             const ctx = canvas.getContext('2d');
             
-            const grad = ctx.createLinearGradient(0, 0, 0, 850);
+            const grad = ctx.createLinearGradient(0, 0, 0, 950);
             grad.addColorStop(0, '#1a1a1a');
             grad.addColorStop(1, '#0a0a0a');
             ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 950, 850);
+            ctx.fillRect(0, 0, 950, 950);
             
-            ctx.fillStyle = item.pago ? '#27ae60' : (status === 'vencido' ? '#e74c3c' : (status === 'perto' ? '#f39c12' : '#25D366'));
+            const corStatus = status === 'pago' ? '#27ae60' : (status === 'naopago' ? '#8B0000' : '#25D366');
+            ctx.fillStyle = corStatus;
             ctx.fillRect(0, 0, 950, 8);
             
             if(logoEmpresa) {
@@ -1099,14 +1185,13 @@
                 ctx.fillStyle = '#888';
                 ctx.fillText('SISTEMA DE COBRANÇA', logoImg ? 140 : 40, 92);
                 
-                const statusText = item.pago ? '✅ PAGO' : (status === 'vencido' ? '❌ VENCIDO' : (status === 'perto' ? '⚠️ PERTO' : '✅ EM DIA'));
-                const statusColor = item.pago ? '#27ae60' : (status === 'vencido' ? '#e74c3c' : (status === 'perto' ? '#f39c12' : '#27ae60'));
-                ctx.fillStyle = statusColor;
-                ctx.fillRect(750, 40, 160, 50);
+                const statusText = status === 'pago' ? '✅ PAGO' : (status === 'naopago' ? '⚠️ NÃO PAGO' : '✅ EM DIA');
+                ctx.fillStyle = corStatus;
+                ctx.fillRect(720, 40, 190, 50);
                 ctx.fillStyle = '#fff';
                 ctx.font = 'bold 16px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(statusText, 830, 72);
+                ctx.fillText(statusText, 815, 72);
                 
                 ctx.strokeStyle = '#333';
                 ctx.beginPath();
@@ -1124,7 +1209,7 @@
                         ctx.clip();
                         ctx.drawImage(fotoImg, 50, 150, 140, 140);
                         ctx.restore();
-                        ctx.strokeStyle = statusColor;
+                        ctx.strokeStyle = corStatus;
                         ctx.lineWidth = 3;
                         ctx.beginPath();
                         ctx.arc(120, 220, 70, 0, Math.PI * 2);
@@ -1155,6 +1240,7 @@
                     ctx.fillText('📞 ' + item.telefone, 220, 228);
                     ctx.fillText('🖥️ ' + (item.servidor || 'N/A'), 220, 250);
                     
+                    // BLOCO DE CREDENCIAIS
                     ctx.fillStyle = '#0f0f0f';
                     ctx.fillRect(40, 310, 870, 90);
                     ctx.strokeStyle = '#32bcad';
@@ -1171,6 +1257,7 @@
                     ctx.fillText('Usuário: ' + (item.usuario || 'N/A'), 60, 370);
                     ctx.fillText('Senha: ' + (item.senha || 'N/A'), 500, 370);
                     
+                    // REGISTRO E VENCIMENTO
                     ctx.fillStyle = '#0f0f0f';
                     ctx.fillRect(40, 420, 870, 90);
                     ctx.strokeStyle = '#333';
@@ -1186,26 +1273,48 @@
                     ctx.font = '16px Arial';
                     ctx.fillStyle = '#32bcad';
                     ctx.fillText(formatarData(item.data_registro), 60, 485);
-                    ctx.fillStyle = status === 'vencido' ? '#e74c3c' : '#fff';
+                    ctx.fillStyle = status === 'naopago' ? '#ff6666' : '#fff';
                     ctx.fillText(formatarDataSimples(item.vencimento), 350, 485);
                     ctx.fillStyle = '#ffd700';
                     ctx.fillText('R$ ' + (item.valor || '0,00'), 650, 485);
                     
+                    // AVISO DE SUSPENSÃO (SE NÃO PAGO)
+                    if(status === 'naopago') {
+                        ctx.fillStyle = '#2e0e0e';
+                        ctx.fillRect(40, 530, 870, 80);
+                        ctx.strokeStyle = '#ff0000';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(40, 530, 870, 80);
+                        
+                        ctx.fillStyle = '#ff6666';
+                        ctx.font = 'bold 18px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('🚨 PAGUE ANTES DE 24 HORAS!', 475, 560);
+                        const termo = item.tipo === 'revenda' ? 'PAINEL' : 'ACESSO IPTV';
+                        ctx.font = 'bold 15px Arial';
+                        ctx.fillText('Seu ' + termo + ' será SUSPENSO após este prazo!', 475, 590);
+                        ctx.textAlign = 'left';
+                    }
+                    
+                    // MENSAGEM
+                    const yMsg = status === 'naopago' ? 630 : 530;
+                    const hMsg = status === 'naopago' ? 280 : 380;
+                    
                     ctx.fillStyle = '#0f0f0f';
-                    ctx.fillRect(40, 530, 870, 280);
+                    ctx.fillRect(40, yMsg, 870, hMsg);
                     ctx.strokeStyle = '#333';
-                    ctx.strokeRect(40, 530, 870, 280);
+                    ctx.strokeRect(40, yMsg, 870, hMsg);
                     
                     ctx.fillStyle = '#fff';
                     ctx.font = 'bold 14px Arial';
-                    ctx.fillText('💬 MENSAGEM:', 60, 560);
+                    ctx.fillText('💬 MENSAGEM:', 60, yMsg + 30);
                     
                     ctx.font = '12px Arial';
                     ctx.fillStyle = '#ccc';
                     const linhas = msg.split('\n');
-                    let y = 585;
+                    let y = yMsg + 55;
                     linhas.forEach(linha => {
-                        if(y < 800) {
+                        if(y < yMsg + hMsg - 20) {
                             ctx.fillText(linha.replace(/\*/g, '').substring(0, 100), 60, y);
                             y += 17;
                         }
@@ -1214,7 +1323,7 @@
                     ctx.fillStyle = '#555';
                     ctx.font = '11px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText('Gerado em ' + new Date().toLocaleString('pt-BR') + ' - ' + nomeEmpresa, 475, 830);
+                    ctx.fillText('Gerado em ' + new Date().toLocaleString('pt-BR') + ' - ' + nomeEmpresa, 475, 930);
                     
                     const dataUrl = canvas.toDataURL('image/png');
                     salvarHistorico(item.nome, 'Foto', item.id, dataUrl);
@@ -1229,9 +1338,10 @@
         }
 
         function gerarFaturaPDF(item, msg, status) {
-            const statusText = item.pago ? '✅ PAGO' : (status === 'vencido' ? '❌ VENCIDO' : (status === 'perto' ? '⚠️ PERTO' : '✅ EM DIA'));
-            const statusColor = item.pago ? '#27ae60' : (status === 'vencido' ? '#e74c3c' : (status === 'perto' ? '#f39c12' : '#27ae60'));
+            const statusText = status === 'pago' ? '✅ PAGO' : (status === 'naopago' ? '⚠️ NÃO PAGO' : '✅ EM DIA');
+            const statusColor = status === 'pago' ? '#27ae60' : (status === 'naopago' ? '#8B0000' : '#27ae60');
             const tituloCred = item.tipo === 'revenda' ? '🔐 ACESSO AO PAINEL' : '🔐 ACESSO IPTV';
+            const termo = item.tipo === 'revenda' ? 'PAINEL' : 'ACESSO IPTV';
             
             const win = window.open('', '_blank');
             win.document.write(`
@@ -1252,6 +1362,9 @@
                     .info-box { background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 15px 0; }
                     .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ddd; }
                     .valor { color: #ffd700; background: #1a1a1a; padding: 5px 10px; border-radius: 5px; }
+                    .aviso-suspensao { background: #2e0e0e; color: #fff; padding: 20px; border-radius: 10px; margin: 15px 0; border: 3px solid #ff0000; text-align: center; }
+                    .aviso-suspensao h3 { color: #ff6666; margin: 0 0 10px 0; font-size: 20px; }
+                    .aviso-suspensao p { margin: 5px 0; font-size: 15px; }
                     .msg-box { background: #1a1a1a; color: #fff; padding: 20px; border-radius: 10px; white-space: pre-wrap; font-size: 13px; line-height: 1.6; }
                     .footer { margin-top: 30px; text-align: center; color: #888; font-size: 11px; border-top: 1px solid #ddd; padding-top: 15px; }
                 </style></head>
@@ -1288,6 +1401,14 @@
                         <div class="info-row"><span>💰 Valor:</span><strong class="valor">R$ ${item.valor || '0,00'}</strong></div>
                         <div class="info-row"><span>📊 Status:</span><strong style="color:${statusColor};">${statusText}</strong></div>
                     </div>
+                    
+                    ${status === 'naopago' ? `
+                    <div class="aviso-suspensao">
+                        <h3>🚨 ATENÇÃO - PAGAMENTO PENDENTE 🚨</h3>
+                        <p><strong>PAGUE SEU PLANO ANTES DE 24 HORAS!</strong></p>
+                        <p>Seu <strong>${termo}</strong> será <strong>SUSPENSO</strong> após este prazo!</p>
+                    </div>
+                    ` : ''}
                     
                     <div class="msg-box">${msg.replace(/\*/g, '')}</div>
                     
@@ -1346,14 +1467,13 @@
         }
 
         // ==================================================
-        // BACKUP EXPORTAR / IMPORTAR
+        // BACKUP
         // ==================================================
         function exportarBackup() {
             const backup = {
-                versao: '3.0',
+                versao: '4.0',
                 data: new Date().toISOString(),
-                clientes, revendas, historico, config,
-                logoEmpresa, nomeEmpresa
+                clientes, revendas, historico, config, logoEmpresa, nomeEmpresa
             };
             const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -1368,7 +1488,7 @@
         async function importarBackup(input) {
             const file = input.files[0];
             if(!file) return;
-            if(!confirm("⚠️ Isso vai SUBSTITUIR todos os dados atuais. Continuar?")) { input.value = ''; return; }
+            if(!confirm("⚠️ Substituir TODOS os dados atuais?")) { input.value = ''; return; }
             
             const reader = new FileReader();
             reader.onload = async (e) => {
@@ -1390,7 +1510,7 @@
                     atualizarEstatisticas();
                     alert(`✅ Backup importado!\n${clientes.length} clientes, ${revendas.length} revendas.`);
                 } catch(err) {
-                    alert("❌ Erro ao importar: arquivo inválido!");
+                    alert("❌ Arquivo inválido!");
                 }
             };
             reader.readAsText(file);
@@ -1422,12 +1542,10 @@
             } catch(e) {}
         });
 
-        // Salvar ao trocar de aba do navegador
         document.addEventListener('visibilitychange', () => {
             if(document.visibilityState === 'hidden') salvarTudo();
         });
 
-        // Sincronização entre abas
         window.addEventListener('storage', (e) => {
             if(e.key && e.key.startsWith('tv_')) {
                 carregarTudo().then(() => {
@@ -1439,7 +1557,6 @@
             }
         });
 
-        // INICIAR
         init();
     </script>
 </body>
