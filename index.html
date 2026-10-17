@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0f0f0f">
-    <title>Sistema de Cobrança Ilimitado</title>
+    <meta name="theme-color" content="#0a0e27">
+    <title>Acesso ao Sistema</title>
     <style>
         :root {
             --bg: #0f0f0f; --card: #1a1a1a; --card2: #222; --text: #f0f0f0; --border: #333;
@@ -16,364 +16,685 @@
             --gold: #ffd700;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { overflow-x: hidden; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        h1, h2, h3, h4 { margin: 5px 0; }
-        
-        .sync-status { position: fixed; top: 5px; right: 5px; background: #27ae60; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.7em; font-weight: bold; z-index: 9999; transition: 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
-        .sync-status.salvando { background: #f39c12; }
-        .sync-status.erro { background: #e74c3c; }
-        
-        .logo { text-align: center; margin-bottom: 12px; padding-bottom: 10px; width: 100%; max-width: 1100px; display: flex; align-items: center; justify-content: center; gap: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
-        .logo img { max-height: 60px; }
-        .logo-text h1 { font-size: 1.8em; letter-spacing: 4px; text-transform: uppercase; background: linear-gradient(90deg, #fff, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo-text span { color: #888; font-size: 0.6em; letter-spacing: 2px; }
-        
-        .painel { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 12px; width: 100%; max-width: 1100px; }
-        .stat-card { background: linear-gradient(135deg, var(--card), var(--card2)); padding: 10px; border-radius: 8px; border-left: 4px solid var(--whatsapp); box-shadow: 0 3px 10px rgba(0,0,0,0.4); }
+        html, body { overflow-x: hidden; margin: 0; padding: 0; }
+
+        /* ============================================ */
+        /* TELA DE LOGIN */
+        /* ============================================ */
+        .login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a4e 25%, #4a1a6e 50%, #6e1a5e 75%, #0a0e27 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 99999; padding: 20px;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .login-box {
+            background: rgba(15, 15, 30, 0.85);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px; padding: 40px 30px;
+            width: 100%; max-width: 420px; text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 40px rgba(255,215,0,0.1);
+        }
+        .login-logo { margin-bottom: 20px; display: flex; justify-content: center; }
+        .login-logo img {
+            max-height: 100px; max-width: 90%;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.6));
+        }
+        .login-logo-text {
+            font-size: 1.8em; font-weight: bold; letter-spacing: 4px;
+            background: linear-gradient(90deg, #fff, #ffd700, #fff);
+            background-size: 200% auto; -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
+            animation: textShine 3s linear infinite; margin: 0;
+        }
+        @keyframes textShine { to { background-position: 200% center; } }
+        .login-subtitle {
+            color: #a0a0c0; font-size: 0.75em; letter-spacing: 3px;
+            margin-bottom: 30px; text-transform: uppercase;
+        }
+        .login-field { margin-bottom: 18px; text-align: left; }
+        .login-field label {
+            display: block; color: #ffd700; font-size: 0.8em;
+            margin-bottom: 6px; font-weight: bold; letter-spacing: 1px;
+        }
+        .login-field input {
+            width: 100%; padding: 14px 18px; border-radius: 12px;
+            border: 2px solid rgba(255,215,0,0.2);
+            background: rgba(10,10,20,0.8); color: white;
+            font-size: 1em; font-family: inherit;
+        }
+        .login-field input:focus {
+            outline: none; border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255,215,0,0.4);
+        }
+        .login-btn {
+            width: 100%; padding: 15px; margin-top: 10px;
+            background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
+            background-size: 200% auto; border: none; border-radius: 12px;
+            color: #0a0e27; font-size: 1.05em; font-weight: bold;
+            letter-spacing: 2px; cursor: pointer;
+            animation: btnShine 3s linear infinite;
+            box-shadow: 0 5px 20px rgba(255,215,0,0.4);
+        }
+        @keyframes btnShine { to { background-position: 200% center; } }
+        .login-error {
+            color: #ff6666; font-size: 0.85em; margin-top: 12px;
+            min-height: 20px; font-weight: bold;
+        }
+        .whatsapp-contact {
+            margin-top: 25px; padding-top: 20px;
+            border-top: 1px solid rgba(255,215,0,0.15);
+        }
+        .whatsapp-contact p {
+            color: #a0a0c0; font-size: 0.8em; margin: 0 0 12px 0; line-height: 1.4;
+        }
+        .whatsapp-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 10px; padding: 12px 24px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white; border-radius: 50px; text-decoration: none;
+            font-weight: bold; font-size: 0.95em; transition: 0.3s;
+            box-shadow: 0 5px 20px rgba(37,211,102,0.4);
+            border: none; cursor: pointer; font-family: inherit;
+        }
+        .whatsapp-btn:hover { transform: scale(1.05); }
+        .whatsapp-btn svg { width: 22px; height: 22px; fill: white; }
+        .whatsapp-number {
+            display: block; color: #25D366; font-size: 0.85em;
+            font-weight: bold; margin-top: 8px; letter-spacing: 1px;
+        }
+
+        /* ============================================ */
+        /* SISTEMA PRINCIPAL */
+        /* ============================================ */
+        .sistema { display: none; }
+        .sistema.ativo { display: block; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; min-height: 100vh; }
+
+        /* HEADER PROFISSIONAL */
+        .header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 15px; background: linear-gradient(135deg, #1a1a1a, #252525);
+            border-radius: 12px; margin-bottom: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            flex-wrap: wrap; gap: 10px;
+        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { max-height: 50px; }
+        .header-title {
+            font-size: 1.3em; font-weight: bold; letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, #ffd700);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .header-sub { font-size: 0.65em; color: #888; letter-spacing: 1px; display: block; }
+        .btn-sair {
+            background: linear-gradient(135deg, #c0392b, #8B0000);
+            color: white; padding: 8px 16px; border-radius: 8px;
+            font-size: 0.8em; font-weight: bold; border: none;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-sair:hover { transform: scale(1.05); }
+
+        /* PAINEL DE ESTATÍSTICAS */
+        .painel {
+            display: grid; gap: 10px; margin-bottom: 15px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .stat-card {
+            background: linear-gradient(135deg, var(--card), var(--card2));
+            padding: 12px; border-radius: 10px;
+            border-left: 4px solid var(--whatsapp);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
         .stat-card.rev { border-left-color: var(--telegram); }
         .stat-card.dinheiro { border-left-color: var(--gold); }
         .stat-card.pago { border-left-color: var(--emdia); }
-        .stat-card.pendente { border-left-color: var(--vencido); }
+        .stat-card.pendente { border-left-color: var(--perto); }
         .stat-card.naopago { border-left-color: var(--naopago); }
-        .stat-card h4 { margin: 0; font-size: 0.68em; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-card .num { font-size: 1.5em; font-weight: bold; color: white; margin: 3px 0; }
+        .stat-card h4 { margin: 0; font-size: 0.7em; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card .num { font-size: 1.4em; font-weight: bold; color: white; margin: 3px 0; }
         .stat-card .sub { font-size: 0.68em; color: #999; }
         .stat-card .num.gold { color: var(--gold); }
-        
-        .tabs { display: flex; gap: 5px; margin-bottom: 12px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 1100px; }
-        .tab-btn { background: var(--card); color: white; border: 1px solid var(--border); padding: 8px 12px; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.3s; font-size: 0.8em; flex: 1; min-width: 100px; max-width: 180px; }
-        .tab-btn.active, .tab-btn:hover { background: var(--primary); color: black; }
-        
-        .container { width: 100%; max-width: 1100px; background: var(--card); padding: 14px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: none; }
+
+        /* ABAS EM CARTÕES */
+        .tabs-cards {
+            display: grid; gap: 10px; margin-bottom: 15px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .tab-card {
+            background: linear-gradient(135deg, var(--card), var(--card2));
+            border: 2px solid var(--border); border-radius: 12px;
+            padding: 18px 12px; cursor: pointer; transition: 0.3s;
+            text-align: center; font-weight: bold; color: white;
+            font-family: inherit; font-size: 0.9em;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+        }
+        .tab-card .ico { font-size: 2em; }
+        .tab-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+        .tab-card.active {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #0a0e27; border-color: #ffd700;
+            box-shadow: 0 6px 20px rgba(255,215,0,0.4);
+        }
+
+        /* CONTEÚDO */
+        .container {
+            background: var(--card); padding: 16px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: none;
+            margin-bottom: 15px;
+        }
         .container.active { display: block; }
-        
-        .filtros { display: flex; gap: 5px; margin-bottom: 12px; flex-wrap: wrap; }
-        .filtro-btn { padding: 6px 12px; border-radius: 20px; border: 2px solid var(--border); background: transparent; color: white; cursor: pointer; font-weight: bold; font-size: 0.75em; transition: 0.2s; }
+
+        /* FORMULÁRIO */
+        .form-group { display: grid; gap: 10px; margin-bottom: 10px; grid-template-columns: 1fr; }
+        .form-group.tres { grid-template-columns: 1fr; }
+        .form-group.full { grid-template-columns: 1fr; }
+        label { display: block; margin-bottom: 4px; font-size: 0.78em; color: #aaa; }
+        input, select, textarea {
+            width: 100%; padding: 10px; border-radius: 8px;
+            border: 1px solid var(--border); background: #0a0a0a;
+            color: white; font-size: 0.9em; font-family: inherit;
+        }
+        input[type="file"] { padding: 6px; background: #222; }
+
+        /* BOTÕES DE AÇÃO EM CARTÕES */
+        .acoes-grid {
+            display: grid; gap: 8px; margin-top: 8px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .action-btn {
+            display: flex; align-items: center; justify-content: center;
+            gap: 6px; padding: 12px 8px; border-radius: 10px;
+            border: none; cursor: pointer; font-weight: bold;
+            color: white; font-family: inherit; font-size: 0.8em;
+            text-decoration: none; transition: 0.2s;
+            text-align: center;
+        }
+        .action-btn:hover { transform: scale(1.03); }
+        .action-btn:active { transform: scale(0.97); }
+        .action-btn .ico { font-size: 1.3em; }
+
+        .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
+        .btn-telegram { background: linear-gradient(135deg, #0088cc, #006699); }
+        .btn-email { background: linear-gradient(135deg, #3498db, #2874a6); }
+        .btn-messenger { background: linear-gradient(135deg, #0084FF, #0066cc); }
+        .btn-telefone { background: linear-gradient(135deg, #f1c40f, #d4ac0d); color: black; }
+        .btn-foto { background: linear-gradient(135deg, #9b59b6, #7d3c98); }
+        .btn-pdf { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .btn-pago { background: linear-gradient(135deg, #27ae60, #1e8449); }
+        .btn-naopago { background: linear-gradient(135deg, #8B0000, #c0392b); border: 2px solid #ff0000; }
+        .btn-edit { background: linear-gradient(135deg, #f39c12, #d68910); color: black; }
+        .btn-del { background: linear-gradient(135deg, #c0392b, #8B0000); }
+        .btn-salvar {
+            background: linear-gradient(135deg, #27ae60, #1e8449);
+            width: 100%; margin-top: 10px; padding: 14px;
+            font-size: 1em; border: none; border-radius: 10px;
+            color: white; font-weight: bold; cursor: pointer;
+            font-family: inherit;
+        }
+        .btn-salvar:hover { transform: scale(1.02); }
+        .btn-cancelar {
+            background: linear-gradient(135deg, #555, #333);
+            width: 100%; margin-top: 8px; padding: 12px;
+            border: none; border-radius: 10px; color: white;
+            font-weight: bold; cursor: pointer; font-family: inherit;
+        }
+
+        /* SELETOR DE STATUS */
+        .status-selector {
+            display: grid; gap: 8px; margin-top: 10px;
+            grid-template-columns: 1fr;
+            padding: 10px; background: #0a0a0a;
+            border-radius: 10px; border: 1px solid var(--border);
+        }
+        .status-selector .action-btn {
+            padding: 14px 10px; font-size: 0.85em;
+        }
+        .status-ativo-dia { box-shadow: 0 0 0 3px rgba(39,174,96,0.5); }
+        .status-ativo-pago { box-shadow: 0 0 0 3px rgba(255,215,0,0.5); }
+        .status-ativo-naopago { box-shadow: 0 0 0 3px rgba(255,0,0,0.5); }
+
+        /* FILTROS */
+        .filtros {
+            display: grid; gap: 6px; margin-bottom: 12px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .filtro-btn {
+            padding: 10px 8px; border-radius: 8px;
+            border: 2px solid var(--border); background: transparent;
+            color: white; cursor: pointer; font-weight: bold;
+            font-size: 0.78em; transition: 0.2s; font-family: inherit;
+        }
         .filtro-btn.ativo-dia { background: var(--emdia); border-color: var(--emdia); }
-        .filtro-btn.ativo-vencido { background: var(--vencido); border-color: var(--vencido); }
-        .filtro-btn.ativo-perto { background: var(--perto); border-color: var(--perto); color: black; }
         .filtro-btn.ativo-todos { background: var(--primary); border-color: var(--primary); color: black; }
         .filtro-btn.ativo-pago { background: var(--gold); border-color: var(--gold); color: black; }
         .filtro-btn.ativo-naopago { background: var(--naopago); border-color: var(--naopago); }
-        
-        .form-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .form-group.tres { grid-template-columns: 1fr 1fr 1fr; }
-        .form-group.full { grid-template-columns: 1fr; }
-        label { display: block; margin-bottom: 4px; font-size: 0.78em; color: #aaa; }
-        input, select, textarea { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid var(--border); background: #0a0a0a; color: white; font-size: 0.85em; font-family: inherit; }
-        input[type="file"] { padding: 5px; background: #222; }
-        
-        .btn { padding: 7px 11px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 4px; text-decoration: none; font-size: 0.75em; margin: 2px; }
-        .btn:hover { opacity: 0.85; transform: scale(1.03); }
-        .btn-salvar { background: #27ae60; width: 100%; margin-top: 8px; padding: 10px; font-size: 0.9em;}
-        .btn-edit { background: var(--edit); color: black; }
-        .btn-del { background: var(--danger2); }
-        .btn-whatsapp { background: var(--whatsapp); }
-        .btn-telegram { background: var(--telegram); }
-        .btn-foto { background: var(--foto); }
-        .btn-pdf { background: var(--pdf); }
-        .btn-email { background: var(--email); }
-        .btn-messenger { background: var(--messenger); }
-        .btn-telefone { background: var(--telefone); color: black; }
-        .btn-pago { background: var(--emdia); }
-        .btn-pendente { background: var(--perto); color: black; }
-        .btn-naopago { background: var(--naopago); border: 2px solid #ff0000; }
-        .btn-cancelar { background: #555; width: 100%; margin-top: 5px; }
-        .btn-export { background: #3498db; }
-        .btn-import { background: #9b59b6; }
-        
-        .lista-item { background: #252525; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; border-left: 4px solid var(--emdia); position: relative; }
-        .lista-item.vencido { border-left-color: var(--vencido); background: #2e1e1e; }
-        .lista-item.perto { border-left-color: var(--perto); background: #2e2a1e; }
+
+        /* LISTA */
+        .lista-item {
+            background: #252525; padding: 14px; border-radius: 10px;
+            margin-bottom: 12px; border-left: 4px solid var(--emdia);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
         .lista-item.naopago { border-left-color: var(--naopago); background: #2e0e0e; }
         .lista-item.revenda { border-left-color: var(--telegram); }
         .lista-item.historico { border-left-color: var(--foto); }
         .lista-item.pago-ok { border-left-color: var(--gold); background: #2a2a1a; }
-        
-        .lista-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
-        .perfil-box { display: flex; gap: 10px; align-items: center; flex: 1; min-width: 200px; }
-        .perfil-foto { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); background: #111; }
-        .perfil-foto-vazia { width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5em; border: 2px solid var(--border); }
-        .lista-info strong { display: block; font-size: 0.95em; }
-        .lista-info small { color: #aaa; display: block; margin-top: 2px; font-size: 0.75em; }
-        
-        .badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 0.65em; font-weight: bold; margin-left: 5px; }
+
+        .lista-header {
+            display: flex; justify-content: space-between;
+            align-items: flex-start; gap: 10px; flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .perfil-box { display: flex; gap: 10px; align-items: center; flex: 1; min-width: 100%; }
+        .perfil-foto {
+            width: 55px; height: 55px; border-radius: 50%;
+            object-fit: cover; border: 2px solid var(--border); background: #111;
+        }
+        .perfil-foto-vazia {
+            width: 55px; height: 55px; border-radius: 50%;
+            background: #333; display: flex; align-items: center;
+            justify-content: center; font-size: 1.6em; border: 2px solid var(--border);
+        }
+        .lista-info { flex: 1; min-width: 0; }
+        .lista-info strong { display: block; font-size: 1em; margin-bottom: 3px; }
+        .lista-info small { color: #aaa; display: block; margin-top: 2px; font-size: 0.75em; word-break: break-word; }
+
+        .badge {
+            display: inline-block; padding: 3px 8px; border-radius: 10px;
+            font-size: 0.62em; font-weight: bold; margin-left: 5px;
+        }
         .badge.dia { background: var(--emdia); color: white; }
-        .badge.venc { background: var(--vencido); color: white; }
-        .badge.perto { background: var(--perto); color: black; }
         .badge.pago { background: var(--gold); color: black; }
         .badge.naopago { background: var(--naopago); color: white; border: 1px solid #ff0000; }
-        
-        .acoes { display: flex; gap: 4px; flex-wrap: wrap; }
-        
-        .config-box { background: #0f0f0f; padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px; }
-        .aviso { background: linear-gradient(90deg, #f39c12, #e67e22); color: black; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 12px; font-size: 0.82em; font-weight: bold; }
-        .aviso-verde { background: linear-gradient(90deg, #27ae60, #2ecc71); color: white; }
-        .radio-group { display: flex; gap: 15px; margin-bottom: 12px; padding: 10px; background: #1a1a1a; border-radius: 5px; flex-wrap: wrap; }
-        .radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: white; font-size: 0.88em; }
-        
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background: var(--card); padding: 20px; border-radius: 10px; width: 100%; max-width: 600px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
-        
-        .historico-preview { width: 100%; border-radius: 5px; margin-top: 10px; border: 1px solid #444; }
-        .empty-msg { text-align: center; color: #666; padding: 20px; font-style: italic; font-size: 0.88em; }
-        
-        /* SELETOR DE STATUS (3 BOTÕES) */
-        .status-selector {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-            padding: 10px;
-            background: #0a0a0a;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+
+        .info-credenciais {
+            background: #0a0a0a; padding: 8px; border-radius: 6px;
+            margin-top: 6px; border-left: 3px solid var(--telegram);
+            font-size: 0.72em;
         }
-        .status-selector .btn { flex: 1; min-width: 110px; padding: 10px 8px; font-size: 0.8em; }
-        .status-ativo-dia { background: var(--emdia) !important; box-shadow: 0 0 0 3px rgba(39,174,96,0.3); }
-        .status-ativo-pago { background: var(--gold) !important; color: black !important; box-shadow: 0 0 0 3px rgba(255,215,0,0.3); }
-        .status-ativo-naopago { background: var(--naopago) !important; border: 2px solid #ff0000 !important; box-shadow: 0 0 0 3px rgba(139,0,0,0.5); }
-        .status-ativo-naopago::before { content: '⚠️ '; }
-        
-        .info-credenciais { background: #0a0a0a; padding: 8px; border-radius: 5px; margin-top: 5px; border-left: 3px solid var(--telegram); font-size: 0.75em; }
         .info-credenciais strong { color: #32bcad; }
-        
-        .diagnostico { background: #0a0a0a; padding: 10px; border-radius: 5px; border: 1px solid #333; font-size: 0.8em; color: #888; margin-top: 10px; }
+
+        /* CONFIG */
+        .config-box {
+            background: #0f0f0f; padding: 14px; border-radius: 10px;
+            border: 1px solid var(--border); margin-bottom: 12px;
+        }
+        .config-box h3 { font-size: 1em; margin-bottom: 10px; color: var(--gold); }
+        .aviso-verde {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            color: white; padding: 12px; border-radius: 8px;
+            text-align: center; margin-bottom: 12px;
+            font-size: 0.85em; font-weight: bold;
+        }
+        .radio-group {
+            display: grid; gap: 10px; padding: 10px;
+            background: #1a1a1a; border-radius: 8px;
+        }
+        .radio-group label {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; color: white; font-size: 0.9em;
+        }
+        .radio-group input[type="radio"] { width: auto; }
+
+        /* MODAL */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            z-index: 1000; justify-content: center; align-items: center; padding: 15px;
+        }
+        .modal-content {
+            background: var(--card); padding: 20px; border-radius: 12px;
+            width: 100%; max-width: 600px; border: 1px solid var(--border);
+            max-height: 90vh; overflow-y: auto;
+        }
+        .historico-preview { width: 100%; border-radius: 8px; margin-top: 10px; border: 1px solid #444; }
+        .empty-msg { text-align: center; color: #666; padding: 25px; font-style: italic; font-size: 0.88em; }
+        .diagnostico {
+            background: #0a0a0a; padding: 12px; border-radius: 8px;
+            border: 1px solid #333; font-size: 0.85em; color: #888;
+            margin-top: 10px; text-align: center;
+        }
         .diagnostico span { color: #32bcad; font-weight: bold; }
-        
-        @media (max-width: 900px) { .logo-text h1 { font-size: 1.5em; } }
-        @media (max-width: 700px) {
-            body { padding: 8px; }
-            .form-group, .form-group.tres { grid-template-columns: 1fr; }
-            .logo-text h1 { font-size: 1.3em; }
-            .stat-card .num { font-size: 1.3em; }
-            .tab-btn { font-size: 0.75em; padding: 7px 10px; }
-            .btn { padding: 6px 9px; font-size: 0.72em; }
-            .painel { grid-template-columns: repeat(2, 1fr); }
-            .perfil-box { min-width: 100%; }
-            .status-selector .btn { min-width: 90px; font-size: 0.72em; }
+
+        .sync-status {
+            position: fixed; top: 5px; right: 5px;
+            background: #27ae60; color: white; padding: 5px 10px;
+            border-radius: 15px; font-size: 0.7em; font-weight: bold;
+            z-index: 9999; box-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
-        @media (max-width: 500px) {
-            .logo-text h1 { font-size: 1.1em; }
-            .stat-card .num { font-size: 1.1em; }
-            .acoes .btn { flex: 1; min-width: 70px; font-size: 0.68em; padding: 6px 4px; }
-            .status-selector { flex-direction: column; }
-            .status-selector .btn { width: 100%; min-width: auto; }
+        .sync-status.salvando { background: #f39c12; }
+        .sync-status.erro { background: #e74c3c; }
+
+        /* ============================================ */
+        /* COMPUTADOR / NOTEBOOK (>= 768px) */
+        /* ============================================ */
+        @media (min-width: 768px) {
+            body { padding: 15px 25px; max-width: 1400px; margin: 0 auto; }
+            
+            .painel { grid-template-columns: repeat(6, 1fr); gap: 12px; }
+            .stat-card .num { font-size: 1.6em; }
+            
+            .tabs-cards { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+            .tab-card { padding: 20px 15px; font-size: 0.95em; }
+            .tab-card .ico { font-size: 2.2em; }
+            
+            .form-group { grid-template-columns: 1fr 1fr; }
+            .form-group.tres { grid-template-columns: 1fr 1fr 1fr; }
+            
+            .acoes-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+            .action-btn { padding: 12px 10px; font-size: 0.82em; }
+            
+            .status-selector { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            
+            .filtros { grid-template-columns: repeat(5, 1fr); }
+            
+            .perfil-box { min-width: 200px; }
         }
-        @media (min-width: 1200px) { .painel { grid-template-columns: repeat(6, 1fr); } }
-        @media (hover: none) { .btn:active { transform: scale(0.95); } }
+
+        /* ============================================ */
+        /* TELA MÉDIA (tablet - 500-767px) */
+        /* ============================================ */
+        @media (min-width: 500px) and (max-width: 767px) {
+            .painel { grid-template-columns: repeat(3, 1fr); }
+            .tabs-cards { grid-template-columns: repeat(2, 1fr); }
+            .acoes-grid { grid-template-columns: repeat(3, 1fr); }
+            .status-selector { grid-template-columns: 1fr; }
+            .form-group { grid-template-columns: 1fr 1fr; }
+            .filtros { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        /* ============================================ */
+        /* CELULAR PEQUENO (< 400px) */
+        /* ============================================ */
+        @media (max-width: 400px) {
+            .painel { grid-template-columns: 1fr 1fr; }
+            .tabs-cards { grid-template-columns: 1fr 1fr; }
+            .acoes-grid { grid-template-columns: 1fr 1fr; }
+            .header-title { font-size: 1em; letter-spacing: 1px; }
+            .login-logo-text { font-size: 1.4em; letter-spacing: 2px; }
+            .login-box { padding: 30px 20px; }
+            .perfil-foto, .perfil-foto-vazia { width: 45px; height: 45px; }
+            .action-btn { font-size: 0.72em; padding: 10px 6px; }
+        }
+
+        /* ============================================ */
+        /* ORIENTAÇÃO HORIZONTAL EM CELULAR */
+        /* ============================================ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .painel { grid-template-columns: repeat(4, 1fr); }
+            .tabs-cards { grid-template-columns: repeat(4, 1fr); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="sync-status" id="sync-status">💾 Salvo</div>
+    <!-- TELA DE LOGIN -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-box">
+            <div class="login-logo" id="login-logo-container">
+                <h1 class="login-logo-text" id="login-logo-text">TV NOVA JUAREZ</h1>
+            </div>
+            <p class="login-subtitle">Sistema de Cobrança</p>
 
-    <div class="logo">
-        <div class="logo-text">
-            <h1 id="nome-empresa-header">TV NOVA JUAREZ</h1>
-            <span>SISTEMA ILIMITADO • SINCRONIZADO</span>
+            <div class="login-field">
+                <label>👤 USUÁRIO</label>
+                <input type="text" id="login-user" placeholder="Digite seu usuário" autocomplete="off">
+            </div>
+
+            <div class="login-field">
+                <label>🔒 SENHA</label>
+                <input type="password" id="login-pass" placeholder="Digite sua senha" autocomplete="off">
+            </div>
+
+            <button class="login-btn" onclick="fazerLogin()">🔓 ENTRAR NO SISTEMA</button>
+            <div class="login-error" id="login-error"></div>
+
+            <div class="whatsapp-contact">
+                <p>🔐 Não tem acesso?<br>Entre em contato com o dono e peça seu acesso!</p>
+                <button class="whatsapp-btn" onclick="abrirWhatsDono()">
+                    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Falar com o Dono
+                </button>
+                <span class="whatsapp-number">📱 (21) 97751-9001</span>
+            </div>
         </div>
     </div>
 
-    <!-- PAINEL DE ESTATÍSTICAS -->
-    <div class="painel">
-        <div class="stat-card">
-            <h4>👤 Total Clientes</h4>
-            <div class="num" id="stat-cli-total">0</div>
-            <div class="sub"><span style="color:#27ae60;" id="stat-cli-dia">0</span> dia · <span style="color:#ffd700;" id="stat-cli-pago">0</span> pago · <span style="color:#8B0000;" id="stat-cli-naopago">0</span> ñ pago</div>
-        </div>
-        <div class="stat-card rev">
-            <h4>🏢 Total Revendas</h4>
-            <div class="num" id="stat-rev-total">0</div>
-            <div class="sub"><span style="color:#27ae60;" id="stat-rev-dia">0</span> dia · <span style="color:#ffd700;" id="stat-rev-pago">0</span> pago · <span style="color:#8B0000;" id="stat-rev-naopago">0</span> ñ pago</div>
-        </div>
-        <div class="stat-card dinheiro">
-            <h4>💰 Total a Receber</h4>
-            <div class="num gold" id="stat-total-valor">R$ 0,00</div>
-            <div class="sub">Todos os registros</div>
-        </div>
-        <div class="stat-card pago">
-            <h4>✅ Já Recebido</h4>
-            <div class="num" id="stat-valor-pago" style="color:#27ae60;">R$ 0,00</div>
-            <div class="sub">Confirmados</div>
-        </div>
-        <div class="stat-card pendente">
-            <h4>⏳ Pendente</h4>
-            <div class="num" id="stat-valor-pendente" style="color:#f39c12;">R$ 0,00</div>
-            <div class="sub">Em dia</div>
-        </div>
-        <div class="stat-card naopago">
-            <h4>⚠️ Não Pago</h4>
-            <div class="num" id="stat-valor-naopago" style="color:#ff6666;">R$ 0,00</div>
-            <div class="sub">Atrasado</div>
-        </div>
-    </div>
+    <!-- SISTEMA PRINCIPAL -->
+    <div class="sistema" id="sistema">
+        <div class="sync-status" id="sync-status">💾 Salvo</div>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="abrirAba('clientes')">👤 Clientes</button>
-        <button class="tab-btn" onclick="abrirAba('revendas')">🏢 Revendas</button>
-        <button class="tab-btn" onclick="abrirAba('historico')">📂 Histórico</button>
-        <button class="tab-btn" onclick="abrirAba('config')">⚙️ Config</button>
-    </div>
-
-    <!-- CLIENTES -->
-    <div id="clientes" class="container active">
-        <h2 id="titulo-cliente">Cadastrar Cliente</h2>
-        <input type="hidden" id="cli_id_edit">
-        <div class="form-group">
-            <div><label>Nome</label><input type="text" id="cli_nome"></div>
-            <div><label>Sobrenome</label><input type="text" id="cli_sobrenome"></div>
-            <div><label>E-mail</label><input type="email" id="cli_email"></div>
-            <div><label>Telefone (WhatsApp)</label><input type="text" id="cli_telefone" placeholder="11999999999" inputmode="numeric"></div>
-            <div><label>Servidor</label><input type="text" id="cli_servidor"></div>
-            <div><label>📸 Foto de Perfil</label><input type="file" id="cli_foto" accept="image/*" onchange="previewFoto(this, 'preview-cli')"></div>
-        </div>
-        
-        <h3 style="color:#32bcad; margin-top:15px;">🔐 Dados de Acesso IPTV</h3>
-        <div class="form-group">
-            <div><label>Usuário IPTV</label><input type="text" id="cli_usuario" placeholder="usuario_iptv"></div>
-            <div><label>Senha IPTV</label><input type="text" id="cli_senha" placeholder="senha123"></div>
-        </div>
-        
-        <div class="form-group tres">
-            <div><label>📅 Registro</label><input type="datetime-local" id="cli_data_registro" readonly style="background:#0a0a0a;"></div>
-            <div><label>📅 Vencimento</label><input type="date" id="cli_vencimento"></div>
-            <div><label>💰 Valor (R$)</label><input type="text" id="cli_valor" placeholder="49,90" inputmode="decimal"></div>
-        </div>
-        
-        <h3 style="color:#ffd700; margin-top:15px;">📊 Status do Cliente</h3>
-        <div class="status-selector" id="status-selector-cli">
-            <button type="button" class="btn btn-pago" onclick="selecionarStatus('cli', 'dia')" id="status-cli-dia">✅ Em Dia</button>
-            <button type="button" class="btn btn-pendente" onclick="selecionarStatus('cli', 'naopago')" id="status-cli-naopago">⚠️ Não Foi Pago</button>
-            <button type="button" class="btn btn-pago" onclick="selecionarStatus('cli', 'pago')" id="status-cli-pago">💰 Pago</button>
-        </div>
-        
-        <div id="preview-cli" style="text-align:center;"></div>
-        <button class="btn btn-salvar" onclick="salvarCliente()" id="btn-salvar-cli">💾 Salvar Cliente</button>
-        <button class="btn btn-cancelar" onclick="cancelarEdicaoCliente()" id="btn-cancelar-cli" style="display:none;">❌ Cancelar Edição</button>
-
-        <h3 style="margin-top: 20px;">📋 Lista de Clientes</h3>
-        <div class="filtros">
-            <button class="filtro-btn ativo-todos" onclick="filtrarClientes('todos', this)">📋 Todos</button>
-            <button class="filtro-btn" onclick="filtrarClientes('dia', this)">✅ Em Dia</button>
-            <button class="filtro-btn" onclick="filtrarClientes('naopago', this)">⚠️ Não Pago</button>
-            <button class="filtro-btn" onclick="filtrarClientes('pago', this)">💰 Pagos</button>
-        </div>
-        <div id="lista-clientes"></div>
-    </div>
-
-    <!-- REVENDAS -->
-    <div id="revendas" class="container">
-        <h2 id="titulo-revenda">Cadastrar Revenda</h2>
-        <input type="hidden" id="rev_id_edit">
-        <div class="form-group">
-            <div><label>Nome</label><input type="text" id="rev_nome"></div>
-            <div><label>Sobrenome</label><input type="text" id="rev_sobrenome"></div>
-            <div><label>E-mail</label><input type="email" id="rev_email"></div>
-            <div><label>Telefone</label><input type="text" id="rev_telefone" placeholder="11999999999" inputmode="numeric"></div>
-            <div><label>Servidor</label><input type="text" id="rev_servidor"></div>
-            <div><label>📸 Foto/Logo</label><input type="file" id="rev_foto" accept="image/*" onchange="previewFoto(this, 'preview-rev')"></div>
-        </div>
-        
-        <h3 style="color:#32bcad; margin-top:15px;">🔐 Dados de Acesso ao Painel</h3>
-        <div class="form-group">
-            <div><label>Usuário do Painel</label><input type="text" id="rev_usuario" placeholder="usuario_painel"></div>
-            <div><label>Senha do Painel</label><input type="text" id="rev_senha" placeholder="senha_painel"></div>
-        </div>
-        
-        <div class="form-group tres">
-            <div><label>📅 Registro</label><input type="datetime-local" id="rev_data_registro" readonly style="background:#0a0a0a;"></div>
-            <div><label>📅 Vencimento</label><input type="date" id="rev_vencimento"></div>
-            <div><label>💰 Valor (R$)</label><input type="text" id="rev_valor" placeholder="99,90" inputmode="decimal"></div>
-        </div>
-        
-        <h3 style="color:#ffd700; margin-top:15px;">📊 Status da Revenda</h3>
-        <div class="status-selector" id="status-selector-rev">
-            <button type="button" class="btn btn-pago" onclick="selecionarStatus('rev', 'dia')" id="status-rev-dia">✅ Em Dia</button>
-            <button type="button" class="btn btn-pendente" onclick="selecionarStatus('rev', 'naopago')" id="status-rev-naopago">⚠️ Não Foi Pago</button>
-            <button type="button" class="btn btn-pago" onclick="selecionarStatus('rev', 'pago')" id="status-rev-pago">💰 Pago</button>
-        </div>
-        
-        <div id="preview-rev" style="text-align:center;"></div>
-        <button class="btn btn-salvar" onclick="salvarRevenda()" id="btn-salvar-rev">💾 Salvar Revenda</button>
-        <button class="btn btn-cancelar" onclick="cancelarEdicaoRevenda()" id="btn-cancelar-rev" style="display:none;">❌ Cancelar Edição</button>
-
-        <h3 style="margin-top: 20px;">📋 Lista de Revendas</h3>
-        <div class="filtros">
-            <button class="filtro-btn ativo-todos" onclick="filtrarRevendas('todos', this)">📋 Todas</button>
-            <button class="filtro-btn" onclick="filtrarRevendas('dia', this)">✅ Em Dia</button>
-            <button class="filtro-btn" onclick="filtrarRevendas('naopago', this)">⚠️ Não Pago</button>
-            <button class="filtro-btn" onclick="filtrarRevendas('pago', this)">💰 Pagas</button>
-        </div>
-        <div id="lista-revendas"></div>
-    </div>
-
-    <!-- HISTÓRICO -->
-    <div id="historico" class="container">
-        <h2>📂 Histórico de Cobranças</h2>
-        <div id="lista-historico"></div>
-    </div>
-
-    <!-- CONFIGURAÇÕES -->
-    <div id="config" class="container">
-        <h2>⚙️ Configurações do Dono</h2>
-        <div class="aviso aviso-verde">✅ SISTEMA ILIMITADO - Dados permanentes e sincronizados.</div>
-        
-        <div class="config-box">
-            <h3>🏢 Nome da Empresa</h3>
-            <input type="text" id="cfg_nome_empresa" placeholder="Ex: TV NOVA JUAREZ" maxlength="50">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <div id="header-logo-container"></div>
+                <div>
+                    <div class="header-title" id="nome-empresa-header">TV NOVA JUAREZ</div>
+                    <span class="header-sub">SISTEMA DE COBRANÇA</span>
+                </div>
+            </div>
+            <button class="btn-sair" onclick="sair()">🚪 Sair</button>
         </div>
 
-        <div class="config-box">
-            <h3>🖼️ Logo da Empresa</h3>
-            <input type="file" id="cfg_logo_file" accept="image/*" onchange="carregarLogo(this)">
-            <div id="logo-preview" style="text-align:center; margin-top:10px;"></div>
-        </div>
-
-        <div class="config-box">
-            <h3>Modo de Dados Bancários</h3>
-            <div class="radio-group">
-                <label><input type="radio" name="modo_banco" value="completo" onchange="mudarModoBanco()"> Completos</label>
-                <label><input type="radio" name="modo_banco" value="simples" onchange="mudarModoBanco()"> Apenas Pix + Nome</label>
+        <!-- PAINEL -->
+        <div class="painel">
+            <div class="stat-card">
+                <h4>👤 Clientes</h4>
+                <div class="num" id="stat-cli-total">0</div>
+                <div class="sub"><span style="color:#27ae60;" id="stat-cli-dia">0</span>D · <span style="color:#ffd700;" id="stat-cli-pago">0</span>P · <span style="color:#ff6666;" id="stat-cli-naopago">0</span>Ñ</div>
+            </div>
+            <div class="stat-card rev">
+                <h4>🏢 Revendas</h4>
+                <div class="num" id="stat-rev-total">0</div>
+                <div class="sub"><span style="color:#27ae60;" id="stat-rev-dia">0</span>D · <span style="color:#ffd700;" id="stat-rev-pago">0</span>P · <span style="color:#ff6666;" id="stat-rev-naopago">0</span>Ñ</div>
+            </div>
+            <div class="stat-card dinheiro">
+                <h4>💰 Total</h4>
+                <div class="num gold" id="stat-total-valor">R$ 0</div>
+            </div>
+            <div class="stat-card pago">
+                <h4>✅ Recebido</h4>
+                <div class="num" id="stat-valor-pago" style="color:#27ae60;">R$ 0</div>
+            </div>
+            <div class="stat-card pendente">
+                <h4>⏳ Pendente</h4>
+                <div class="num" id="stat-valor-pendente" style="color:#f39c12;">R$ 0</div>
+            </div>
+            <div class="stat-card naopago">
+                <h4>⚠️ Não Pago</h4>
+                <div class="num" id="stat-valor-naopago" style="color:#ff6666;">R$ 0</div>
             </div>
         </div>
 
-        <div class="config-box" id="box-completo">
-            <h3>Dados Bancários Completos</h3>
+        <!-- ABAS EM CARTÕES -->
+        <div class="tabs-cards">
+            <button class="tab-card active" onclick="abrirAba('clientes', this)">
+                <span class="ico">👤</span>
+                <span>Clientes</span>
+            </button>
+            <button class="tab-card" onclick="abrirAba('revendas', this)">
+                <span class="ico">🏢</span>
+                <span>Revendas</span>
+            </button>
+            <button class="tab-card" onclick="abrirAba('historico', this)">
+                <span class="ico">📂</span>
+                <span>Histórico</span>
+            </button>
+            <button class="tab-card" onclick="abrirAba('config', this)">
+                <span class="ico">⚙️</span>
+                <span>Config</span>
+            </button>
+        </div>
+
+        <!-- CLIENTES -->
+        <div id="clientes" class="container active">
+            <h2 id="titulo-cliente" style="color:var(--gold); font-size:1.2em; margin-bottom:12px;">➕ Cadastrar Cliente</h2>
+            <input type="hidden" id="cli_id_edit">
+            
             <div class="form-group">
-                <div><label>Banco</label><input type="text" id="cfg_banco"></div>
-                <div><label>Agência</label><input type="text" id="cfg_agencia"></div>
-                <div><label>Conta</label><input type="text" id="cfg_conta"></div>
-                <div><label>Titular</label><input type="text" id="cfg_titular"></div>
-                <div class="full"><label>Chave Pix</label><input type="text" id="cfg_pix"></div>
+                <div><label>Nome</label><input type="text" id="cli_nome" placeholder="Nome"></div>
+                <div><label>Sobrenome</label><input type="text" id="cli_sobrenome" placeholder="Sobrenome"></div>
+                <div><label>E-mail</label><input type="email" id="cli_email" placeholder="email@exemplo.com"></div>
+                <div><label>Telefone WhatsApp</label><input type="text" id="cli_telefone" placeholder="11999999999" inputmode="numeric"></div>
+                <div><label>Servidor</label><input type="text" id="cli_servidor" placeholder="Servidor"></div>
+                <div><label>📸 Foto de Perfil</label><input type="file" id="cli_foto" accept="image/*" onchange="previewFoto(this, 'preview-cli')"></div>
             </div>
-        </div>
 
-        <div class="config-box" id="box-simples" style="display:none;">
-            <h3>Dados Simplificados</h3>
+            <h3 style="color:#32bcad; margin-top:15px; font-size:1em;">🔐 Acesso IPTV</h3>
             <div class="form-group">
-                <div><label>Banco (Pix)</label><input type="text" id="cfg_banco_simples"></div>
-                <div><label>Titular</label><input type="text" id="cfg_titular_simples"></div>
-                <div class="full"><label>Chave Pix</label><input type="text" id="cfg_pix_simples"></div>
+                <div><label>Usuário IPTV</label><input type="text" id="cli_usuario" placeholder="usuario"></div>
+                <div><label>Senha IPTV</label><input type="text" id="cli_senha" placeholder="senha"></div>
             </div>
+
+            <div class="form-group tres">
+                <div><label>📅 Registro</label><input type="datetime-local" id="cli_data_registro" readonly style="background:#0a0a0a;"></div>
+                <div><label>📅 Vencimento</label><input type="date" id="cli_vencimento"></div>
+                <div><label>💰 Valor (R$)</label><input type="text" id="cli_valor" placeholder="49,90" inputmode="decimal"></div>
+            </div>
+
+            <h3 style="color:#ffd700; margin-top:15px; font-size:1em;">📊 Status</h3>
+            <div class="status-selector" id="status-selector-cli">
+                <button type="button" class="action-btn btn-pago" onclick="selecionarStatus('cli', 'dia')" id="status-cli-dia">✅ Em Dia</button>
+                <button type="button" class="action-btn btn-naopago" onclick="selecionarStatus('cli', 'naopago')" id="status-cli-naopago">⚠️ Não Pago</button>
+                <button type="button" class="action-btn btn-pago" onclick="selecionarStatus('cli', 'pago')" id="status-cli-pago">💰 Pago</button>
+            </div>
+
+            <div id="preview-cli" style="text-align:center;"></div>
+            <button class="btn-salvar" onclick="salvarCliente()" id="btn-salvar-cli">💾 Salvar Cliente</button>
+            <button class="btn-cancelar" onclick="cancelarEdicaoCliente()" id="btn-cancelar-cli" style="display:none;">❌ Cancelar Edição</button>
+
+            <h3 style="margin-top: 20px; color:var(--gold); font-size:1.1em;">📋 Lista de Clientes</h3>
+            <div class="filtros">
+                <button class="filtro-btn ativo-todos" onclick="filtrarClientes('todos', this)">📋 Todos</button>
+                <button class="filtro-btn" onclick="filtrarClientes('dia', this)">✅ Em Dia</button>
+                <button class="filtro-btn" onclick="filtrarClientes('naopago', this)">⚠️ Não Pago</button>
+                <button class="filtro-btn" onclick="filtrarClientes('pago', this)">💰 Pagos</button>
+            </div>
+            <div id="lista-clientes"></div>
         </div>
 
-        <div class="config-box">
-            <h3>💾 Backup e Restauração</h3>
-            <button class="btn btn-export" onclick="exportarBackup()" style="width:100%; margin-top:8px;">📥 Exportar Backup (JSON)</button>
-            <label style="display:block; margin-top:10px; cursor:pointer; padding:10px; background:#9b59b6; border-radius:5px; text-align:center; font-weight:bold; color:white; font-size:0.85em;">
-                📤 Importar Backup
-                <input type="file" id="import_file" accept=".json" onchange="importarBackup(this)" style="display:none;">
-            </label>
+        <!-- REVENDAS -->
+        <div id="revendas" class="container">
+            <h2 id="titulo-revenda" style="color:var(--gold); font-size:1.2em; margin-bottom:12px;">➕ Cadastrar Revenda</h2>
+            <input type="hidden" id="rev_id_edit">
+            
+            <div class="form-group">
+                <div><label>Nome</label><input type="text" id="rev_nome" placeholder="Nome"></div>
+                <div><label>Sobrenome</label><input type="text" id="rev_sobrenome" placeholder="Sobrenome"></div>
+                <div><label>E-mail</label><input type="email" id="rev_email" placeholder="email@exemplo.com"></div>
+                <div><label>Telefone</label><input type="text" id="rev_telefone" placeholder="11999999999" inputmode="numeric"></div>
+                <div><label>Servidor</label><input type="text" id="rev_servidor" placeholder="Servidor"></div>
+                <div><label>📸 Foto/Logo</label><input type="file" id="rev_foto" accept="image/*" onchange="previewFoto(this, 'preview-rev')"></div>
+            </div>
+
+            <h3 style="color:#32bcad; margin-top:15px; font-size:1em;">🔐 Acesso ao Painel</h3>
+            <div class="form-group">
+                <div><label>Usuário do Painel</label><input type="text" id="rev_usuario" placeholder="usuario"></div>
+                <div><label>Senha do Painel</label><input type="text" id="rev_senha" placeholder="senha"></div>
+            </div>
+
+            <div class="form-group tres">
+                <div><label>📅 Registro</label><input type="datetime-local" id="rev_data_registro" readonly style="background:#0a0a0a;"></div>
+                <div><label>📅 Vencimento</label><input type="date" id="rev_vencimento"></div>
+                <div><label>💰 Valor (R$)</label><input type="text" id="rev_valor" placeholder="99,90" inputmode="decimal"></div>
+            </div>
+
+            <h3 style="color:#ffd700; margin-top:15px; font-size:1em;">📊 Status</h3>
+            <div class="status-selector" id="status-selector-rev">
+                <button type="button" class="action-btn btn-pago" onclick="selecionarStatus('rev', 'dia')" id="status-rev-dia">✅ Em Dia</button>
+                <button type="button" class="action-btn btn-naopago" onclick="selecionarStatus('rev', 'naopago')" id="status-rev-naopago">⚠️ Não Pago</button>
+                <button type="button" class="action-btn btn-pago" onclick="selecionarStatus('rev', 'pago')" id="status-rev-pago">💰 Pago</button>
+            </div>
+
+            <div id="preview-rev" style="text-align:center;"></div>
+            <button class="btn-salvar" onclick="salvarRevenda()" id="btn-salvar-rev">💾 Salvar Revenda</button>
+            <button class="btn-cancelar" onclick="cancelarEdicaoRevenda()" id="btn-cancelar-rev" style="display:none;">❌ Cancelar Edição</button>
+
+            <h3 style="margin-top: 20px; color:var(--gold); font-size:1.1em;">📋 Lista de Revendas</h3>
+            <div class="filtros">
+                <button class="filtro-btn ativo-todos" onclick="filtrarRevendas('todos', this)">📋 Todas</button>
+                <button class="filtro-btn" onclick="filtrarRevendas('dia', this)">✅ Em Dia</button>
+                <button class="filtro-btn" onclick="filtrarRevendas('naopago', this)">⚠️ Não Pago</button>
+                <button class="filtro-btn" onclick="filtrarRevendas('pago', this)">💰 Pagas</button>
+            </div>
+            <div id="lista-revendas"></div>
         </div>
 
-        <div class="diagnostico" id="diagnostico">
-            🔍 <span id="diag-clientes">0</span> clientes · <span id="diag-revendas">0</span> revendas · <span id="diag-historico">0</span> histórico
+        <!-- HISTÓRICO -->
+        <div id="historico" class="container">
+            <h2 style="color:var(--gold); font-size:1.2em;">📂 Histórico de Cobranças</h2>
+            <div id="lista-historico"></div>
         </div>
 
-        <button class="btn btn-salvar" onclick="salvarConfig()">💾 Salvar Configurações</button>
-        <button class="btn btn-del" onclick="limparTudo()" style="width:100%; margin-top:8px;">🗑️ APAGAR TODOS OS DADOS</button>
+        <!-- CONFIG -->
+        <div id="config" class="container">
+            <h2 style="color:var(--gold); font-size:1.2em;">⚙️ Configurações</h2>
+            <div class="aviso-verde">✅ SISTEMA ILIMITADO - Dados permanentes</div>
+
+            <div class="config-box">
+                <h3>🏢 Nome da Empresa</h3>
+                <input type="text" id="cfg_nome_empresa" placeholder="Ex: TV NOVA JUAREZ" maxlength="50">
+            </div>
+
+            <div class="config-box">
+                <h3>🖼️ Logo da Empresa</h3>
+                <input type="file" id="cfg_logo_file" accept="image/*" onchange="carregarLogo(this)">
+                <div id="logo-preview" style="text-align:center; margin-top:10px;"></div>
+            </div>
+
+            <div class="config-box">
+                <h3>💳 Modo de Dados Bancários</h3>
+                <div class="radio-group">
+                    <label><input type="radio" name="modo_banco" value="completo" onchange="mudarModoBanco()"> Completos</label>
+                    <label><input type="radio" name="modo_banco" value="simples" onchange="mudarModoBanco()"> Apenas Pix + Nome</label>
+                </div>
+            </div>
+
+            <div class="config-box" id="box-completo">
+                <h3>Dados Bancários Completos</h3>
+                <div class="form-group">
+                    <div><label>Banco</label><input type="text" id="cfg_banco"></div>
+                    <div><label>Agência</label><input type="text" id="cfg_agencia"></div>
+                    <div><label>Conta</label><input type="text" id="cfg_conta"></div>
+                    <div><label>Titular</label><input type="text" id="cfg_titular"></div>
+                    <div><label>Chave Pix</label><input type="text" id="cfg_pix"></div>
+                </div>
+            </div>
+
+            <div class="config-box" id="box-simples" style="display:none;">
+                <h3>Dados Simplificados</h3>
+                <div class="form-group">
+                    <div><label>Banco (Pix)</label><input type="text" id="cfg_banco_simples"></div>
+                    <div><label>Titular</label><input type="text" id="cfg_titular_simples"></div>
+                    <div><label>Chave Pix</label><input type="text" id="cfg_pix_simples"></div>
+                </div>
+            </div>
+
+            <div class="config-box">
+                <h3>💾 Backup</h3>
+                <button class="action-btn btn-email" onclick="exportarBackup()" style="width:100%; margin-top:8px;">📥 Exportar Backup</button>
+                <label style="display:block; margin-top:10px; cursor:pointer; padding:12px; background:linear-gradient(135deg,#9b59b6,#7d3c98); border-radius:10px; text-align:center; font-weight:bold; color:white; font-size:0.85em;">
+                    📤 Importar Backup
+                    <input type="file" id="import_file" accept=".json" onchange="importarBackup(this)" style="display:none;">
+                </label>
+            </div>
+
+            <div class="diagnostico">
+                🔍 <span id="diag-clientes">0</span> clientes · <span id="diag-revendas">0</span> revendas · <span id="diag-historico">0</span> histórico
+            </div>
+
+            <button class="btn-salvar" onclick="salvarConfig()">💾 Salvar Configurações</button>
+            <button class="action-btn btn-del" onclick="limparTudo()" style="width:100%; margin-top:10px; padding:14px;">🗑️ APAGAR TODOS OS DADOS</button>
+        </div>
     </div>
 
     <div id="modal-historico" class="modal">
@@ -381,21 +702,81 @@
             <h3>Detalhes</h3>
             <p id="modal-info"></p>
             <div id="modal-preview"></div>
-            <button class="btn btn-del" onclick="fecharModal()" style="width:100%; margin-top:15px;">Fechar</button>
+            <button class="action-btn btn-del" onclick="fecharModal()" style="width:100%; margin-top:15px; padding:12px;">Fechar</button>
         </div>
     </div>
 
     <script>
         // ==================================================
-        // SISTEMA DE ARMAZENAMENTO PERMANENTE
+        // LOGIN
+        // ==================================================
+        const USUARIO_CORRETO = 'jesus';
+        const SENHA_CORRETA = 'jesus';
+        const NUMERO_DONO = '5521977519001';
+        const MENSAGEM_DONO = 'Olá! Gostaria de solicitar acesso ao sistema de cobrança.';
+
+        function fazerLogin() {
+            const user = document.getElementById('login-user').value.trim().toLowerCase();
+            const pass = document.getElementById('login-pass').value.trim().toLowerCase();
+            const erro = document.getElementById('login-error');
+
+            if(user === USUARIO_CORRETO && pass === SENHA_CORRETA) {
+                erro.style.color = '#27ae60';
+                erro.textContent = '✅ Acesso concedido!';
+                sessionStorage.setItem('sistema_logado', 'true');
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('sistema').classList.add('ativo');
+                    init();
+                }, 700);
+            } else {
+                erro.style.color = '#ff6666';
+                erro.textContent = '❌ Usuário ou senha incorretos!';
+                document.getElementById('login-pass').value = '';
+                setTimeout(() => erro.textContent = '', 3000);
+            }
+        }
+
+        function abrirWhatsDono() {
+            window.open(`https://wa.me/${NUMERO_DONO}?text=${encodeURIComponent(MENSAGEM_DONO)}`, '_blank');
+        }
+
+        function sair() {
+            if(!confirm("🚪 Deseja sair?")) return;
+            sessionStorage.removeItem('sistema_logado');
+            location.reload();
+        }
+
+        if(sessionStorage.getItem('sistema_logado') === 'true') {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('sistema').classList.add('ativo');
+        }
+
+        document.getElementById('login-user').addEventListener('keypress', e => { if(e.key === 'Enter') document.getElementById('login-pass').focus(); });
+        document.getElementById('login-pass').addEventListener('keypress', e => { if(e.key === 'Enter') fazerLogin(); });
+
+        function aplicarLogoLogin() {
+            const logoSalva = localStorage.getItem('tv_logo_v3');
+            if(logoSalva) {
+                document.getElementById('login-logo-container').innerHTML = `<img src="${logoSalva}" alt="Logo">`;
+            }
+            const nomeSalvo = localStorage.getItem('tv_nome_empresa_v3');
+            if(nomeSalvo) {
+                const el = document.getElementById('login-logo-text');
+                if(el) el.innerText = nomeSalvo;
+            }
+        }
+        aplicarLogoLogin();
+
+        // ==================================================
+        // SISTEMA
         // ==================================================
         const DB_NAME = 'TVNovaJuarezDB';
-        const DB_VERSION = 1;
         let db = null;
 
         function abrirIndexedDB() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                const request = indexedDB.open(DB_NAME, 1);
                 request.onerror = () => reject(request.error);
                 request.onsuccess = () => { db = request.result; resolve(db); };
                 request.onupgradeneeded = (e) => {
@@ -411,35 +792,33 @@
             try {
                 if(!db) await abrirIndexedDB();
                 return new Promise((resolve, reject) => {
-                    const transaction = db.transaction(['dados'], 'readwrite');
-                    transaction.objectStore('dados').put({ chave, valor, timestamp: Date.now() });
-                    transaction.oncomplete = () => resolve();
-                    transaction.onerror = () => reject(transaction.error);
+                    const t = db.transaction(['dados'], 'readwrite');
+                    t.objectStore('dados').put({ chave, valor, timestamp: Date.now() });
+                    t.oncomplete = () => resolve();
+                    t.onerror = () => reject(t.error);
                 });
-            } catch(e) { console.error('Erro IndexedDB:', e); }
+            } catch(e) {}
         }
 
         async function carregarIndexedDB(chave) {
             try {
                 if(!db) await abrirIndexedDB();
                 return new Promise((resolve, reject) => {
-                    const transaction = db.transaction(['dados'], 'readonly');
-                    const request = transaction.objectStore('dados').get(chave);
-                    request.onsuccess = () => resolve(request.result ? request.result.valor : null);
-                    request.onerror = () => reject(request.error);
+                    const t = db.transaction(['dados'], 'readonly');
+                    const r = t.objectStore('dados').get(chave);
+                    r.onsuccess = () => resolve(r.result ? r.result.valor : null);
+                    r.onerror = () => reject(r.error);
                 });
             } catch(e) { return null; }
         }
 
         function mostrarStatus(texto, tipo = 'ok') {
             const el = document.getElementById('sync-status');
+            if(!el) return;
             el.innerText = texto;
             el.className = 'sync-status ' + (tipo === 'salvando' ? 'salvando' : tipo === 'erro' ? 'erro' : '');
         }
 
-        // ==================================================
-        // VARIÁVEIS GLOBAIS
-        // ==================================================
         let clientes = [];
         let revendas = [];
         let historico = [];
@@ -450,20 +829,16 @@
         let filtroRev = 'todos';
         let fotoCliTemp = null;
         let fotoRevTemp = null;
-        // Status temporário no formulário
-        let statusCliTemp = 'dia';   // 'dia', 'naopago', 'pago'
+        let statusCliTemp = 'dia';
         let statusRevTemp = 'dia';
 
-        // ==================================================
-        // CARREGAMENTO
-        // ==================================================
         async function carregarTudo() {
-            let cliIDB = await carregarIndexedDB('clientes');
-            let revIDB = await carregarIndexedDB('revendas');
-            let histIDB = await carregarIndexedDB('historico');
-            let cfgIDB = await carregarIndexedDB('config');
-            let logoIDB = await carregarIndexedDB('logo');
-            let nomeIDB = await carregarIndexedDB('nome_empresa');
+            let cli = await carregarIndexedDB('clientes');
+            let rev = await carregarIndexedDB('revendas');
+            let hist = await carregarIndexedDB('historico');
+            let cfg = await carregarIndexedDB('config');
+            let logo = await carregarIndexedDB('logo');
+            let nome = await carregarIndexedDB('nome_empresa');
 
             let cliLS = localStorage.getItem('tv_clientes_v3') || localStorage.getItem('tv_clientes');
             let revLS = localStorage.getItem('tv_revendas_v3') || localStorage.getItem('tv_revendas');
@@ -472,42 +847,19 @@
             let logoLS = localStorage.getItem('tv_logo_v3') || localStorage.getItem('tv_logo');
             let nomeLS = localStorage.getItem('tv_nome_empresa_v3') || localStorage.getItem('tv_nome_empresa');
 
-            const cliIDBArr = cliIDB || [];
-            const cliLSArr = cliLS ? JSON.parse(cliLS) : [];
-            clientes = cliIDBArr.length >= cliLSArr.length ? cliIDBArr : cliLSArr;
+            clientes = (cli && cli.length > 0) ? cli : (cliLS ? JSON.parse(cliLS) : []);
+            revendas = (rev && rev.length > 0) ? rev : (revLS ? JSON.parse(revLS) : []);
+            historico = (hist && hist.length > 0) ? hist : (histLS ? JSON.parse(histLS) : []);
+            config = cfg || (cfgLS ? JSON.parse(cfgLS) : { modo: 'completo' });
+            logoEmpresa = logo || logoLS || null;
+            nomeEmpresa = nome || nomeLS || 'TV NOVA JUAREZ';
 
-            const revIDBArr = revIDB || [];
-            const revLSArr = revLS ? JSON.parse(revLS) : [];
-            revendas = revIDBArr.length >= revLSArr.length ? revIDBArr : revLSArr;
-
-            const histIDBArr = histIDB || [];
-            const histLSArr = histLS ? JSON.parse(histLS) : [];
-            historico = histIDBArr.length >= histLSArr.length ? histIDBArr : histLSArr;
-
-            config = cfgIDB || (cfgLS ? JSON.parse(cfgLS) : { modo: 'completo' });
-            logoEmpresa = logoIDB || logoLS || null;
-            nomeEmpresa = nomeIDB || nomeLS || 'TV NOVA JUAREZ';
-
-            // MIGRAÇÃO DE STATUS ANTIGO (se existir "pago: true/false")
-            clientes = clientes.map(c => {
-                if(c.status === undefined) {
-                    c.status = c.pago ? 'pago' : 'dia';
-                }
-                return c;
-            });
-            revendas = revendas.map(r => {
-                if(r.status === undefined) {
-                    r.status = r.pago ? 'pago' : 'dia';
-                }
-                return r;
-            });
+            clientes = clientes.map(c => { if(c.status === undefined) c.status = c.pago ? 'pago' : 'dia'; return c; });
+            revendas = revendas.map(r => { if(r.status === undefined) r.status = r.pago ? 'pago' : 'dia'; return r; });
 
             atualizarDiagnostico();
         }
 
-        // ==================================================
-        // SALVAMENTO
-        // ==================================================
         async function salvarTudo() {
             mostrarStatus('💾 Salvando...', 'salvando');
             try {
@@ -525,15 +877,9 @@
                 if(logoEmpresa) await salvarIndexedDB('logo', logoEmpresa);
                 if(nomeEmpresa) await salvarIndexedDB('nome_empresa', nomeEmpresa);
 
-                sessionStorage.setItem('backup_clientes', JSON.stringify(clientes));
-                sessionStorage.setItem('backup_revendas', JSON.stringify(revendas));
-
                 setTimeout(() => mostrarStatus('💾 Salvo'), 500);
                 atualizarDiagnostico();
-            } catch(e) {
-                console.error('❌ Erro:', e);
-                mostrarStatus('❌ Erro', 'erro');
-            }
+            } catch(e) { mostrarStatus('❌ Erro', 'erro'); }
         }
 
         function atualizarDiagnostico() {
@@ -547,9 +893,6 @@
 
         setInterval(() => { salvarTudo(); }, 30000);
 
-        // ==================================================
-        // INICIALIZAÇÃO
-        // ==================================================
         async function init() {
             await abrirIndexedDB();
             await carregarTudo();
@@ -564,39 +907,35 @@
             selecionarStatus('cli', 'dia');
             selecionarStatus('rev', 'dia');
             mostrarStatus('💾 Salvo');
-            console.log('🚀 Sistema iniciado!');
         }
 
-        // ==================================================
-        // FUNÇÕES AUXILIARES
-        // ==================================================
         function aplicarNomeEmpresa() {
             document.getElementById('nome-empresa-header').innerText = nomeEmpresa;
             document.title = nomeEmpresa + ' - Sistema';
+            if(logoEmpresa) {
+                document.getElementById('header-logo-container').innerHTML = `<img src="${logoEmpresa}" class="header-logo" alt="Logo">`;
+            }
         }
 
-        function abrirAba(id) {
+        function abrirAba(id, btn) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-card').forEach(el => el.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            event.target.classList.add('active');
+            if(btn) btn.classList.add('active');
             if(id === 'clientes') renderizarClientes();
             if(id === 'revendas') renderizarRevendas();
             if(id === 'historico') renderizarHistorico();
             if(id === 'config') carregarConfig();
             atualizarEstatisticas();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ==================================================
-        // NOVO SISTEMA DE STATUS (3 opções)
-        // ==================================================
         function selecionarStatus(tipo, valor) {
             if(tipo === 'cli') {
                 statusCliTemp = valor;
                 document.getElementById('status-cli-dia').classList.remove('status-ativo-dia');
                 document.getElementById('status-cli-naopago').classList.remove('status-ativo-naopago');
                 document.getElementById('status-cli-pago').classList.remove('status-ativo-pago');
-                
                 if(valor === 'dia') document.getElementById('status-cli-dia').classList.add('status-ativo-dia');
                 if(valor === 'naopago') document.getElementById('status-cli-naopago').classList.add('status-ativo-naopago');
                 if(valor === 'pago') document.getElementById('status-cli-pago').classList.add('status-ativo-pago');
@@ -606,30 +945,23 @@
                 document.getElementById('status-rev-dia').classList.remove('status-ativo-dia');
                 document.getElementById('status-rev-naopago').classList.remove('status-ativo-naopago');
                 document.getElementById('status-rev-pago').classList.remove('status-ativo-pago');
-                
                 if(valor === 'dia') document.getElementById('status-rev-dia').classList.add('status-ativo-dia');
                 if(valor === 'naopago') document.getElementById('status-rev-naopago').classList.add('status-ativo-naopago');
                 if(valor === 'pago') document.getElementById('status-rev-pago').classList.add('status-ativo-pago');
             }
         }
 
-        // ==================================================
-        // VERIFICAR STATUS FINAL
-        // ==================================================
         function getStatusFinal(item) {
-            // Prioridade: status explícito > vencimento
             if(item.status === 'pago') return 'pago';
             if(item.status === 'naopago') return 'naopago';
             if(item.status === 'dia') {
-                // Verifica se o vencimento já passou (pode virar não pago)
                 if(item.vencimento) {
                     const hoje = new Date(); hoje.setHours(0,0,0,0);
                     const venc = new Date(item.vencimento + 'T00:00:00');
-                    if(venc < hoje) return 'naopago'; // venceu e não foi pago
+                    if(venc < hoje) return 'naopago';
                 }
                 return 'dia';
             }
-            // Fallback para registros antigos
             if(item.pago) return 'pago';
             if(!item.vencimento) return 'dia';
             const hoje = new Date(); hoje.setHours(0,0,0,0);
@@ -645,7 +977,7 @@
             const revDia = revendas.filter(r => getStatusFinal(r) === 'dia').length;
             const revPago = revendas.filter(r => getStatusFinal(r) === 'pago').length;
             const revNaoPago = revendas.filter(r => getStatusFinal(r) === 'naopago').length;
-            
+
             document.getElementById('stat-cli-total').innerText = clientes.length;
             document.getElementById('stat-cli-dia').innerText = cliDia;
             document.getElementById('stat-cli-pago').innerText = cliPago;
@@ -654,31 +986,31 @@
             document.getElementById('stat-rev-dia').innerText = revDia;
             document.getElementById('stat-rev-pago').innerText = revPago;
             document.getElementById('stat-rev-naopago').innerText = revNaoPago;
-            
+
             const totalCli = clientes.reduce((sum, c) => sum + (parseFloat((c.valor||'0').replace(',','.')) || 0), 0);
             const totalRev = revendas.reduce((sum, r) => sum + (parseFloat((r.valor||'0').replace(',','.')) || 0), 0);
             const totalGeral = totalCli + totalRev;
-            const pagoGeral = clientes.filter(c=>getStatusFinal(c)==='pago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0) 
+            const pagoGeral = clientes.filter(c=>getStatusFinal(c)==='pago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0)
                              + revendas.filter(r=>getStatusFinal(r)==='pago').reduce((s,r)=>s+(parseFloat((r.valor||'0').replace(',','.'))||0),0);
-            const naoPagoGeral = clientes.filter(c=>getStatusFinal(c)==='naopago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0) 
+            const naoPagoGeral = clientes.filter(c=>getStatusFinal(c)==='naopago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0)
                              + revendas.filter(r=>getStatusFinal(r)==='naopago').reduce((s,r)=>s+(parseFloat((r.valor||'0').replace(',','.'))||0),0);
             const pendenteGeral = totalGeral - pagoGeral - naoPagoGeral;
-            
-            document.getElementById('stat-total-valor').innerText = 'R$ ' + totalGeral.toFixed(2).replace('.',',');
-            document.getElementById('stat-valor-pago').innerText = 'R$ ' + pagoGeral.toFixed(2).replace('.',',');
-            document.getElementById('stat-valor-pendente').innerText = 'R$ ' + pendenteGeral.toFixed(2).replace('.',',');
-            document.getElementById('stat-valor-naopago').innerText = 'R$ ' + naoPagoGeral.toFixed(2).replace('.',',');
+
+            document.getElementById('stat-total-valor').innerText = 'R$ ' + totalGeral.toFixed(0);
+            document.getElementById('stat-valor-pago').innerText = 'R$ ' + pagoGeral.toFixed(0);
+            document.getElementById('stat-valor-pendente').innerText = 'R$ ' + pendenteGeral.toFixed(0);
+            document.getElementById('stat-valor-naopago').innerText = 'R$ ' + naoPagoGeral.toFixed(0);
         }
 
         function filtrarClientes(tipo, btn) {
             filtroCli = tipo;
-            document.querySelectorAll('#clientes .filtro-btn').forEach(b => b.classList.remove('ativo-dia','ativo-vencido','ativo-todos','ativo-perto','ativo-pago','ativo-naopago'));
+            document.querySelectorAll('#clientes .filtro-btn').forEach(b => b.classList.remove('ativo-dia','ativo-todos','ativo-pago','ativo-naopago'));
             btn.classList.add('ativo-' + (tipo === 'todos' ? 'todos' : tipo));
             renderizarClientes();
         }
         function filtrarRevendas(tipo, btn) {
             filtroRev = tipo;
-            document.querySelectorAll('#revendas .filtro-btn').forEach(b => b.classList.remove('ativo-dia','ativo-vencido','ativo-todos','ativo-perto','ativo-pago','ativo-naopago'));
+            document.querySelectorAll('#revendas .filtro-btn').forEach(b => b.classList.remove('ativo-dia','ativo-todos','ativo-pago','ativo-naopago'));
             btn.classList.add('ativo-' + (tipo === 'todos' ? 'todos' : tipo));
             renderizarRevendas();
         }
@@ -748,9 +1080,6 @@
             return agora.toISOString().slice(0,16);
         }
 
-        // ==================================================
-        // CLIENTES
-        // ==================================================
         async function salvarCliente() {
             const idEdit = document.getElementById('cli_id_edit').value;
             const nome = document.getElementById('cli_nome').value;
@@ -802,15 +1131,12 @@
             document.getElementById('cli_valor').value = c.valor || '';
             fotoCliTemp = c.foto;
             if(c.foto) document.getElementById('preview-cli').innerHTML = `<img src="${c.foto}" style="max-height:80px; border-radius:8px; margin-top:8px;">`;
-            
-            // Seleciona o status atual
-            const statusAtual = c.status || (c.pago ? 'pago' : 'dia');
-            selecionarStatus('cli', statusAtual);
-            
+            const s = c.status || (c.pago ? 'pago' : 'dia');
+            selecionarStatus('cli', s);
             document.getElementById('titulo-cliente').innerText = "✏️ Editando Cliente";
             document.getElementById('btn-salvar-cli').innerText = "💾 Atualizar Cliente";
             document.getElementById('btn-cancelar-cli').style.display = 'block';
-            window.scrollTo(0,0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function cancelarEdicaoCliente() {
@@ -820,7 +1146,7 @@
             document.getElementById('preview-cli').innerHTML = '';
             fotoCliTemp = null;
             selecionarStatus('cli', 'dia');
-            document.getElementById('titulo-cliente').innerText = "Cadastrar Cliente";
+            document.getElementById('titulo-cliente').innerText = "➕ Cadastrar Cliente";
             document.getElementById('btn-salvar-cli').innerText = "💾 Salvar Cliente";
             document.getElementById('btn-cancelar-cli').style.display = 'none';
         }
@@ -834,12 +1160,7 @@
 
         async function mudarStatusCliente(id, novoStatus) {
             const c = clientes.find(x => x.id === id);
-            if(c) { 
-                c.status = novoStatus; 
-                await salvarTudo(); 
-                renderizarClientes(); 
-                atualizarEstatisticas(); 
-            }
+            if(c) { c.status = novoStatus; await salvarTudo(); renderizarClientes(); atualizarEstatisticas(); }
         }
 
         function renderizarClientes() {
@@ -848,9 +1169,9 @@
             if(filtroCli === 'dia') lista = clientes.filter(c => getStatusFinal(c) === 'dia');
             if(filtroCli === 'naopago') lista = clientes.filter(c => getStatusFinal(c) === 'naopago');
             if(filtroCli === 'pago') lista = clientes.filter(c => getStatusFinal(c) === 'pago');
-            
+
             if(lista.length === 0) { div.innerHTML = '<p class="empty-msg">Nenhum cliente encontrado.</p>'; return; }
-            
+
             div.innerHTML = lista.map(c => {
                 const status = getStatusFinal(c);
                 const badge = status === 'pago' ? '<span class="badge pago">💰 PAGO</span>' :
@@ -864,37 +1185,31 @@
                             ${fotoHtml}
                             <div class="lista-info">
                                 <strong>${c.nome} ${c.sobrenome} ${badge}</strong>
-                                <small>📞 ${c.telefone} | 🖥️ ${c.servidor}</small>
-                                <small>📅 Reg: ${formatarData(c.data_registro)} | Venc: ${formatarDataSimples(c.vencimento)} ${c.valor ? '| R$ ' + c.valor : ''}</small>
+                                <small>📞 ${c.telefone}</small>
+                                <small>🖥️ ${c.servidor || 'N/A'} | Venc: ${formatarDataSimples(c.vencimento)}${c.valor ? ' | R$ ' + c.valor : ''}</small>
                                 <div class="info-credenciais">🔐 <strong>IPTV:</strong> ${c.usuario || 'N/A'} | ${c.senha || 'N/A'}</div>
                             </div>
                         </div>
-                        <div class="acoes">
-                            <button class="btn btn-edit" onclick="editarCliente(${c.id})">✏️</button>
-                            <button class="btn btn-del" onclick="excluirCliente(${c.id})">🗑️</button>
-                        </div>
                     </div>
                     <div class="status-selector">
-                        <button class="btn btn-pago ${status === 'dia' ? 'status-ativo-dia' : ''}" onclick="mudarStatusCliente(${c.id}, 'dia')">✅ Em Dia</button>
-                        <button class="btn btn-naopago ${status === 'naopago' ? 'status-ativo-naopago' : ''}" onclick="mudarStatusCliente(${c.id}, 'naopago')">⚠️ Não Foi Pago</button>
-                        <button class="btn btn-pago ${status === 'pago' ? 'status-ativo-pago' : ''}" onclick="mudarStatusCliente(${c.id}, 'pago')">💰 Pago</button>
+                        <button class="action-btn btn-pago ${status === 'dia' ? 'status-ativo-dia' : ''}" onclick="mudarStatusCliente(${c.id}, 'dia')">✅ Em Dia</button>
+                        <button class="action-btn btn-naopago ${status === 'naopago' ? 'status-ativo-naopago' : ''}" onclick="mudarStatusCliente(${c.id}, 'naopago')">⚠️ Não Pago</button>
+                        <button class="action-btn btn-pago ${status === 'pago' ? 'status-ativo-pago' : ''}" onclick="mudarStatusCliente(${c.id}, 'pago')">💰 Pago</button>
                     </div>
-                    <div class="acoes">
-                        <button class="btn btn-whatsapp" onclick="enviarWhats('${c.telefone}', '${c.nome}', ${c.id})">📱 Zap</button>
-                        <button class="btn btn-telegram" onclick="enviarTelegram('${c.telefone}', '${c.nome}', ${c.id})">✈️ Tel</button>
-                        <button class="btn btn-email" onclick="enviarEmail('${c.email}', '${c.nome}', ${c.id})">📧 Email</button>
-                        <button class="btn btn-messenger" onclick="enviarMessenger('${c.nome}', ${c.id})">💬 Msg</button>
-                        <button class="btn btn-telefone" onclick="ligar('${c.telefone}')">📞 Ligar</button>
-                        <button class="btn btn-foto" onclick="gerarCobranca(${c.id}, 'foto')">📸 Fatura</button>
-                        <button class="btn btn-pdf" onclick="gerarCobranca(${c.id}, 'pdf')">📄 PDF</button>
+                    <div class="acoes-grid">
+                        <button class="action-btn btn-whatsapp" onclick="enviarWhats('${c.telefone}', '${c.nome}', ${c.id})"><span class="ico">📱</span> WhatsApp</button>
+                        <button class="action-btn btn-telegram" onclick="enviarTelegram('${c.telefone}', '${c.nome}', ${c.id})"><span class="ico">✈️</span> Telegram</button>
+                        <button class="action-btn btn-email" onclick="enviarEmail('${c.email}', '${c.nome}', ${c.id})"><span class="ico">📧</span> E-mail</button>
+                        <button class="action-btn btn-telefone" onclick="ligar('${c.telefone}')"><span class="ico">📞</span> Ligar</button>
+                        <button class="action-btn btn-foto" onclick="gerarCobranca(${c.id}, 'foto')"><span class="ico">📸</span> Fatura</button>
+                        <button class="action-btn btn-pdf" onclick="gerarCobranca(${c.id}, 'pdf')"><span class="ico">📄</span> PDF</button>
+                        <button class="action-btn btn-edit" onclick="editarCliente(${c.id})"><span class="ico">✏️</span> Editar</button>
+                        <button class="action-btn btn-del" onclick="excluirCliente(${c.id})"><span class="ico">🗑️</span> Excluir</button>
                     </div>
                 </div>`;
             }).join('');
         }
 
-        // ==================================================
-        // REVENDAS
-        // ==================================================
         async function salvarRevenda() {
             const idEdit = document.getElementById('rev_id_edit').value;
             const nome = document.getElementById('rev_nome').value;
@@ -946,14 +1261,12 @@
             document.getElementById('rev_valor').value = r.valor || '';
             fotoRevTemp = r.foto;
             if(r.foto) document.getElementById('preview-rev').innerHTML = `<img src="${r.foto}" style="max-height:80px; border-radius:8px; margin-top:8px;">`;
-            
-            const statusAtual = r.status || (r.pago ? 'pago' : 'dia');
-            selecionarStatus('rev', statusAtual);
-            
+            const s = r.status || (r.pago ? 'pago' : 'dia');
+            selecionarStatus('rev', s);
             document.getElementById('titulo-revenda').innerText = "✏️ Editando Revenda";
             document.getElementById('btn-salvar-rev').innerText = "💾 Atualizar Revenda";
             document.getElementById('btn-cancelar-rev').style.display = 'block';
-            window.scrollTo(0,0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function cancelarEdicaoRevenda() {
@@ -963,7 +1276,7 @@
             document.getElementById('preview-rev').innerHTML = '';
             fotoRevTemp = null;
             selecionarStatus('rev', 'dia');
-            document.getElementById('titulo-revenda').innerText = "Cadastrar Revenda";
+            document.getElementById('titulo-revenda').innerText = "➕ Cadastrar Revenda";
             document.getElementById('btn-salvar-rev').innerText = "💾 Salvar Revenda";
             document.getElementById('btn-cancelar-rev').style.display = 'none';
         }
@@ -977,12 +1290,7 @@
 
         async function mudarStatusRevenda(id, novoStatus) {
             const r = revendas.find(x => x.id === id);
-            if(r) { 
-                r.status = novoStatus; 
-                await salvarTudo(); 
-                renderizarRevendas(); 
-                atualizarEstatisticas(); 
-            }
+            if(r) { r.status = novoStatus; await salvarTudo(); renderizarRevendas(); atualizarEstatisticas(); }
         }
 
         function renderizarRevendas() {
@@ -991,9 +1299,9 @@
             if(filtroRev === 'dia') lista = revendas.filter(r => getStatusFinal(r) === 'dia');
             if(filtroRev === 'naopago') lista = revendas.filter(r => getStatusFinal(r) === 'naopago');
             if(filtroRev === 'pago') lista = revendas.filter(r => getStatusFinal(r) === 'pago');
-            
+
             if(lista.length === 0) { div.innerHTML = '<p class="empty-msg">Nenhuma revenda encontrada.</p>'; return; }
-            
+
             div.innerHTML = lista.map(r => {
                 const status = getStatusFinal(r);
                 const badge = status === 'pago' ? '<span class="badge pago">💰 PAGO</span>' :
@@ -1007,29 +1315,26 @@
                             ${fotoHtml}
                             <div class="lista-info">
                                 <strong>${r.nome} ${r.sobrenome} ${badge}</strong>
-                                <small>📞 ${r.telefone} | 🖥️ ${r.servidor}</small>
-                                <small>📅 Reg: ${formatarData(r.data_registro)} | Venc: ${formatarDataSimples(r.vencimento)} ${r.valor ? '| R$ ' + r.valor : ''}</small>
+                                <small>📞 ${r.telefone}</small>
+                                <small>🖥️ ${r.servidor || 'N/A'} | Venc: ${formatarDataSimples(r.vencimento)}${r.valor ? ' | R$ ' + r.valor : ''}</small>
                                 <div class="info-credenciais">🔐 <strong>Painel:</strong> ${r.usuario || 'N/A'} | ${r.senha || 'N/A'}</div>
                             </div>
                         </div>
-                        <div class="acoes">
-                            <button class="btn btn-edit" onclick="editarRevenda(${r.id})">✏️</button>
-                            <button class="btn btn-del" onclick="excluirRevenda(${r.id})">🗑️</button>
-                        </div>
                     </div>
                     <div class="status-selector">
-                        <button class="btn btn-pago ${status === 'dia' ? 'status-ativo-dia' : ''}" onclick="mudarStatusRevenda(${r.id}, 'dia')">✅ Em Dia</button>
-                        <button class="btn btn-naopago ${status === 'naopago' ? 'status-ativo-naopago' : ''}" onclick="mudarStatusRevenda(${r.id}, 'naopago')">⚠️ Não Foi Pago</button>
-                        <button class="btn btn-pago ${status === 'pago' ? 'status-ativo-pago' : ''}" onclick="mudarStatusRevenda(${r.id}, 'pago')">💰 Pago</button>
+                        <button class="action-btn btn-pago ${status === 'dia' ? 'status-ativo-dia' : ''}" onclick="mudarStatusRevenda(${r.id}, 'dia')">✅ Em Dia</button>
+                        <button class="action-btn btn-naopago ${status === 'naopago' ? 'status-ativo-naopago' : ''}" onclick="mudarStatusRevenda(${r.id}, 'naopago')">⚠️ Não Pago</button>
+                        <button class="action-btn btn-pago ${status === 'pago' ? 'status-ativo-pago' : ''}" onclick="mudarStatusRevenda(${r.id}, 'pago')">💰 Pago</button>
                     </div>
-                    <div class="acoes">
-                        <button class="btn btn-whatsapp" onclick="enviarWhats('${r.telefone}', '${r.nome}', ${r.id})">📱 Zap</button>
-                        <button class="btn btn-telegram" onclick="enviarTelegram('${r.telefone}', '${r.nome}', ${r.id})">✈️ Tel</button>
-                        <button class="btn btn-email" onclick="enviarEmail('${r.email}', '${r.nome}', ${r.id})">📧 Email</button>
-                        <button class="btn btn-messenger" onclick="enviarMessenger('${r.nome}', ${r.id})">💬 Msg</button>
-                        <button class="btn btn-telefone" onclick="ligar('${r.telefone}')">📞 Ligar</button>
-                        <button class="btn btn-foto" onclick="gerarCobranca(${r.id}, 'foto')">📸 Fatura</button>
-                        <button class="btn btn-pdf" onclick="gerarCobranca(${r.id}, 'pdf')">📄 PDF</button>
+                    <div class="acoes-grid">
+                        <button class="action-btn btn-whatsapp" onclick="enviarWhats('${r.telefone}', '${r.nome}', ${r.id})"><span class="ico">📱</span> WhatsApp</button>
+                        <button class="action-btn btn-telegram" onclick="enviarTelegram('${r.telefone}', '${r.nome}', ${r.id})"><span class="ico">✈️</span> Telegram</button>
+                        <button class="action-btn btn-email" onclick="enviarEmail('${r.email}', '${r.nome}', ${r.id})"><span class="ico">📧</span> E-mail</button>
+                        <button class="action-btn btn-telefone" onclick="ligar('${r.telefone}')"><span class="ico">📞</span> Ligar</button>
+                        <button class="action-btn btn-foto" onclick="gerarCobranca(${r.id}, 'foto')"><span class="ico">📸</span> Fatura</button>
+                        <button class="action-btn btn-pdf" onclick="gerarCobranca(${r.id}, 'pdf')"><span class="ico">📄</span> PDF</button>
+                        <button class="action-btn btn-edit" onclick="editarRevenda(${r.id})"><span class="ico">✏️</span> Editar</button>
+                        <button class="action-btn btn-del" onclick="excluirRevenda(${r.id})"><span class="ico">🗑️</span> Excluir</button>
                     </div>
                 </div>`;
             }).join('');
@@ -1046,9 +1351,6 @@
             return `${dia}/${mes}/${ano}`;
         }
 
-        // ==================================================
-        // MENSAGEM PERSONALIZADA POR STATUS E TIPO
-        // ==================================================
         function getMensagem(item) {
             const nome = item.nome;
             const status = getStatusFinal(item);
@@ -1056,61 +1358,41 @@
             const venc = formatarDataSimples(item.vencimento);
             const valor = item.valor || 'Não informado';
             const servidor = item.servidor || '';
-            
-            // 🔑 Termo correto: PAINEL para revenda, IPTV para cliente
-            const termoServico = item.tipo === 'revenda' ? 'painel' : 'acesso IPTV';
             const termoMaiusculo = item.tipo === 'revenda' ? 'PAINEL' : 'ACESSO IPTV';
-            
+
             let cabecalho = '';
-            
             if(status === 'pago') {
-                cabecalho = `✅ *PAGAMENTO CONFIRMADO!*\n\nOlá *${nome}*, tudo bem? Recebemos seu pagamento referente ao serviço *${nomeEmpresa}*. Sua assinatura está ativa e em dia! 🎉\n\n`;
-            } 
-            else if(status === 'naopago') {
-                cabecalho = `⚠️ *ATENÇÃO - PAGAMENTO PENDENTE!*\n\nOlá *${nome}*, tudo bem?\n\n`;
-                cabecalho += `❌ Identificamos que seu plano *${nomeEmpresa}* está *EM ATRASO*.\n\n`;
+                cabecalho = `✅ *PAGAMENTO CONFIRMADO!*\n\nOlá *${nome}*, seu pagamento foi recebido! Serviço *${nomeEmpresa}* ativo! 🎉\n\n`;
+            } else if(status === 'naopago') {
+                cabecalho = `⚠️ *ATENÇÃO - PAGAMENTO PENDENTE!*\n\nOlá *${nome}*.\n\n`;
+                cabecalho += `❌ Seu plano *${nomeEmpresa}* está *EM ATRASO*.\n\n`;
                 cabecalho += `🚨 *PAGUE SEU PLANO ANTES DE 24 HORAS, POIS SEU ${termoMaiusculo} SERÁ SUSPENSO!*\n\n`;
-                cabecalho += `Para regularizar, utilize os dados abaixo:\n\n`;
-            } 
-            else {
-                cabecalho = `✅ *SUA ASSINATURA ESTÁ EM DIA!*\n\nOlá *${nome}*, tudo bem? Sua assinatura *${nomeEmpresa}* está ativa. Obrigado pela preferência! 🙏\n\n`;
+            } else {
+                cabecalho = `✅ *SUA ASSINATURA ESTÁ EM DIA!*\n\nOlá *${nome}*, sua assinatura *${nomeEmpresa}* está ativa! 🙏\n\n`;
             }
-            
+
             let texto = cabecalho;
-            texto += `📋 *DADOS DO REGISTRO:*\n`;
-            texto += `📅 Registro: ${dataReg}\n`;
-            texto += `⏰ Vencimento: ${venc}\n`;
-            texto += `💰 Valor: R$ ${valor}\n`;
+            texto += `📋 *DADOS:*\n📅 Reg: ${dataReg}\n⏰ Venc: ${venc}\n💰 Valor: R$ ${valor}\n`;
             if(servidor) texto += `🖥️ Servidor: ${servidor}\n`;
             texto += `\n`;
-            
+
             if(item.tipo === 'cliente' && (item.usuario || item.senha)) {
-                texto += `🔐 *ACESSO IPTV:*\n👤 Usuário: ${item.usuario || 'N/A'}\n🔑 Senha: ${item.senha || 'N/A'}\n\n`;
+                texto += `🔐 *ACESSO IPTV:*\n👤 ${item.usuario || 'N/A'}\n🔑 ${item.senha || 'N/A'}\n\n`;
             }
             if(item.tipo === 'revenda' && (item.usuario || item.senha)) {
-                texto += `🔐 *ACESSO AO PAINEL:*\n👤 Usuário: ${item.usuario || 'N/A'}\n🔑 Senha: ${item.senha || 'N/A'}\n\n`;
+                texto += `🔐 *ACESSO AO PAINEL:*\n👤 ${item.usuario || 'N/A'}\n🔑 ${item.senha || 'N/A'}\n\n`;
             }
-            
+
             if(status === 'naopago') {
                 if(config.modo === 'simples') {
-                    texto += `💳 *PAGUE AGORA - DADOS PARA PAGAMENTO:*\n`;
-                    texto += `🏦 Banco: ${config.banco_simples || 'Não informado'}\n`;
-                    texto += `👤 Titular: ${config.titular_simples || 'Não informado'}\n`;
-                    texto += `🔑 Chave Pix: ${config.pix_simples || 'Não informada'}\n`;
+                    texto += `💳 *PAGAMENTO:*\n🏦 ${config.banco_simples || 'N/I'}\n👤 ${config.titular_simples || 'N/I'}\n🔑 Pix: ${config.pix_simples || 'N/I'}\n`;
                 } else {
-                    texto += `💳 *PAGUE AGORA - DADOS BANCÁRIOS:*\n`;
-                    texto += `🏦 Banco: ${config.banco || 'Não informado'}\n`;
-                    texto += `📍 Agência: ${config.agencia || 'Não informada'}\n`;
-                    texto += `💳 Conta: ${config.conta || 'Não informada'}\n`;
-                    texto += `👤 Titular: ${config.titular || 'Não informado'}\n`;
-                    texto += `🔑 Chave Pix: ${config.pix || 'Não informada'}\n`;
+                    texto += `💳 *BANCÁRIOS:*\n🏦 ${config.banco || 'N/I'}\n📍 Ag: ${config.agencia || 'N/I'}\n💳 Cc: ${config.conta || 'N/I'}\n👤 ${config.titular || 'N/I'}\n🔑 Pix: ${config.pix || 'N/I'}\n`;
                 }
-                texto += `\n⏰ *PRAZO: 24 HORAS*\n`;
-                texto += `🚨 Após este prazo, o ${termoServico} será suspenso automaticamente.\n`;
+                texto += `\n⏰ *PRAZO: 24 HORAS*\n🚨 Após este prazo, o ${item.tipo === 'revenda' ? 'painel' : 'acesso IPTV'} será suspenso!\n`;
             } else if(status === 'pago') {
                 texto += `✅ *Pagamento confirmado!* Obrigado! 🎉\n`;
             }
-            
             texto += `\nQualquer dúvida estou à disposição! 🙏`;
             return texto;
         }
@@ -1132,22 +1414,13 @@
             window.open(`mailto:${email}?subject=Cobrança ${nomeEmpresa}&body=${msg}`, '_blank');
             salvarHistorico(nome, 'E-mail', id);
         }
-        function enviarMessenger(nome, id) {
-            window.open(`https://m.me/`, '_blank');
-            alert(`💬 Messenger para ${nome}.\n\n${getMensagem(buscarItem(id))}`);
-            salvarHistorico(nome, 'Messenger', id);
-        }
         function ligar(telefone) { window.open(`tel:${telefone}`, '_blank'); }
 
-        // ==================================================
-        // FATURAS
-        // ==================================================
         function gerarCobranca(id, tipo) {
             const item = buscarItem(id);
             if(!item) return;
             const msg = getMensagem(item);
             const status = getStatusFinal(item);
-            
             if(tipo === 'foto') gerarFaturaImagem(item, msg, status);
             else if(tipo === 'pdf') gerarFaturaPDF(item, msg, status);
         }
@@ -1156,182 +1429,103 @@
             const canvas = document.createElement('canvas');
             canvas.width = 950; canvas.height = 950;
             const ctx = canvas.getContext('2d');
-            
             const grad = ctx.createLinearGradient(0, 0, 0, 950);
             grad.addColorStop(0, '#1a1a1a');
             grad.addColorStop(1, '#0a0a0a');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 950, 950);
-            
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, 950, 950);
             const corStatus = status === 'pago' ? '#27ae60' : (status === 'naopago' ? '#8B0000' : '#25D366');
-            ctx.fillStyle = corStatus;
-            ctx.fillRect(0, 0, 950, 8);
-            
+            ctx.fillStyle = corStatus; ctx.fillRect(0, 0, 950, 8);
+
             if(logoEmpresa) {
                 const logoImg = new Image();
                 logoImg.onload = () => desenharResto(logoImg);
                 logoImg.src = logoEmpresa;
-            } else {
-                desenharResto(null);
-            }
-            
+            } else { desenharResto(null); }
+
             function desenharResto(logoImg) {
                 if(logoImg) ctx.drawImage(logoImg, 40, 30, 80, 80);
-                ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 30px Arial';
-                ctx.textAlign = 'left';
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 30px Arial'; ctx.textAlign = 'left';
                 ctx.fillText(nomeEmpresa, logoImg ? 140 : 40, 70);
-                ctx.font = '14px Arial';
-                ctx.fillStyle = '#888';
+                ctx.font = '14px Arial'; ctx.fillStyle = '#888';
                 ctx.fillText('SISTEMA DE COBRANÇA', logoImg ? 140 : 40, 92);
-                
+
                 const statusText = status === 'pago' ? '✅ PAGO' : (status === 'naopago' ? '⚠️ NÃO PAGO' : '✅ EM DIA');
-                ctx.fillStyle = corStatus;
-                ctx.fillRect(720, 40, 190, 50);
-                ctx.fillStyle = '#fff';
-                ctx.font = 'bold 16px Arial';
-                ctx.textAlign = 'center';
+                ctx.fillStyle = corStatus; ctx.fillRect(720, 40, 190, 50);
+                ctx.fillStyle = '#fff'; ctx.font = 'bold 16px Arial'; ctx.textAlign = 'center';
                 ctx.fillText(statusText, 815, 72);
-                
-                ctx.strokeStyle = '#333';
-                ctx.beginPath();
-                ctx.moveTo(40, 130);
-                ctx.lineTo(910, 130);
-                ctx.stroke();
-                
+
+                ctx.strokeStyle = '#333'; ctx.beginPath(); ctx.moveTo(40, 130); ctx.lineTo(910, 130); ctx.stroke();
+
                 if(item.foto) {
                     const fotoImg = new Image();
                     fotoImg.onload = () => {
-                        ctx.save();
-                        ctx.beginPath();
-                        ctx.arc(120, 220, 70, 0, Math.PI * 2);
-                        ctx.closePath();
-                        ctx.clip();
-                        ctx.drawImage(fotoImg, 50, 150, 140, 140);
-                        ctx.restore();
-                        ctx.strokeStyle = corStatus;
-                        ctx.lineWidth = 3;
-                        ctx.beginPath();
-                        ctx.arc(120, 220, 70, 0, Math.PI * 2);
-                        ctx.stroke();
+                        ctx.save(); ctx.beginPath(); ctx.arc(120, 220, 70, 0, Math.PI * 2); ctx.closePath(); ctx.clip();
+                        ctx.drawImage(fotoImg, 50, 150, 140, 140); ctx.restore();
+                        ctx.strokeStyle = corStatus; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(120, 220, 70, 0, Math.PI * 2); ctx.stroke();
                         desenharTexto();
                     };
                     fotoImg.src = item.foto;
                 } else {
-                    ctx.fillStyle = '#333';
-                    ctx.beginPath();
-                    ctx.arc(120, 220, 70, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#888';
-                    ctx.font = '60px Arial';
-                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#333'; ctx.beginPath(); ctx.arc(120, 220, 70, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = '#888'; ctx.font = '60px Arial'; ctx.textAlign = 'center';
                     ctx.fillText(item.tipo === 'revenda' ? '🏢' : '👤', 120, 240);
                     desenharTexto();
                 }
-                
+
                 function desenharTexto() {
-                    ctx.textAlign = 'left';
-                    ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 24px Arial';
+                    ctx.textAlign = 'left'; ctx.fillStyle = '#fff'; ctx.font = 'bold 24px Arial';
                     ctx.fillText(item.nome + ' ' + item.sobrenome, 220, 200);
-                    
-                    ctx.font = '15px Arial';
-                    ctx.fillStyle = '#aaa';
+                    ctx.font = '15px Arial'; ctx.fillStyle = '#aaa';
                     ctx.fillText('📞 ' + item.telefone, 220, 228);
                     ctx.fillText('🖥️ ' + (item.servidor || 'N/A'), 220, 250);
-                    
-                    // BLOCO DE CREDENCIAIS
-                    ctx.fillStyle = '#0f0f0f';
-                    ctx.fillRect(40, 310, 870, 90);
-                    ctx.strokeStyle = '#32bcad';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(40, 310, 870, 90);
-                    
-                    ctx.fillStyle = '#32bcad';
-                    ctx.font = 'bold 16px Arial';
-                    const tituloCred = item.tipo === 'revenda' ? '🔐 ACESSO AO PAINEL' : '🔐 ACESSO IPTV';
-                    ctx.fillText(tituloCred, 60, 340);
-                    
-                    ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 18px Arial';
+
+                    ctx.fillStyle = '#0f0f0f'; ctx.fillRect(40, 310, 870, 90);
+                    ctx.strokeStyle = '#32bcad'; ctx.lineWidth = 2; ctx.strokeRect(40, 310, 870, 90);
+                    ctx.fillStyle = '#32bcad'; ctx.font = 'bold 16px Arial';
+                    ctx.fillText(item.tipo === 'revenda' ? '🔐 ACESSO AO PAINEL' : '🔐 ACESSO IPTV', 60, 340);
+                    ctx.fillStyle = '#fff'; ctx.font = 'bold 18px Arial';
                     ctx.fillText('Usuário: ' + (item.usuario || 'N/A'), 60, 370);
                     ctx.fillText('Senha: ' + (item.senha || 'N/A'), 500, 370);
-                    
-                    // REGISTRO E VENCIMENTO
-                    ctx.fillStyle = '#0f0f0f';
-                    ctx.fillRect(40, 420, 870, 90);
-                    ctx.strokeStyle = '#333';
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(40, 420, 870, 90);
-                    
-                    ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 14px Arial';
-                    ctx.fillText('📅 REGISTRO:', 60, 450);
-                    ctx.fillText('⏰ VENCIMENTO:', 350, 450);
-                    ctx.fillText('💰 VALOR:', 650, 450);
-                    
-                    ctx.font = '16px Arial';
-                    ctx.fillStyle = '#32bcad';
+
+                    ctx.fillStyle = '#0f0f0f'; ctx.fillRect(40, 420, 870, 90);
+                    ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.strokeRect(40, 420, 870, 90);
+                    ctx.fillStyle = '#fff'; ctx.font = 'bold 14px Arial';
+                    ctx.fillText('📅 REGISTRO:', 60, 450); ctx.fillText('⏰ VENCIMENTO:', 350, 450); ctx.fillText('💰 VALOR:', 650, 450);
+                    ctx.font = '16px Arial'; ctx.fillStyle = '#32bcad';
                     ctx.fillText(formatarData(item.data_registro), 60, 485);
                     ctx.fillStyle = status === 'naopago' ? '#ff6666' : '#fff';
                     ctx.fillText(formatarDataSimples(item.vencimento), 350, 485);
-                    ctx.fillStyle = '#ffd700';
-                    ctx.fillText('R$ ' + (item.valor || '0,00'), 650, 485);
-                    
-                    // AVISO DE SUSPENSÃO (SE NÃO PAGO)
+                    ctx.fillStyle = '#ffd700'; ctx.fillText('R$ ' + (item.valor || '0,00'), 650, 485);
+
                     if(status === 'naopago') {
-                        ctx.fillStyle = '#2e0e0e';
-                        ctx.fillRect(40, 530, 870, 80);
-                        ctx.strokeStyle = '#ff0000';
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(40, 530, 870, 80);
-                        
-                        ctx.fillStyle = '#ff6666';
-                        ctx.font = 'bold 18px Arial';
-                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#2e0e0e'; ctx.fillRect(40, 530, 870, 80);
+                        ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 2; ctx.strokeRect(40, 530, 870, 80);
+                        ctx.fillStyle = '#ff6666'; ctx.font = 'bold 18px Arial'; ctx.textAlign = 'center';
                         ctx.fillText('🚨 PAGUE ANTES DE 24 HORAS!', 475, 560);
-                        const termo = item.tipo === 'revenda' ? 'PAINEL' : 'ACESSO IPTV';
                         ctx.font = 'bold 15px Arial';
-                        ctx.fillText('Seu ' + termo + ' será SUSPENSO após este prazo!', 475, 590);
+                        ctx.fillText('Seu ' + (item.tipo === 'revenda' ? 'PAINEL' : 'ACESSO IPTV') + ' será SUSPENSO!', 475, 590);
                         ctx.textAlign = 'left';
                     }
-                    
-                    // MENSAGEM
+
                     const yMsg = status === 'naopago' ? 630 : 530;
                     const hMsg = status === 'naopago' ? 280 : 380;
-                    
-                    ctx.fillStyle = '#0f0f0f';
-                    ctx.fillRect(40, yMsg, 870, hMsg);
-                    ctx.strokeStyle = '#333';
-                    ctx.strokeRect(40, yMsg, 870, hMsg);
-                    
-                    ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 14px Arial';
-                    ctx.fillText('💬 MENSAGEM:', 60, yMsg + 30);
-                    
-                    ctx.font = '12px Arial';
-                    ctx.fillStyle = '#ccc';
-                    const linhas = msg.split('\n');
-                    let y = yMsg + 55;
+                    ctx.fillStyle = '#0f0f0f'; ctx.fillRect(40, yMsg, 870, hMsg);
+                    ctx.strokeStyle = '#333'; ctx.strokeRect(40, yMsg, 870, hMsg);
+                    ctx.fillStyle = '#fff'; ctx.font = 'bold 14px Arial'; ctx.fillText('💬 MENSAGEM:', 60, yMsg + 30);
+                    ctx.font = '12px Arial'; ctx.fillStyle = '#ccc';
+                    const linhas = msg.split('\n'); let y = yMsg + 55;
                     linhas.forEach(linha => {
-                        if(y < yMsg + hMsg - 20) {
-                            ctx.fillText(linha.replace(/\*/g, '').substring(0, 100), 60, y);
-                            y += 17;
-                        }
+                        if(y < yMsg + hMsg - 20) { ctx.fillText(linha.replace(/\*/g, '').substring(0, 100), 60, y); y += 17; }
                     });
-                    
-                    ctx.fillStyle = '#555';
-                    ctx.font = '11px Arial';
-                    ctx.textAlign = 'center';
+
+                    ctx.fillStyle = '#555'; ctx.font = '11px Arial'; ctx.textAlign = 'center';
                     ctx.fillText('Gerado em ' + new Date().toLocaleString('pt-BR') + ' - ' + nomeEmpresa, 475, 930);
-                    
+
                     const dataUrl = canvas.toDataURL('image/png');
                     salvarHistorico(item.nome, 'Foto', item.id, dataUrl);
-                    
                     const link = document.createElement('a');
                     link.download = `fatura_${item.nome.replace(/\s/g,'_')}.png`;
-                    link.href = dataUrl;
-                    link.click();
+                    link.href = dataUrl; link.click();
                     alert("📸 Fatura gerada!");
                 }
             }
@@ -1342,7 +1536,7 @@
             const statusColor = status === 'pago' ? '#27ae60' : (status === 'naopago' ? '#8B0000' : '#27ae60');
             const tituloCred = item.tipo === 'revenda' ? '🔐 ACESSO AO PAINEL' : '🔐 ACESSO IPTV';
             const termo = item.tipo === 'revenda' ? 'PAINEL' : 'ACESSO IPTV';
-            
+
             const win = window.open('', '_blank');
             win.document.write(`
                 <html><head><title>Fatura - ${item.nome}</title>
@@ -1364,7 +1558,6 @@
                     .valor { color: #ffd700; background: #1a1a1a; padding: 5px 10px; border-radius: 5px; }
                     .aviso-suspensao { background: #2e0e0e; color: #fff; padding: 20px; border-radius: 10px; margin: 15px 0; border: 3px solid #ff0000; text-align: center; }
                     .aviso-suspensao h3 { color: #ff6666; margin: 0 0 10px 0; font-size: 20px; }
-                    .aviso-suspensao p { margin: 5px 0; font-size: 15px; }
                     .msg-box { background: #1a1a1a; color: #fff; padding: 20px; border-radius: 10px; white-space: pre-wrap; font-size: 13px; line-height: 1.6; }
                     .footer { margin-top: 30px; text-align: center; color: #888; font-size: 11px; border-top: 1px solid #ddd; padding-top: 15px; }
                 </style></head>
@@ -1372,14 +1565,10 @@
                     <div class="header">
                         <div style="display:flex; align-items:center; gap:15px;">
                             ${logoEmpresa ? `<img src="${logoEmpresa}" class="logo">` : ''}
-                            <div>
-                                <h1>${nomeEmpresa}</h1>
-                                <p style="margin:0; color:#888; font-size:12px;">SISTEMA DE COBRANÇA</p>
-                            </div>
+                            <div><h1>${nomeEmpresa}</h1><p style="margin:0; color:#888; font-size:12px;">SISTEMA DE COBRANÇA</p></div>
                         </div>
                         <div class="badge">${statusText}</div>
                     </div>
-                    
                     <div class="perfil">
                         ${item.foto ? `<img src="${item.foto}" class="foto">` : `<div class="foto-vazia">${item.tipo === 'revenda' ? '🏢' : '👤'}</div>`}
                         <div>
@@ -1388,30 +1577,24 @@
                             <p style="margin:0; color:#666;">🖥️ ${item.servidor || 'N/A'}</p>
                         </div>
                     </div>
-                    
                     <div class="credenciais">
                         <h3>${tituloCred}</h3>
                         <div class="row"><span>👤 Usuário:</span><strong>${item.usuario || 'N/A'}</strong></div>
                         <div class="row"><span>🔑 Senha:</span><strong>${item.senha || 'N/A'}</strong></div>
                     </div>
-                    
                     <div class="info-box">
                         <div class="info-row"><span>📅 Registro:</span><strong>${formatarData(item.data_registro)}</strong></div>
                         <div class="info-row"><span>⏰ Vencimento:</span><strong style="color:${statusColor};">${formatarDataSimples(item.vencimento)}</strong></div>
                         <div class="info-row"><span>💰 Valor:</span><strong class="valor">R$ ${item.valor || '0,00'}</strong></div>
                         <div class="info-row"><span>📊 Status:</span><strong style="color:${statusColor};">${statusText}</strong></div>
                     </div>
-                    
                     ${status === 'naopago' ? `
                     <div class="aviso-suspensao">
                         <h3>🚨 ATENÇÃO - PAGAMENTO PENDENTE 🚨</h3>
                         <p><strong>PAGUE SEU PLANO ANTES DE 24 HORAS!</strong></p>
                         <p>Seu <strong>${termo}</strong> será <strong>SUSPENSO</strong> após este prazo!</p>
-                    </div>
-                    ` : ''}
-                    
+                    </div>` : ''}
                     <div class="msg-box">${msg.replace(/\*/g, '')}</div>
-                    
                     <div class="footer">Gerado em ${new Date().toLocaleString('pt-BR')} - ${nomeEmpresa}</div>
                     <script>window.print();<\/script>
                 </body></html>
@@ -1420,9 +1603,6 @@
             salvarHistorico(item.nome, 'PDF', item.id, 'PDF gerado');
         }
 
-        // ==================================================
-        // HISTÓRICO
-        // ==================================================
         async function salvarHistorico(nome, tipo, idCliente, preview) {
             historico.unshift({ id: Date.now(), nome, tipo, idCliente, data: new Date().toLocaleString('pt-BR'), preview: preview || null });
             if(historico.length > 200) historico.pop();
@@ -1435,13 +1615,10 @@
             div.innerHTML = historico.map(h => `
                 <div class="lista-item historico">
                     <div class="lista-header">
-                        <div class="lista-info">
-                            <strong>${h.nome}</strong>
-                            <small>📌 ${h.tipo} | 🕐 ${h.data}</small>
-                        </div>
-                        <div class="acoes">
-                            <button class="btn btn-edit" onclick="verHistorico(${h.id})">👁️</button>
-                            <button class="btn btn-del" onclick="excluirHistorico(${h.id})">🗑️</button>
+                        <div class="lista-info"><strong>${h.nome}</strong><small>📌 ${h.tipo} | 🕐 ${h.data}</small></div>
+                        <div class="acoes-grid" style="grid-template-columns:1fr 1fr; margin-top:8px;">
+                            <button class="action-btn btn-edit" onclick="verHistorico(${h.id})">👁️ Ver</button>
+                            <button class="action-btn btn-del" onclick="excluirHistorico(${h.id})">🗑️ Excluir</button>
                         </div>
                     </div>
                 </div>
@@ -1453,35 +1630,24 @@
             if(!h) return;
             document.getElementById('modal-info').innerHTML = `<strong>${h.nome}</strong><br>${h.tipo} - ${h.data}`;
             const p = document.getElementById('modal-preview');
-            p.innerHTML = (h.preview && h.preview.startsWith('data:image')) 
-                ? `<img src="${h.preview}" class="historico-preview">` 
-                : `<p style="color:#aaa;">${h.preview || 'Sem preview.'}</p>`;
+            p.innerHTML = (h.preview && h.preview.startsWith('data:image')) ? `<img src="${h.preview}" class="historico-preview">` : `<p style="color:#aaa;">${h.preview || 'Sem preview.'}</p>`;
             document.getElementById('modal-historico').style.display = 'flex';
         }
         function fecharModal() { document.getElementById('modal-historico').style.display = 'none'; }
         async function excluirHistorico(id) {
             if(!confirm("⚠️ Excluir este registro?")) return;
             historico = historico.filter(h => h.id !== id);
-            await salvarTudo();
-            renderizarHistorico();
+            await salvarTudo(); renderizarHistorico();
         }
 
-        // ==================================================
-        // BACKUP
-        // ==================================================
         function exportarBackup() {
-            const backup = {
-                versao: '4.0',
-                data: new Date().toISOString(),
-                clientes, revendas, historico, config, logoEmpresa, nomeEmpresa
-            };
+            const backup = { versao: '6.0', data: new Date().toISOString(), clientes, revendas, historico, config, logoEmpresa, nomeEmpresa };
             const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
             link.download = `backup_${nomeEmpresa.replace(/\s/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
+            link.click(); URL.revokeObjectURL(url);
             alert("✅ Backup exportado!");
         }
 
@@ -1489,7 +1655,6 @@
             const file = input.files[0];
             if(!file) return;
             if(!confirm("⚠️ Substituir TODOS os dados atuais?")) { input.value = ''; return; }
-            
             const reader = new FileReader();
             reader.onload = async (e) => {
                 try {
@@ -1500,18 +1665,10 @@
                     config = backup.config || { modo: 'completo' };
                     logoEmpresa = backup.logoEmpresa || null;
                     nomeEmpresa = backup.nomeEmpresa || 'TV NOVA JUAREZ';
-                    
                     await salvarTudo();
-                    aplicarNomeEmpresa();
-                    renderizarClientes();
-                    renderizarRevendas();
-                    renderizarHistorico();
-                    carregarConfig();
-                    atualizarEstatisticas();
-                    alert(`✅ Backup importado!\n${clientes.length} clientes, ${revendas.length} revendas.`);
-                } catch(err) {
-                    alert("❌ Arquivo inválido!");
-                }
+                    aplicarNomeEmpresa(); renderizarClientes(); renderizarRevendas(); renderizarHistorico(); carregarConfig(); atualizarEstatisticas();
+                    alert(`✅ Backup importado! ${clientes.length} clientes, ${revendas.length} revendas.`);
+                } catch(err) { alert("❌ Arquivo inválido!"); }
             };
             reader.readAsText(file);
         }
@@ -1521,19 +1678,11 @@
             if(!confirm("🚨 ÚLTIMA CONFIRMAÇÃO!")) return;
             const senha = prompt("Digite 'APAGAR' para confirmar:");
             if(senha !== 'APAGAR') { alert("❌ Cancelado."); return; }
-            
-            localStorage.clear();
-            sessionStorage.clear();
-            if(db) {
-                const transaction = db.transaction(['dados'], 'readwrite');
-                transaction.objectStore('dados').clear();
-            }
+            localStorage.clear(); sessionStorage.clear();
+            if(db) { const t = db.transaction(['dados'], 'readwrite'); t.objectStore('dados').clear(); }
             location.reload();
         }
 
-        // ==================================================
-        // SALVAR AO FECHAR
-        // ==================================================
         window.addEventListener('beforeunload', () => {
             try {
                 localStorage.setItem('tv_clientes_v3', JSON.stringify(clientes));
@@ -1541,23 +1690,12 @@
                 localStorage.setItem('tv_historico_v3', JSON.stringify(historico));
             } catch(e) {}
         });
-
-        document.addEventListener('visibilitychange', () => {
-            if(document.visibilityState === 'hidden') salvarTudo();
-        });
-
+        document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') salvarTudo(); });
         window.addEventListener('storage', (e) => {
             if(e.key && e.key.startsWith('tv_')) {
-                carregarTudo().then(() => {
-                    renderizarClientes();
-                    renderizarRevendas();
-                    renderizarHistorico();
-                    atualizarEstatisticas();
-                });
+                carregarTudo().then(() => { renderizarClientes(); renderizarRevendas(); renderizarHistorico(); atualizarEstatisticas(); });
             }
         });
-
-        init();
     </script>
 </body>
 </html>
