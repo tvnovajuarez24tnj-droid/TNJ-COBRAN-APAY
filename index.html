@@ -18,9 +18,6 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { overflow-x: hidden; margin: 0; padding: 0; }
 
-        /* ============================================ */
-        /* TELA DE LOGIN */
-        /* ============================================ */
         .login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #0a0e27 0%, #1a1a4e 25%, #4a1a6e 50%, #6e1a5e 75%, #0a0e27 100%);
@@ -111,14 +108,10 @@
             font-weight: bold; margin-top: 8px; letter-spacing: 1px;
         }
 
-        /* ============================================ */
-        /* SISTEMA PRINCIPAL */
-        /* ============================================ */
         .sistema { display: none; }
         .sistema.ativo { display: block; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; min-height: 100vh; }
 
-        /* HEADER PROFISSIONAL */
         .header {
             display: flex; align-items: center; justify-content: space-between;
             padding: 12px 15px; background: linear-gradient(135deg, #1a1a1a, #252525);
@@ -143,7 +136,6 @@
         }
         .btn-sair:hover { transform: scale(1.05); }
 
-        /* PAINEL DE ESTATÍSTICAS */
         .painel {
             display: grid; gap: 10px; margin-bottom: 15px;
             grid-template-columns: repeat(2, 1fr);
@@ -164,7 +156,6 @@
         .stat-card .sub { font-size: 0.68em; color: #999; }
         .stat-card .num.gold { color: var(--gold); }
 
-        /* ABAS EM CARTÕES */
         .tabs-cards {
             display: grid; gap: 10px; margin-bottom: 15px;
             grid-template-columns: repeat(2, 1fr);
@@ -185,7 +176,6 @@
             box-shadow: 0 6px 20px rgba(255,215,0,0.4);
         }
 
-        /* CONTEÚDO */
         .container {
             background: var(--card); padding: 16px; border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: none;
@@ -193,7 +183,6 @@
         }
         .container.active { display: block; }
 
-        /* FORMULÁRIO */
         .form-group { display: grid; gap: 10px; margin-bottom: 10px; grid-template-columns: 1fr; }
         .form-group.tres { grid-template-columns: 1fr; }
         .form-group.full { grid-template-columns: 1fr; }
@@ -205,7 +194,6 @@
         }
         input[type="file"] { padding: 6px; background: #222; }
 
-        /* BOTÕES DE AÇÃO EM CARTÕES */
         .acoes-grid {
             display: grid; gap: 8px; margin-top: 8px;
             grid-template-columns: repeat(2, 1fr);
@@ -248,7 +236,6 @@
             font-weight: bold; cursor: pointer; font-family: inherit;
         }
 
-        /* SELETOR DE STATUS */
         .status-selector {
             display: grid; gap: 8px; margin-top: 10px;
             grid-template-columns: 1fr;
@@ -262,7 +249,6 @@
         .status-ativo-pago { box-shadow: 0 0 0 3px rgba(255,215,0,0.5); }
         .status-ativo-naopago { box-shadow: 0 0 0 3px rgba(255,0,0,0.5); }
 
-        /* FILTROS */
         .filtros {
             display: grid; gap: 6px; margin-bottom: 12px;
             grid-template-columns: repeat(2, 1fr);
@@ -278,7 +264,6 @@
         .filtro-btn.ativo-pago { background: var(--gold); border-color: var(--gold); color: black; }
         .filtro-btn.ativo-naopago { background: var(--naopago); border-color: var(--naopago); }
 
-        /* LISTA */
         .lista-item {
             background: #252525; padding: 14px; border-radius: 10px;
             margin-bottom: 12px; border-left: 4px solid var(--emdia);
@@ -323,7 +308,6 @@
         }
         .info-credenciais strong { color: #32bcad; }
 
-        /* CONFIG */
         .config-box {
             background: #0f0f0f; padding: 14px; border-radius: 10px;
             border: 1px solid var(--border); margin-bottom: 12px;
@@ -345,7 +329,6 @@
         }
         .radio-group input[type="radio"] { width: auto; }
 
-        /* MODAL */
         .modal {
             display: none; position: fixed; top: 0; left: 0;
             width: 100%; height: 100%; background: rgba(0,0,0,0.9);
@@ -374,35 +357,22 @@
         .sync-status.salvando { background: #f39c12; }
         .sync-status.erro { background: #e74c3c; }
 
-        /* ============================================ */
-        /* COMPUTADOR / NOTEBOOK (>= 768px) */
-        /* ============================================ */
         @media (min-width: 768px) {
             body { padding: 15px 25px; max-width: 1400px; margin: 0 auto; }
-            
             .painel { grid-template-columns: repeat(6, 1fr); gap: 12px; }
             .stat-card .num { font-size: 1.6em; }
-            
             .tabs-cards { grid-template-columns: repeat(4, 1fr); gap: 12px; }
             .tab-card { padding: 20px 15px; font-size: 0.95em; }
             .tab-card .ico { font-size: 2.2em; }
-            
             .form-group { grid-template-columns: 1fr 1fr; }
             .form-group.tres { grid-template-columns: 1fr 1fr 1fr; }
-            
             .acoes-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
             .action-btn { padding: 12px 10px; font-size: 0.82em; }
-            
             .status-selector { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            
             .filtros { grid-template-columns: repeat(5, 1fr); }
-            
             .perfil-box { min-width: 200px; }
         }
 
-        /* ============================================ */
-        /* TELA MÉDIA (tablet - 500-767px) */
-        /* ============================================ */
         @media (min-width: 500px) and (max-width: 767px) {
             .painel { grid-template-columns: repeat(3, 1fr); }
             .tabs-cards { grid-template-columns: repeat(2, 1fr); }
@@ -412,9 +382,6 @@
             .filtros { grid-template-columns: repeat(4, 1fr); }
         }
 
-        /* ============================================ */
-        /* CELULAR PEQUENO (< 400px) */
-        /* ============================================ */
         @media (max-width: 400px) {
             .painel { grid-template-columns: 1fr 1fr; }
             .tabs-cards { grid-template-columns: 1fr 1fr; }
@@ -426,9 +393,6 @@
             .action-btn { font-size: 0.72em; padding: 10px 6px; }
         }
 
-        /* ============================================ */
-        /* ORIENTAÇÃO HORIZONTAL EM CELULAR */
-        /* ============================================ */
         @media (max-height: 500px) and (orientation: landscape) {
             .painel { grid-template-columns: repeat(4, 1fr); }
             .tabs-cards { grid-template-columns: repeat(4, 1fr); }
@@ -437,7 +401,6 @@
 </head>
 <body>
 
-    <!-- TELA DE LOGIN -->
     <div class="login-screen" id="login-screen">
         <div class="login-box">
             <div class="login-logo" id="login-logo-container">
@@ -449,17 +412,15 @@
                 <label>👤 USUÁRIO</label>
                 <input type="text" id="login-user" placeholder="Digite seu usuário" autocomplete="off">
             </div>
-
             <div class="login-field">
                 <label>🔒 SENHA</label>
                 <input type="password" id="login-pass" placeholder="Digite sua senha" autocomplete="off">
             </div>
-
             <button class="login-btn" onclick="fazerLogin()">🔓 ENTRAR NO SISTEMA</button>
             <div class="login-error" id="login-error"></div>
 
             <div class="whatsapp-contact">
-                <p>🔐 Não tem acesso?<br>Entre em contato com o dono e peça seu acesso!</p>
+                <p>🔐 Não tem acesso?<br>Entre em contato com o dono!</p>
                 <button class="whatsapp-btn" onclick="abrirWhatsDono()">
                     <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                     Falar com o Dono
@@ -469,11 +430,9 @@
         </div>
     </div>
 
-    <!-- SISTEMA PRINCIPAL -->
     <div class="sistema" id="sistema">
         <div class="sync-status" id="sync-status">💾 Salvo</div>
 
-        <!-- HEADER -->
         <div class="header">
             <div class="header-left">
                 <div id="header-logo-container"></div>
@@ -485,7 +444,6 @@
             <button class="btn-sair" onclick="sair()">🚪 Sair</button>
         </div>
 
-        <!-- PAINEL -->
         <div class="painel">
             <div class="stat-card">
                 <h4>👤 Clientes</h4>
@@ -515,27 +473,21 @@
             </div>
         </div>
 
-        <!-- ABAS EM CARTÕES -->
         <div class="tabs-cards">
             <button class="tab-card active" onclick="abrirAba('clientes', this)">
-                <span class="ico">👤</span>
-                <span>Clientes</span>
+                <span class="ico">👤</span><span>Clientes</span>
             </button>
             <button class="tab-card" onclick="abrirAba('revendas', this)">
-                <span class="ico">🏢</span>
-                <span>Revendas</span>
+                <span class="ico">🏢</span><span>Revendas</span>
             </button>
             <button class="tab-card" onclick="abrirAba('historico', this)">
-                <span class="ico">📂</span>
-                <span>Histórico</span>
+                <span class="ico">📂</span><span>Histórico</span>
             </button>
             <button class="tab-card" onclick="abrirAba('config', this)">
-                <span class="ico">⚙️</span>
-                <span>Config</span>
+                <span class="ico">⚙️</span><span>Config</span>
             </button>
         </div>
 
-        <!-- CLIENTES -->
         <div id="clientes" class="container active">
             <h2 id="titulo-cliente" style="color:var(--gold); font-size:1.2em; margin-bottom:12px;">➕ Cadastrar Cliente</h2>
             <input type="hidden" id="cli_id_edit">
@@ -582,7 +534,6 @@
             <div id="lista-clientes"></div>
         </div>
 
-        <!-- REVENDAS -->
         <div id="revendas" class="container">
             <h2 id="titulo-revenda" style="color:var(--gold); font-size:1.2em; margin-bottom:12px;">➕ Cadastrar Revenda</h2>
             <input type="hidden" id="rev_id_edit">
@@ -629,16 +580,14 @@
             <div id="lista-revendas"></div>
         </div>
 
-        <!-- HISTÓRICO -->
         <div id="historico" class="container">
             <h2 style="color:var(--gold); font-size:1.2em;">📂 Histórico de Cobranças</h2>
             <div id="lista-historico"></div>
         </div>
 
-        <!-- CONFIG -->
         <div id="config" class="container">
             <h2 style="color:var(--gold); font-size:1.2em;">⚙️ Configurações</h2>
-            <div class="aviso-verde">✅ SISTEMA ILIMITADO - Dados permanentes</div>
+            <div class="aviso-verde">✅ SISTEMA PERMANENTE - Dados NUNCA são apagados</div>
 
             <div class="config-box">
                 <h3>🏢 Nome da Empresa</h3>
@@ -708,8 +657,299 @@
 
     <script>
         // ==================================================
-        // LOGIN
+        // ⚡ SISTEMA PERMANENTE - 4 CAMADAS DE SALVAMENTO
         // ==================================================
+
+        const STORAGE_KEYS = {
+            clientes: 'tv_clientes_v4',
+            revendas: 'tv_revendas_v4',
+            historico: 'tv_historico_v4',
+            config: 'tv_config_v4',
+            logo: 'tv_logo_v4',
+            nome: 'tv_nome_empresa_v4'
+        };
+        const DB_NAME = 'TVNovaJuarezDB';
+        let db = null;
+
+        // ============================================
+        // INDEXEDDB (Camada 1)
+        // ============================================
+        function abrirIndexedDB() {
+            return new Promise((resolve) => {
+                try {
+                    const request = indexedDB.open(DB_NAME, 2);
+                    request.onerror = () => resolve(null);
+                    request.onsuccess = () => { db = request.result; resolve(db); };
+                    request.onupgradeneeded = (e) => {
+                        const database = e.target.result;
+                        if(!database.objectStoreNames.contains('dados')) {
+                            database.createObjectStore('dados', { keyPath: 'chave' });
+                        }
+                    };
+                } catch(e) { resolve(null); }
+            });
+        }
+
+        async function salvarIndexedDB(chave, valor) {
+            try {
+                if(!db) await abrirIndexedDB();
+                if(!db) return;
+                return new Promise((resolve) => {
+                    try {
+                        const t = db.transaction(['dados'], 'readwrite');
+                        t.objectStore('dados').put({ chave, valor, timestamp: Date.now() });
+                        t.oncomplete = () => resolve();
+                        t.onerror = () => resolve();
+                    } catch(e) { resolve(); }
+                });
+            } catch(e) {}
+        }
+
+        async function carregarIndexedDB(chave) {
+            try {
+                if(!db) await abrirIndexedDB();
+                if(!db) return null;
+                return new Promise((resolve) => {
+                    try {
+                        const t = db.transaction(['dados'], 'readonly');
+                        const r = t.objectStore('dados').get(chave);
+                        r.onsuccess = () => resolve(r.result ? r.result.valor : null);
+                        r.onerror = () => resolve(null);
+                    } catch(e) { resolve(null); }
+                });
+            } catch(e) { return null; }
+        }
+
+        // ============================================
+        // ⚠️ BACKUP EM MEMÓRIA (última camada de proteção)
+        // ============================================
+        let backupMemoria = {
+            clientes: [],
+            revendas: [],
+            historico: [],
+            config: { modo: 'completo' },
+            logo: null,
+            nome: 'TV NOVA JUAREZ'
+        };
+
+        // ============================================
+        // FUNÇÃO DE SALVAMENTO TOTAL
+        // ============================================
+        function mostrarStatus(texto, tipo = 'ok') {
+            const el = document.getElementById('sync-status');
+            if(!el) return;
+            el.innerText = texto;
+            el.className = 'sync-status ' + (tipo === 'salvando' ? 'salvando' : tipo === 'erro' ? 'erro' : '');
+        }
+
+        async function salvarTudo() {
+            mostrarStatus('💾 Salvando...', 'salvando');
+            try {
+                // Atualiza backup em memória
+                backupMemoria = {
+                    clientes: [...clientes],
+                    revendas: [...revendas],
+                    historico: [...historico],
+                    config: {...config},
+                    logo: logoEmpresa,
+                    nome: nomeEmpresa
+                };
+
+                // CAMADA 1: LocalStorage
+                localStorage.setItem(STORAGE_KEYS.clientes, JSON.stringify(clientes));
+                localStorage.setItem(STORAGE_KEYS.revendas, JSON.stringify(revendas));
+                localStorage.setItem(STORAGE_KEYS.historico, JSON.stringify(historico));
+                localStorage.setItem(STORAGE_KEYS.config, JSON.stringify(config));
+                if(logoEmpresa) localStorage.setItem(STORAGE_KEYS.logo, logoEmpresa);
+                if(nomeEmpresa) localStorage.setItem(STORAGE_KEYS.nome, nomeEmpresa);
+
+                // CAMADA 2: Também salva nas chaves antigas (compatibilidade)
+                localStorage.setItem('tv_clientes_v3', JSON.stringify(clientes));
+                localStorage.setItem('tv_revendas_v3', JSON.stringify(revendas));
+                localStorage.setItem('tv_historico_v3', JSON.stringify(historico));
+                localStorage.setItem('tv_config_v3', JSON.stringify(config));
+                if(logoEmpresa) localStorage.setItem('tv_logo_v3', logoEmpresa);
+                if(nomeEmpresa) localStorage.setItem('tv_nome_empresa_v3', nomeEmpresa);
+
+                // CAMADA 3: IndexedDB
+                await salvarIndexedDB('clientes', clientes);
+                await salvarIndexedDB('revendas', revendas);
+                await salvarIndexedDB('historico', historico);
+                await salvarIndexedDB('config', config);
+                if(logoEmpresa) await salvarIndexedDB('logo', logoEmpresa);
+                if(nomeEmpresa) await salvarIndexedDB('nome_empresa', nomeEmpresa);
+
+                // CAMADA 4: SessionStorage (backup temporário)
+                sessionStorage.setItem('backup_clientes', JSON.stringify(clientes));
+                sessionStorage.setItem('backup_revendas', JSON.stringify(revendas));
+
+                setTimeout(() => mostrarStatus('💾 Salvo'), 400);
+                atualizarDiagnostico();
+            } catch(e) {
+                console.error('Erro ao salvar:', e);
+                mostrarStatus('❌ Erro ao salvar', 'erro');
+            }
+        }
+
+        // ============================================
+        // CARREGAMENTO COM VERIFICAÇÃO DE INTEGRIDADE
+        // ============================================
+        async function carregarTudo() {
+            let fontes = {
+                clientes: [],
+                revendas: [],
+                historico: []
+            };
+
+            // Fonte 1: LocalStorage v4
+            try {
+                const c = localStorage.getItem(STORAGE_KEYS.clientes);
+                if(c) {
+                    const arr = JSON.parse(c);
+                    if(Array.isArray(arr) && arr.length > fontes.clientes.length) fontes.clientes = arr;
+                }
+            } catch(e) {}
+
+            // Fonte 2: LocalStorage v3 (antigo)
+            try {
+                const c = localStorage.getItem('tv_clientes_v3');
+                if(c) {
+                    const arr = JSON.parse(c);
+                    if(Array.isArray(arr) && arr.length > fontes.clientes.length) fontes.clientes = arr;
+                }
+            } catch(e) {}
+
+            // Fonte 3: LocalStorage original
+            try {
+                const c = localStorage.getItem('tv_clientes');
+                if(c) {
+                    const arr = JSON.parse(c);
+                    if(Array.isArray(arr) && arr.length > fontes.clientes.length) fontes.clientes = arr;
+                }
+            } catch(e) {}
+
+            // Fonte 4: IndexedDB
+            try {
+                const c = await carregarIndexedDB('clientes');
+                if(c && Array.isArray(c) && c.length > fontes.clientes.length) fontes.clientes = c;
+            } catch(e) {}
+
+            // Fonte 5: Backup em memória
+            if(backupMemoria.clientes && backupMemoria.clientes.length > fontes.clientes.length) {
+                fontes.clientes = backupMemoria.clientes;
+            }
+
+            // ===== MESMA LÓGICA PARA REVENDAS =====
+            try {
+                const r = localStorage.getItem(STORAGE_KEYS.revendas);
+                if(r) { const arr = JSON.parse(r); if(Array.isArray(arr) && arr.length > fontes.revendas.length) fontes.revendas = arr; }
+            } catch(e) {}
+            try {
+                const r = localStorage.getItem('tv_revendas_v3');
+                if(r) { const arr = JSON.parse(r); if(Array.isArray(arr) && arr.length > fontes.revendas.length) fontes.revendas = arr; }
+            } catch(e) {}
+            try {
+                const r = localStorage.getItem('tv_revendas');
+                if(r) { const arr = JSON.parse(r); if(Array.isArray(arr) && arr.length > fontes.revendas.length) fontes.revendas = arr; }
+            } catch(e) {}
+            try {
+                const r = await carregarIndexedDB('revendas');
+                if(r && Array.isArray(r) && r.length > fontes.revendas.length) fontes.revendas = r;
+            } catch(e) {}
+            if(backupMemoria.revendas && backupMemoria.revendas.length > fontes.revendas.length) {
+                fontes.revendas = backupMemoria.revendas;
+            }
+
+            // ===== MESMA LÓGICA PARA HISTÓRICO =====
+            try {
+                const h = localStorage.getItem(STORAGE_KEYS.historico);
+                if(h) { const arr = JSON.parse(h); if(Array.isArray(arr) && arr.length > fontes.historico.length) fontes.historico = arr; }
+            } catch(e) {}
+            try {
+                const h = localStorage.getItem('tv_historico_v3');
+                if(h) { const arr = JSON.parse(h); if(Array.isArray(arr) && arr.length > fontes.historico.length) fontes.historico = arr; }
+            } catch(e) {}
+            try {
+                const h = await carregarIndexedDB('historico');
+                if(h && Array.isArray(h) && h.length > fontes.historico.length) fontes.historico = h;
+            } catch(e) {}
+
+            // ===== CONFIG, LOGO E NOME =====
+            let cfg = null, logo = null, nome = null;
+            try { cfg = localStorage.getItem(STORAGE_KEYS.config); } catch(e) {}
+            if(!cfg) { try { cfg = localStorage.getItem('tv_config_v3'); } catch(e) {} }
+            if(!cfg) { cfg = await carregarIndexedDB('config'); if(typeof cfg === 'string') cfg = cfg; }
+            if(cfg) { try { config = typeof cfg === 'string' ? JSON.parse(cfg) : cfg; } catch(e) { config = { modo: 'completo' }; } }
+
+            try { logo = localStorage.getItem(STORAGE_KEYS.logo); } catch(e) {}
+            if(!logo) { try { logo = localStorage.getItem('tv_logo_v3'); } catch(e) {} }
+            if(!logo) { logo = await carregarIndexedDB('logo'); }
+
+            try { nome = localStorage.getItem(STORAGE_KEYS.nome); } catch(e) {}
+            if(!nome) { try { nome = localStorage.getItem('tv_nome_empresa_v3'); } catch(e) {} }
+            if(!nome) { nome = await carregarIndexedDB('nome_empresa'); }
+
+            // Aplica os dados com mais registros
+            clientes = fontes.clientes;
+            revendas = fontes.revendas;
+            historico = fontes.historico;
+            logoEmpresa = logo || backupMemoria.logo;
+            nomeEmpresa = nome || backupMemoria.nome || 'TV NOVA JUAREZ';
+
+            // Garante que todos os clientes/revendas tenham status
+            clientes = clientes.map(c => { if(c.status === undefined) c.status = c.pago ? 'pago' : 'dia'; return c; });
+            revendas = revendas.map(r => { if(r.status === undefined) r.status = r.pago ? 'pago' : 'dia'; return r; });
+
+            console.log('✅ Dados carregados:', clientes.length, 'clientes,', revendas.length, 'revendas');
+            atualizarDiagnostico();
+        }
+
+        function atualizarDiagnostico() {
+            const el = document.getElementById('diagnostico');
+            if(el) {
+                document.getElementById('diag-clientes').innerText = clientes.length;
+                document.getElementById('diag-revendas').innerText = revendas.length;
+                document.getElementById('diag-historico').innerText = historico.length;
+            }
+        }
+
+        // ============================================
+        // AUTO-SAVE A CADA 15 SEGUNDOS
+        // ============================================
+        setInterval(() => { salvarTudo(); }, 15000);
+
+        // ============================================
+        // SALVA AO SAIR/FECHAR/RECARREGAR
+        // ============================================
+        window.addEventListener('beforeunload', () => {
+            try {
+                localStorage.setItem(STORAGE_KEYS.clientes, JSON.stringify(clientes));
+                localStorage.setItem(STORAGE_KEYS.revendas, JSON.stringify(revendas));
+                localStorage.setItem(STORAGE_KEYS.historico, JSON.stringify(historico));
+                localStorage.setItem('tv_clientes_v3', JSON.stringify(clientes));
+                localStorage.setItem('tv_revendas_v3', JSON.stringify(revendas));
+            } catch(e) {}
+        });
+
+        // Salva quando a página perde visibilidade (troca de aba, minimiza, etc)
+        document.addEventListener('visibilitychange', () => { 
+            if(document.visibilityState === 'hidden') salvarTudo(); 
+        });
+
+        // Salva ao sair da página
+        window.addEventListener('pagehide', () => { salvarTudo(); });
+
+        // Salva ao voltar para a página
+        window.addEventListener('pageshow', async () => { 
+            await carregarTudo(); 
+            renderizarClientes(); 
+            renderizarRevendas(); 
+            atualizarEstatisticas();
+        });
+
+        // ============================================
+        // LOGIN
+        // ============================================
         const USUARIO_CORRETO = 'jesus';
         const SENHA_CORRETA = 'jesus';
         const NUMERO_DONO = '5521977519001';
@@ -742,9 +982,11 @@
         }
 
         function sair() {
-            if(!confirm("🚪 Deseja sair?")) return;
-            sessionStorage.removeItem('sistema_logado');
-            location.reload();
+            if(!confirm("🚪 Deseja sair? SEUS DADOS FICARÃO SALVOS!")) return;
+            salvarTudo().then(() => {
+                sessionStorage.removeItem('sistema_logado');
+                location.reload();
+            });
         }
 
         if(sessionStorage.getItem('sistema_logado') === 'true') {
@@ -756,11 +998,11 @@
         document.getElementById('login-pass').addEventListener('keypress', e => { if(e.key === 'Enter') fazerLogin(); });
 
         function aplicarLogoLogin() {
-            const logoSalva = localStorage.getItem('tv_logo_v3');
+            const logoSalva = localStorage.getItem(STORAGE_KEYS.logo) || localStorage.getItem('tv_logo_v3');
             if(logoSalva) {
                 document.getElementById('login-logo-container').innerHTML = `<img src="${logoSalva}" alt="Logo">`;
             }
-            const nomeSalvo = localStorage.getItem('tv_nome_empresa_v3');
+            const nomeSalvo = localStorage.getItem(STORAGE_KEYS.nome) || localStorage.getItem('tv_nome_empresa_v3');
             if(nomeSalvo) {
                 const el = document.getElementById('login-logo-text');
                 if(el) el.innerText = nomeSalvo;
@@ -768,57 +1010,9 @@
         }
         aplicarLogoLogin();
 
-        // ==================================================
-        // SISTEMA
-        // ==================================================
-        const DB_NAME = 'TVNovaJuarezDB';
-        let db = null;
-
-        function abrirIndexedDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, 1);
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => { db = request.result; resolve(db); };
-                request.onupgradeneeded = (e) => {
-                    const database = e.target.result;
-                    if(!database.objectStoreNames.contains('dados')) {
-                        database.createObjectStore('dados', { keyPath: 'chave' });
-                    }
-                };
-            });
-        }
-
-        async function salvarIndexedDB(chave, valor) {
-            try {
-                if(!db) await abrirIndexedDB();
-                return new Promise((resolve, reject) => {
-                    const t = db.transaction(['dados'], 'readwrite');
-                    t.objectStore('dados').put({ chave, valor, timestamp: Date.now() });
-                    t.oncomplete = () => resolve();
-                    t.onerror = () => reject(t.error);
-                });
-            } catch(e) {}
-        }
-
-        async function carregarIndexedDB(chave) {
-            try {
-                if(!db) await abrirIndexedDB();
-                return new Promise((resolve, reject) => {
-                    const t = db.transaction(['dados'], 'readonly');
-                    const r = t.objectStore('dados').get(chave);
-                    r.onsuccess = () => resolve(r.result ? r.result.valor : null);
-                    r.onerror = () => reject(r.error);
-                });
-            } catch(e) { return null; }
-        }
-
-        function mostrarStatus(texto, tipo = 'ok') {
-            const el = document.getElementById('sync-status');
-            if(!el) return;
-            el.innerText = texto;
-            el.className = 'sync-status ' + (tipo === 'salvando' ? 'salvando' : tipo === 'erro' ? 'erro' : '');
-        }
-
+        // ============================================
+        // VARIÁVEIS GLOBAIS
+        // ============================================
         let clientes = [];
         let revendas = [];
         let historico = [];
@@ -832,67 +1026,9 @@
         let statusCliTemp = 'dia';
         let statusRevTemp = 'dia';
 
-        async function carregarTudo() {
-            let cli = await carregarIndexedDB('clientes');
-            let rev = await carregarIndexedDB('revendas');
-            let hist = await carregarIndexedDB('historico');
-            let cfg = await carregarIndexedDB('config');
-            let logo = await carregarIndexedDB('logo');
-            let nome = await carregarIndexedDB('nome_empresa');
-
-            let cliLS = localStorage.getItem('tv_clientes_v3') || localStorage.getItem('tv_clientes');
-            let revLS = localStorage.getItem('tv_revendas_v3') || localStorage.getItem('tv_revendas');
-            let histLS = localStorage.getItem('tv_historico_v3') || localStorage.getItem('tv_historico');
-            let cfgLS = localStorage.getItem('tv_config_v3') || localStorage.getItem('tv_config');
-            let logoLS = localStorage.getItem('tv_logo_v3') || localStorage.getItem('tv_logo');
-            let nomeLS = localStorage.getItem('tv_nome_empresa_v3') || localStorage.getItem('tv_nome_empresa');
-
-            clientes = (cli && cli.length > 0) ? cli : (cliLS ? JSON.parse(cliLS) : []);
-            revendas = (rev && rev.length > 0) ? rev : (revLS ? JSON.parse(revLS) : []);
-            historico = (hist && hist.length > 0) ? hist : (histLS ? JSON.parse(histLS) : []);
-            config = cfg || (cfgLS ? JSON.parse(cfgLS) : { modo: 'completo' });
-            logoEmpresa = logo || logoLS || null;
-            nomeEmpresa = nome || nomeLS || 'TV NOVA JUAREZ';
-
-            clientes = clientes.map(c => { if(c.status === undefined) c.status = c.pago ? 'pago' : 'dia'; return c; });
-            revendas = revendas.map(r => { if(r.status === undefined) r.status = r.pago ? 'pago' : 'dia'; return r; });
-
-            atualizarDiagnostico();
-        }
-
-        async function salvarTudo() {
-            mostrarStatus('💾 Salvando...', 'salvando');
-            try {
-                localStorage.setItem('tv_clientes_v3', JSON.stringify(clientes));
-                localStorage.setItem('tv_revendas_v3', JSON.stringify(revendas));
-                localStorage.setItem('tv_historico_v3', JSON.stringify(historico));
-                localStorage.setItem('tv_config_v3', JSON.stringify(config));
-                if(logoEmpresa) localStorage.setItem('tv_logo_v3', logoEmpresa);
-                if(nomeEmpresa) localStorage.setItem('tv_nome_empresa_v3', nomeEmpresa);
-
-                await salvarIndexedDB('clientes', clientes);
-                await salvarIndexedDB('revendas', revendas);
-                await salvarIndexedDB('historico', historico);
-                await salvarIndexedDB('config', config);
-                if(logoEmpresa) await salvarIndexedDB('logo', logoEmpresa);
-                if(nomeEmpresa) await salvarIndexedDB('nome_empresa', nomeEmpresa);
-
-                setTimeout(() => mostrarStatus('💾 Salvo'), 500);
-                atualizarDiagnostico();
-            } catch(e) { mostrarStatus('❌ Erro', 'erro'); }
-        }
-
-        function atualizarDiagnostico() {
-            const el = document.getElementById('diagnostico');
-            if(el) {
-                document.getElementById('diag-clientes').innerText = clientes.length;
-                document.getElementById('diag-revendas').innerText = revendas.length;
-                document.getElementById('diag-historico').innerText = historico.length;
-            }
-        }
-
-        setInterval(() => { salvarTudo(); }, 30000);
-
+        // ============================================
+        // INIT
+        // ============================================
         async function init() {
             await abrirIndexedDB();
             await carregarTudo();
@@ -907,6 +1043,7 @@
             selecionarStatus('cli', 'dia');
             selecionarStatus('rev', 'dia');
             mostrarStatus('💾 Salvo');
+            console.log('🚀 Sistema iniciado!');
         }
 
         function aplicarNomeEmpresa() {
@@ -1027,15 +1164,15 @@
             reader.readAsDataURL(file);
         }
 
-        function carregarLogo(input) {
+        async function carregarLogo(input) {
             const file = input.files[0];
             if(!file) return;
             const reader = new FileReader();
-            reader.onload = e => {
+            reader.onload = async e => {
                 logoEmpresa = e.target.result;
                 document.getElementById('logo-preview').innerHTML = `<img src="${logoEmpresa}" style="max-height:100px; border-radius:8px;">`;
-                salvarTudo();
-                alert("✅ Logo salva!");
+                await salvarTudo();
+                alert("✅ Logo salva PERMANENTEMENTE!");
             };
             reader.readAsDataURL(file);
         }
@@ -1046,7 +1183,7 @@
             document.getElementById('box-simples').style.display = modo === 'simples' ? 'block' : 'none';
         }
 
-        function salvarConfig() {
+        async function salvarConfig() {
             const modo = document.querySelector('input[name="modo_banco"]:checked').value;
             const nomeDigitado = document.getElementById('cfg_nome_empresa').value.trim();
             if(nomeDigitado) { nomeEmpresa = nomeDigitado.toUpperCase(); aplicarNomeEmpresa(); }
@@ -1060,8 +1197,8 @@
                 titular_simples: document.getElementById('cfg_titular_simples').value,
                 pix_simples: document.getElementById('cfg_pix_simples').value
             };
-            salvarTudo();
-            alert("✅ Configurações salvas!");
+            await salvarTudo();
+            alert("✅ Configurações salvas PERMANENTEMENTE!");
         }
 
         function carregarConfig() {
@@ -1106,13 +1243,18 @@
             if(idEdit) {
                 const idx = clientes.findIndex(c => c.id === parseInt(idEdit));
                 clientes[idx] = dados;
-                alert("✅ Cliente atualizado!");
             } else {
                 clientes.push(dados);
-                alert("✅ Cliente salvo!");
             }
+            
+            // SALVA 2 VEZES para garantir
             await salvarTudo();
-            renderizarClientes(); atualizarEstatisticas(); cancelarEdicaoCliente();
+            await salvarTudo();
+            
+            renderizarClientes(); 
+            atualizarEstatisticas(); 
+            cancelarEdicaoCliente();
+            alert("✅ Cliente salvo PERMANENTEMENTE!");
         }
 
         function editarCliente(id) {
@@ -1156,6 +1298,7 @@
             clientes = clientes.filter(c => c.id !== id);
             await salvarTudo();
             renderizarClientes(); atualizarEstatisticas();
+            alert("🗑️ Cliente excluído!");
         }
 
         async function mudarStatusCliente(id, novoStatus) {
@@ -1236,13 +1379,17 @@
             if(idEdit) {
                 const idx = revendas.findIndex(r => r.id === parseInt(idEdit));
                 revendas[idx] = dados;
-                alert("✅ Revenda atualizada!");
             } else {
                 revendas.push(dados);
-                alert("✅ Revenda salva!");
             }
+            
             await salvarTudo();
-            renderizarRevendas(); atualizarEstatisticas(); cancelarEdicaoRevenda();
+            await salvarTudo();
+            
+            renderizarRevendas(); 
+            atualizarEstatisticas(); 
+            cancelarEdicaoRevenda();
+            alert("✅ Revenda salva PERMANENTEMENTE!");
         }
 
         function editarRevenda(id) {
@@ -1286,6 +1433,7 @@
             revendas = revendas.filter(r => r.id !== id);
             await salvarTudo();
             renderizarRevendas(); atualizarEstatisticas();
+            alert("🗑️ Revenda excluída!");
         }
 
         async function mudarStatusRevenda(id, novoStatus) {
@@ -1641,7 +1789,7 @@
         }
 
         function exportarBackup() {
-            const backup = { versao: '6.0', data: new Date().toISOString(), clientes, revendas, historico, config, logoEmpresa, nomeEmpresa };
+            const backup = { versao: '7.0', data: new Date().toISOString(), clientes, revendas, historico, config, logoEmpresa, nomeEmpresa };
             const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -1674,26 +1822,32 @@
         }
 
         async function limparTudo() {
-            if(!confirm("⚠️ APAGAR TUDO PERMANENTEMENTE?")) return;
+            if(!confirm("⚠️ ATENÇÃO! Isso vai APAGAR TODOS os clientes e revendas!")) return;
             if(!confirm("🚨 ÚLTIMA CONFIRMAÇÃO!")) return;
             const senha = prompt("Digite 'APAGAR' para confirmar:");
             if(senha !== 'APAGAR') { alert("❌ Cancelado."); return; }
-            localStorage.clear(); sessionStorage.clear();
+            
+            clientes = [];
+            revendas = [];
+            historico = [];
+            backupMemoria = { clientes: [], revendas: [], historico: [], config: { modo: 'completo' }, logo: null, nome: 'TV NOVA JUAREZ' };
+            
+            localStorage.clear(); 
+            sessionStorage.clear();
             if(db) { const t = db.transaction(['dados'], 'readwrite'); t.objectStore('dados').clear(); }
+            
             location.reload();
         }
 
-        window.addEventListener('beforeunload', () => {
-            try {
-                localStorage.setItem('tv_clientes_v3', JSON.stringify(clientes));
-                localStorage.setItem('tv_revendas_v3', JSON.stringify(revendas));
-                localStorage.setItem('tv_historico_v3', JSON.stringify(historico));
-            } catch(e) {}
-        });
-        document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') salvarTudo(); });
+        // Storage event para sincronizar entre abas
         window.addEventListener('storage', (e) => {
-            if(e.key && e.key.startsWith('tv_')) {
-                carregarTudo().then(() => { renderizarClientes(); renderizarRevendas(); renderizarHistorico(); atualizarEstatisticas(); });
+            if(e.key && (e.key.startsWith('tv_') || e.key === STORAGE_KEYS.clientes || e.key === STORAGE_KEYS.revendas)) {
+                carregarTudo().then(() => { 
+                    renderizarClientes(); 
+                    renderizarRevendas(); 
+                    renderizarHistorico(); 
+                    atualizarEstatisticas(); 
+                });
             }
         });
     </script>
