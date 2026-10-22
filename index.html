@@ -18,6 +18,9 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { overflow-x: hidden; margin: 0; padding: 0; }
 
+        /* ============================================ */
+        /* TELA DE LOGIN */
+        /* ============================================ */
         .login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #0a0e27 0%, #1a1a4e 25%, #4a1a6e 50%, #6e1a5e 75%, #0a0e27 100%);
@@ -108,6 +111,9 @@
             font-weight: bold; margin-top: 8px; letter-spacing: 1px;
         }
 
+        /* ============================================ */
+        /* SISTEMA PRINCIPAL */
+        /* ============================================ */
         .sistema { display: none; }
         .sistema.ativo { display: block; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; min-height: 100vh; }
@@ -136,26 +142,65 @@
         }
         .btn-sair:hover { transform: scale(1.05); }
 
-        .painel {
-            display: grid; gap: 10px; margin-bottom: 15px;
+        /* ============================================ */
+        /* PAINEL SEPARADO: CLIENTES | REVENDAS */
+        /* ============================================ */
+        .painel-duplo {
+            display: grid; gap: 12px; margin-bottom: 15px;
+            grid-template-columns: 1fr;
+        }
+        .bloco-painel {
+            background: linear-gradient(135deg, #1a1a1a, #222);
+            border-radius: 12px; padding: 12px;
+            border: 2px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .bloco-painel.clientes { border-color: rgba(37, 211, 102, 0.4); }
+        .bloco-painel.revendas { border-color: rgba(0, 136, 204, 0.4); }
+        .bloco-painel.naopago { border-color: rgba(139, 0, 0, 0.6); }
+        
+        .bloco-titulo {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px; padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+        }
+        .bloco-titulo h3 {
+            margin: 0; font-size: 1em; letter-spacing: 1px;
+        }
+        .bloco-titulo.clientes h3 { color: #25D366; }
+        .bloco-titulo.revendas h3 { color: #0088cc; }
+        .bloco-titulo .total-badge {
+            background: rgba(255,255,255,0.1); color: white;
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 0.9em; font-weight: bold;
+        }
+        .bloco-titulo.clientes .total-badge { background: #25D366; }
+        .bloco-titulo.revendas .total-badge { background: #0088cc; }
+        
+        .bloco-stats {
+            display: grid; gap: 8px;
             grid-template-columns: repeat(2, 1fr);
         }
-        .stat-card {
-            background: linear-gradient(135deg, var(--card), var(--card2));
-            padding: 12px; border-radius: 10px;
-            border-left: 4px solid var(--whatsapp);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        .stat-item {
+            background: rgba(0,0,0,0.3); padding: 10px;
+            border-radius: 8px; border-left: 3px solid var(--border);
         }
-        .stat-card.rev { border-left-color: var(--telegram); }
-        .stat-card.dinheiro { border-left-color: var(--gold); }
-        .stat-card.pago { border-left-color: var(--emdia); }
-        .stat-card.pendente { border-left-color: var(--perto); }
-        .stat-card.naopago { border-left-color: var(--naopago); }
-        .stat-card h4 { margin: 0; font-size: 0.7em; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-card .num { font-size: 1.4em; font-weight: bold; color: white; margin: 3px 0; }
-        .stat-card .sub { font-size: 0.68em; color: #999; }
-        .stat-card .num.gold { color: var(--gold); }
+        .stat-item.dia { border-left-color: var(--emdia); }
+        .stat-item.pago { border-left-color: var(--gold); }
+        .stat-item.naopago { border-left-color: var(--naopago); }
+        .stat-item.valor { border-left-color: #25D366; }
+        .stat-item.valor.rev { border-left-color: #0088cc; }
+        .stat-item h5 { margin: 0; font-size: 0.65em; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-item .valor-num { font-size: 1.2em; font-weight: bold; margin-top: 3px; }
+        .stat-item.dia .valor-num { color: var(--emdia); }
+        .stat-item.pago .valor-num { color: var(--gold); }
+        .stat-item.naopago .valor-num { color: #ff6666; }
+        .stat-item.valor .valor-num { color: #25D366; }
+        .stat-item.valor.rev .valor-num { color: #0088cc; }
 
+        /* ============================================ */
+        /* ABAS EM CARTÕES */
+        /* ============================================ */
         .tabs-cards {
             display: grid; gap: 10px; margin-bottom: 15px;
             grid-template-columns: repeat(2, 1fr);
@@ -176,6 +221,9 @@
             box-shadow: 0 6px 20px rgba(255,215,0,0.4);
         }
 
+        /* ============================================ */
+        /* CONTEÚDO */
+        /* ============================================ */
         .container {
             background: var(--card); padding: 16px; border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: none;
@@ -357,10 +405,13 @@
         .sync-status.salvando { background: #f39c12; }
         .sync-status.erro { background: #e74c3c; }
 
+        /* ============================================ */
+        /* RESPONSIVO */
+        /* ============================================ */
         @media (min-width: 768px) {
             body { padding: 15px 25px; max-width: 1400px; margin: 0 auto; }
-            .painel { grid-template-columns: repeat(6, 1fr); gap: 12px; }
-            .stat-card .num { font-size: 1.6em; }
+            .painel-duplo { grid-template-columns: 1fr 1fr; gap: 15px; }
+            .bloco-stats { grid-template-columns: repeat(2, 1fr); }
             .tabs-cards { grid-template-columns: repeat(4, 1fr); gap: 12px; }
             .tab-card { padding: 20px 15px; font-size: 0.95em; }
             .tab-card .ico { font-size: 2.2em; }
@@ -374,7 +425,7 @@
         }
 
         @media (min-width: 500px) and (max-width: 767px) {
-            .painel { grid-template-columns: repeat(3, 1fr); }
+            .painel-duplo { grid-template-columns: 1fr 1fr; gap: 10px; }
             .tabs-cards { grid-template-columns: repeat(2, 1fr); }
             .acoes-grid { grid-template-columns: repeat(3, 1fr); }
             .status-selector { grid-template-columns: 1fr; }
@@ -383,7 +434,7 @@
         }
 
         @media (max-width: 400px) {
-            .painel { grid-template-columns: 1fr 1fr; }
+            .painel-duplo { grid-template-columns: 1fr; }
             .tabs-cards { grid-template-columns: 1fr 1fr; }
             .acoes-grid { grid-template-columns: 1fr 1fr; }
             .header-title { font-size: 1em; letter-spacing: 1px; }
@@ -394,13 +445,14 @@
         }
 
         @media (max-height: 500px) and (orientation: landscape) {
-            .painel { grid-template-columns: repeat(4, 1fr); }
+            .painel-duplo { grid-template-columns: 1fr 1fr; }
             .tabs-cards { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
 <body>
 
+    <!-- TELA DE LOGIN -->
     <div class="login-screen" id="login-screen">
         <div class="login-box">
             <div class="login-logo" id="login-logo-container">
@@ -430,6 +482,7 @@
         </div>
     </div>
 
+    <!-- SISTEMA PRINCIPAL -->
     <div class="sistema" id="sistema">
         <div class="sync-status" id="sync-status">💾 Salvo</div>
 
@@ -444,35 +497,78 @@
             <button class="btn-sair" onclick="sair()">🚪 Sair</button>
         </div>
 
-        <div class="painel">
-            <div class="stat-card">
-                <h4>👤 Clientes</h4>
-                <div class="num" id="stat-cli-total">0</div>
-                <div class="sub"><span style="color:#27ae60;" id="stat-cli-dia">0</span>D · <span style="color:#ffd700;" id="stat-cli-pago">0</span>P · <span style="color:#ff6666;" id="stat-cli-naopago">0</span>Ñ</div>
+        <!-- PAINEL SEPARADO: CLIENTES | REVENDAS -->
+        <div class="painel-duplo">
+            <!-- BLOCO CLIENTES -->
+            <div class="bloco-painel clientes">
+                <div class="bloco-titulo clientes">
+                    <h3>👤 CLIENTES</h3>
+                    <span class="total-badge" id="cli-total-badge">0</span>
+                </div>
+                <div class="bloco-stats">
+                    <div class="stat-item dia">
+                        <h5>✅ Em Dia</h5>
+                        <div class="valor-num" id="cli-stat-dia">0</div>
+                    </div>
+                    <div class="stat-item pago">
+                        <h5>💰 Pagos</h5>
+                        <div class="valor-num" id="cli-stat-pago">0</div>
+                    </div>
+                    <div class="stat-item naopago">
+                        <h5>⚠️ Não Pago</h5>
+                        <div class="valor-num" id="cli-stat-naopago">0</div>
+                    </div>
+                    <div class="stat-item valor">
+                        <h5>💵 Total Clientes</h5>
+                        <div class="valor-num" id="cli-stat-valor">R$ 0</div>
+                    </div>
+                    <div class="stat-item pago">
+                        <h5>✅ Recebido</h5>
+                        <div class="valor-num" id="cli-stat-recebido">R$ 0</div>
+                    </div>
+                    <div class="stat-item naopago">
+                        <h5>❌ A Receber</h5>
+                        <div class="valor-num" id="cli-stat-pendente">R$ 0</div>
+                    </div>
+                </div>
             </div>
-            <div class="stat-card rev">
-                <h4>🏢 Revendas</h4>
-                <div class="num" id="stat-rev-total">0</div>
-                <div class="sub"><span style="color:#27ae60;" id="stat-rev-dia">0</span>D · <span style="color:#ffd700;" id="stat-rev-pago">0</span>P · <span style="color:#ff6666;" id="stat-rev-naopago">0</span>Ñ</div>
-            </div>
-            <div class="stat-card dinheiro">
-                <h4>💰 Total</h4>
-                <div class="num gold" id="stat-total-valor">R$ 0</div>
-            </div>
-            <div class="stat-card pago">
-                <h4>✅ Recebido</h4>
-                <div class="num" id="stat-valor-pago" style="color:#27ae60;">R$ 0</div>
-            </div>
-            <div class="stat-card pendente">
-                <h4>⏳ Pendente</h4>
-                <div class="num" id="stat-valor-pendente" style="color:#f39c12;">R$ 0</div>
-            </div>
-            <div class="stat-card naopago">
-                <h4>⚠️ Não Pago</h4>
-                <div class="num" id="stat-valor-naopago" style="color:#ff6666;">R$ 0</div>
+
+            <!-- BLOCO REVENDAS -->
+            <div class="bloco-painel revendas">
+                <div class="bloco-titulo revendas">
+                    <h3>🏢 REVENDAS</h3>
+                    <span class="total-badge" id="rev-total-badge">0</span>
+                </div>
+                <div class="bloco-stats">
+                    <div class="stat-item dia">
+                        <h5>✅ Em Dia</h5>
+                        <div class="valor-num" id="rev-stat-dia">0</div>
+                    </div>
+                    <div class="stat-item pago">
+                        <h5>💰 Pagos</h5>
+                        <div class="valor-num" id="rev-stat-pago">0</div>
+                    </div>
+                    <div class="stat-item naopago">
+                        <h5>⚠️ Não Pago</h5>
+                        <div class="valor-num" id="rev-stat-naopago">0</div>
+                    </div>
+                    <div class="stat-item valor rev">
+                        <h5>💵 Total Revendas</h5>
+                        <div class="valor-num" id="rev-stat-valor">R$ 0</div>
+                    </div>
+                    <div class="stat-item pago">
+                        <h5>✅ Recebido</h5>
+                        <div class="valor-num" id="rev-stat-recebido">R$ 0</div>
+                    </div>
+                    <div class="stat-item naopago">
+                        <h5>❌ A Receber</h5>
+                        <div class="valor-num" id="rev-stat-pendente">R$ 0</div>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- ABAS -->
         <div class="tabs-cards">
             <button class="tab-card active" onclick="abrirAba('clientes', this)">
                 <span class="ico">👤</span><span>Clientes</span>
@@ -488,6 +584,7 @@
             </button>
         </div>
 
+        <!-- CLIENTES -->
         <div id="clientes" class="container active">
             <h2 id="titulo-cliente" style="color:var(--gold); font-size:1.2em; margin-bottom:12px;">➕ Cadastrar Cliente</h2>
             <input type="hidden" id="cli_id_edit">
@@ -534,6 +631,7 @@
             <div id="lista-clientes"></div>
         </div>
 
+        <!-- REVENDAS -->
         <div id="revendas" class="container">
             <h2 id="titulo-revenda" style="color:var(--gold); font-size:1.2em; margin-bottom:12px;">➕ Cadastrar Revenda</h2>
             <input type="hidden" id="rev_id_edit">
@@ -580,11 +678,13 @@
             <div id="lista-revendas"></div>
         </div>
 
+        <!-- HISTÓRICO -->
         <div id="historico" class="container">
             <h2 style="color:var(--gold); font-size:1.2em;">📂 Histórico de Cobranças</h2>
             <div id="lista-historico"></div>
         </div>
 
+        <!-- CONFIG -->
         <div id="config" class="container">
             <h2 style="color:var(--gold); font-size:1.2em;">⚙️ Configurações</h2>
             <div class="aviso-verde">✅ SISTEMA PERMANENTE - Dados NUNCA são apagados</div>
@@ -657,27 +757,31 @@
 
     <script>
         // ==================================================
-        // ⚡ SISTEMA PERMANENTE - 4 CAMADAS DE SALVAMENTO
+        // NOVO LOGIN: 3333 / 4444
         // ==================================================
+        const USUARIO_CORRETO = '3333';
+        const SENHA_CORRETA = '4444';
+        const NUMERO_DONO = '5521977519001';
+        const MENSAGEM_DONO = 'Olá! Gostaria de solicitar acesso ao sistema de cobrança.';
 
+        // ==================================================
+        // SISTEMA PERMANENTE
+        // ==================================================
         const STORAGE_KEYS = {
-            clientes: 'tv_clientes_v4',
-            revendas: 'tv_revendas_v4',
-            historico: 'tv_historico_v4',
-            config: 'tv_config_v4',
-            logo: 'tv_logo_v4',
-            nome: 'tv_nome_empresa_v4'
+            clientes: 'tv_clientes_v5',
+            revendas: 'tv_revendas_v5',
+            historico: 'tv_historico_v5',
+            config: 'tv_config_v5',
+            logo: 'tv_logo_v5',
+            nome: 'tv_nome_empresa_v5'
         };
         const DB_NAME = 'TVNovaJuarezDB';
         let db = null;
 
-        // ============================================
-        // INDEXEDDB (Camada 1)
-        // ============================================
         function abrirIndexedDB() {
             return new Promise((resolve) => {
                 try {
-                    const request = indexedDB.open(DB_NAME, 2);
+                    const request = indexedDB.open(DB_NAME, 3);
                     request.onerror = () => resolve(null);
                     request.onsuccess = () => { db = request.result; resolve(db); };
                     request.onupgradeneeded = (e) => {
@@ -720,9 +824,6 @@
             } catch(e) { return null; }
         }
 
-        // ============================================
-        // ⚠️ BACKUP EM MEMÓRIA (última camada de proteção)
-        // ============================================
         let backupMemoria = {
             clientes: [],
             revendas: [],
@@ -732,9 +833,6 @@
             nome: 'TV NOVA JUAREZ'
         };
 
-        // ============================================
-        // FUNÇÃO DE SALVAMENTO TOTAL
-        // ============================================
         function mostrarStatus(texto, tipo = 'ok') {
             const el = document.getElementById('sync-status');
             if(!el) return;
@@ -745,7 +843,6 @@
         async function salvarTudo() {
             mostrarStatus('💾 Salvando...', 'salvando');
             try {
-                // Atualiza backup em memória
                 backupMemoria = {
                     clientes: [...clientes],
                     revendas: [...revendas],
@@ -755,7 +852,6 @@
                     nome: nomeEmpresa
                 };
 
-                // CAMADA 1: LocalStorage
                 localStorage.setItem(STORAGE_KEYS.clientes, JSON.stringify(clientes));
                 localStorage.setItem(STORAGE_KEYS.revendas, JSON.stringify(revendas));
                 localStorage.setItem(STORAGE_KEYS.historico, JSON.stringify(historico));
@@ -763,15 +859,10 @@
                 if(logoEmpresa) localStorage.setItem(STORAGE_KEYS.logo, logoEmpresa);
                 if(nomeEmpresa) localStorage.setItem(STORAGE_KEYS.nome, nomeEmpresa);
 
-                // CAMADA 2: Também salva nas chaves antigas (compatibilidade)
-                localStorage.setItem('tv_clientes_v3', JSON.stringify(clientes));
-                localStorage.setItem('tv_revendas_v3', JSON.stringify(revendas));
-                localStorage.setItem('tv_historico_v3', JSON.stringify(historico));
-                localStorage.setItem('tv_config_v3', JSON.stringify(config));
-                if(logoEmpresa) localStorage.setItem('tv_logo_v3', logoEmpresa);
-                if(nomeEmpresa) localStorage.setItem('tv_nome_empresa_v3', nomeEmpresa);
+                localStorage.setItem('tv_clientes_v4', JSON.stringify(clientes));
+                localStorage.setItem('tv_revendas_v4', JSON.stringify(revendas));
+                localStorage.setItem('tv_historico_v4', JSON.stringify(historico));
 
-                // CAMADA 3: IndexedDB
                 await salvarIndexedDB('clientes', clientes);
                 await salvarIndexedDB('revendas', revendas);
                 await salvarIndexedDB('historico', historico);
@@ -779,7 +870,6 @@
                 if(logoEmpresa) await salvarIndexedDB('logo', logoEmpresa);
                 if(nomeEmpresa) await salvarIndexedDB('nome_empresa', nomeEmpresa);
 
-                // CAMADA 4: SessionStorage (backup temporário)
                 sessionStorage.setItem('backup_clientes', JSON.stringify(clientes));
                 sessionStorage.setItem('backup_revendas', JSON.stringify(revendas));
 
@@ -787,120 +877,57 @@
                 atualizarDiagnostico();
             } catch(e) {
                 console.error('Erro ao salvar:', e);
-                mostrarStatus('❌ Erro ao salvar', 'erro');
+                mostrarStatus('❌ Erro', 'erro');
             }
         }
 
-        // ============================================
-        // CARREGAMENTO COM VERIFICAÇÃO DE INTEGRIDADE
-        // ============================================
         async function carregarTudo() {
-            let fontes = {
-                clientes: [],
-                revendas: [],
-                historico: []
-            };
+            let fontes = { clientes: [], revendas: [], historico: [] };
 
-            // Fonte 1: LocalStorage v4
-            try {
-                const c = localStorage.getItem(STORAGE_KEYS.clientes);
-                if(c) {
-                    const arr = JSON.parse(c);
-                    if(Array.isArray(arr) && arr.length > fontes.clientes.length) fontes.clientes = arr;
-                }
-            } catch(e) {}
+            // CLIENTES - busca em várias fontes
+            try { const c = localStorage.getItem(STORAGE_KEYS.clientes); if(c) { const a = JSON.parse(c); if(Array.isArray(a) && a.length > fontes.clientes.length) fontes.clientes = a; } } catch(e) {}
+            try { const c = localStorage.getItem('tv_clientes_v4'); if(c) { const a = JSON.parse(c); if(Array.isArray(a) && a.length > fontes.clientes.length) fontes.clientes = a; } } catch(e) {}
+            try { const c = localStorage.getItem('tv_clientes_v3'); if(c) { const a = JSON.parse(c); if(Array.isArray(a) && a.length > fontes.clientes.length) fontes.clientes = a; } } catch(e) {}
+            try { const c = await carregarIndexedDB('clientes'); if(c && Array.isArray(c) && c.length > fontes.clientes.length) fontes.clientes = c; } catch(e) {}
+            if(backupMemoria.clientes && backupMemoria.clientes.length > fontes.clientes.length) fontes.clientes = backupMemoria.clientes;
 
-            // Fonte 2: LocalStorage v3 (antigo)
-            try {
-                const c = localStorage.getItem('tv_clientes_v3');
-                if(c) {
-                    const arr = JSON.parse(c);
-                    if(Array.isArray(arr) && arr.length > fontes.clientes.length) fontes.clientes = arr;
-                }
-            } catch(e) {}
+            // REVENDAS
+            try { const r = localStorage.getItem(STORAGE_KEYS.revendas); if(r) { const a = JSON.parse(r); if(Array.isArray(a) && a.length > fontes.revendas.length) fontes.revendas = a; } } catch(e) {}
+            try { const r = localStorage.getItem('tv_revendas_v4'); if(r) { const a = JSON.parse(r); if(Array.isArray(a) && a.length > fontes.revendas.length) fontes.revendas = a; } } catch(e) {}
+            try { const r = localStorage.getItem('tv_revendas_v3'); if(r) { const a = JSON.parse(r); if(Array.isArray(a) && a.length > fontes.revendas.length) fontes.revendas = a; } } catch(e) {}
+            try { const r = await carregarIndexedDB('revendas'); if(r && Array.isArray(r) && r.length > fontes.revendas.length) fontes.revendas = r; } catch(e) {}
+            if(backupMemoria.revendas && backupMemoria.revendas.length > fontes.revendas.length) fontes.revendas = backupMemoria.revendas;
 
-            // Fonte 3: LocalStorage original
-            try {
-                const c = localStorage.getItem('tv_clientes');
-                if(c) {
-                    const arr = JSON.parse(c);
-                    if(Array.isArray(arr) && arr.length > fontes.clientes.length) fontes.clientes = arr;
-                }
-            } catch(e) {}
+            // HISTÓRICO
+            try { const h = localStorage.getItem(STORAGE_KEYS.historico); if(h) { const a = JSON.parse(h); if(Array.isArray(a) && a.length > fontes.historico.length) fontes.historico = a; } } catch(e) {}
+            try { const h = localStorage.getItem('tv_historico_v4'); if(h) { const a = JSON.parse(h); if(Array.isArray(a) && a.length > fontes.historico.length) fontes.historico = a; } } catch(e) {}
+            try { const h = await carregarIndexedDB('historico'); if(h && Array.isArray(h) && h.length > fontes.historico.length) fontes.historico = h; } catch(e) {}
 
-            // Fonte 4: IndexedDB
-            try {
-                const c = await carregarIndexedDB('clientes');
-                if(c && Array.isArray(c) && c.length > fontes.clientes.length) fontes.clientes = c;
-            } catch(e) {}
-
-            // Fonte 5: Backup em memória
-            if(backupMemoria.clientes && backupMemoria.clientes.length > fontes.clientes.length) {
-                fontes.clientes = backupMemoria.clientes;
-            }
-
-            // ===== MESMA LÓGICA PARA REVENDAS =====
-            try {
-                const r = localStorage.getItem(STORAGE_KEYS.revendas);
-                if(r) { const arr = JSON.parse(r); if(Array.isArray(arr) && arr.length > fontes.revendas.length) fontes.revendas = arr; }
-            } catch(e) {}
-            try {
-                const r = localStorage.getItem('tv_revendas_v3');
-                if(r) { const arr = JSON.parse(r); if(Array.isArray(arr) && arr.length > fontes.revendas.length) fontes.revendas = arr; }
-            } catch(e) {}
-            try {
-                const r = localStorage.getItem('tv_revendas');
-                if(r) { const arr = JSON.parse(r); if(Array.isArray(arr) && arr.length > fontes.revendas.length) fontes.revendas = arr; }
-            } catch(e) {}
-            try {
-                const r = await carregarIndexedDB('revendas');
-                if(r && Array.isArray(r) && r.length > fontes.revendas.length) fontes.revendas = r;
-            } catch(e) {}
-            if(backupMemoria.revendas && backupMemoria.revendas.length > fontes.revendas.length) {
-                fontes.revendas = backupMemoria.revendas;
-            }
-
-            // ===== MESMA LÓGICA PARA HISTÓRICO =====
-            try {
-                const h = localStorage.getItem(STORAGE_KEYS.historico);
-                if(h) { const arr = JSON.parse(h); if(Array.isArray(arr) && arr.length > fontes.historico.length) fontes.historico = arr; }
-            } catch(e) {}
-            try {
-                const h = localStorage.getItem('tv_historico_v3');
-                if(h) { const arr = JSON.parse(h); if(Array.isArray(arr) && arr.length > fontes.historico.length) fontes.historico = arr; }
-            } catch(e) {}
-            try {
-                const h = await carregarIndexedDB('historico');
-                if(h && Array.isArray(h) && h.length > fontes.historico.length) fontes.historico = h;
-            } catch(e) {}
-
-            // ===== CONFIG, LOGO E NOME =====
+            // CONFIG, LOGO, NOME
             let cfg = null, logo = null, nome = null;
             try { cfg = localStorage.getItem(STORAGE_KEYS.config); } catch(e) {}
-            if(!cfg) { try { cfg = localStorage.getItem('tv_config_v3'); } catch(e) {} }
-            if(!cfg) { cfg = await carregarIndexedDB('config'); if(typeof cfg === 'string') cfg = cfg; }
+            if(!cfg) { try { cfg = localStorage.getItem('tv_config_v4'); } catch(e) {} }
+            if(!cfg) { cfg = await carregarIndexedDB('config'); }
             if(cfg) { try { config = typeof cfg === 'string' ? JSON.parse(cfg) : cfg; } catch(e) { config = { modo: 'completo' }; } }
 
             try { logo = localStorage.getItem(STORAGE_KEYS.logo); } catch(e) {}
-            if(!logo) { try { logo = localStorage.getItem('tv_logo_v3'); } catch(e) {} }
+            if(!logo) { try { logo = localStorage.getItem('tv_logo_v4'); } catch(e) {} }
             if(!logo) { logo = await carregarIndexedDB('logo'); }
 
             try { nome = localStorage.getItem(STORAGE_KEYS.nome); } catch(e) {}
-            if(!nome) { try { nome = localStorage.getItem('tv_nome_empresa_v3'); } catch(e) {} }
+            if(!nome) { try { nome = localStorage.getItem('tv_nome_empresa_v4'); } catch(e) {} }
             if(!nome) { nome = await carregarIndexedDB('nome_empresa'); }
 
-            // Aplica os dados com mais registros
             clientes = fontes.clientes;
             revendas = fontes.revendas;
             historico = fontes.historico;
             logoEmpresa = logo || backupMemoria.logo;
             nomeEmpresa = nome || backupMemoria.nome || 'TV NOVA JUAREZ';
 
-            // Garante que todos os clientes/revendas tenham status
             clientes = clientes.map(c => { if(c.status === undefined) c.status = c.pago ? 'pago' : 'dia'; return c; });
             revendas = revendas.map(r => { if(r.status === undefined) r.status = r.pago ? 'pago' : 'dia'; return r; });
 
-            console.log('✅ Dados carregados:', clientes.length, 'clientes,', revendas.length, 'revendas');
+            console.log('✅ Carregado:', clientes.length, 'clientes,', revendas.length, 'revendas');
             atualizarDiagnostico();
         }
 
@@ -913,48 +940,22 @@
             }
         }
 
-        // ============================================
-        // AUTO-SAVE A CADA 15 SEGUNDOS
-        // ============================================
         setInterval(() => { salvarTudo(); }, 15000);
 
-        // ============================================
-        // SALVA AO SAIR/FECHAR/RECARREGAR
-        // ============================================
         window.addEventListener('beforeunload', () => {
             try {
                 localStorage.setItem(STORAGE_KEYS.clientes, JSON.stringify(clientes));
                 localStorage.setItem(STORAGE_KEYS.revendas, JSON.stringify(revendas));
                 localStorage.setItem(STORAGE_KEYS.historico, JSON.stringify(historico));
-                localStorage.setItem('tv_clientes_v3', JSON.stringify(clientes));
-                localStorage.setItem('tv_revendas_v3', JSON.stringify(revendas));
             } catch(e) {}
         });
-
-        // Salva quando a página perde visibilidade (troca de aba, minimiza, etc)
-        document.addEventListener('visibilitychange', () => { 
-            if(document.visibilityState === 'hidden') salvarTudo(); 
-        });
-
-        // Salva ao sair da página
+        document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') salvarTudo(); });
         window.addEventListener('pagehide', () => { salvarTudo(); });
+        window.addEventListener('pageshow', async () => { await carregarTudo(); renderizarClientes(); renderizarRevendas(); atualizarEstatisticas(); });
 
-        // Salva ao voltar para a página
-        window.addEventListener('pageshow', async () => { 
-            await carregarTudo(); 
-            renderizarClientes(); 
-            renderizarRevendas(); 
-            atualizarEstatisticas();
-        });
-
-        // ============================================
+        // ==================================================
         // LOGIN
-        // ============================================
-        const USUARIO_CORRETO = 'jesus';
-        const SENHA_CORRETA = 'jesus';
-        const NUMERO_DONO = '5521977519001';
-        const MENSAGEM_DONO = 'Olá! Gostaria de solicitar acesso ao sistema de cobrança.';
-
+        // ==================================================
         function fazerLogin() {
             const user = document.getElementById('login-user').value.trim().toLowerCase();
             const pass = document.getElementById('login-pass').value.trim().toLowerCase();
@@ -998,11 +999,11 @@
         document.getElementById('login-pass').addEventListener('keypress', e => { if(e.key === 'Enter') fazerLogin(); });
 
         function aplicarLogoLogin() {
-            const logoSalva = localStorage.getItem(STORAGE_KEYS.logo) || localStorage.getItem('tv_logo_v3');
+            const logoSalva = localStorage.getItem(STORAGE_KEYS.logo) || localStorage.getItem('tv_logo_v4');
             if(logoSalva) {
                 document.getElementById('login-logo-container').innerHTML = `<img src="${logoSalva}" alt="Logo">`;
             }
-            const nomeSalvo = localStorage.getItem(STORAGE_KEYS.nome) || localStorage.getItem('tv_nome_empresa_v3');
+            const nomeSalvo = localStorage.getItem(STORAGE_KEYS.nome) || localStorage.getItem('tv_nome_empresa_v4');
             if(nomeSalvo) {
                 const el = document.getElementById('login-logo-text');
                 if(el) el.innerText = nomeSalvo;
@@ -1010,9 +1011,9 @@
         }
         aplicarLogoLogin();
 
-        // ============================================
+        // ==================================================
         // VARIÁVEIS GLOBAIS
-        // ============================================
+        // ==================================================
         let clientes = [];
         let revendas = [];
         let historico = [];
@@ -1026,9 +1027,6 @@
         let statusCliTemp = 'dia';
         let statusRevTemp = 'dia';
 
-        // ============================================
-        // INIT
-        // ============================================
         async function init() {
             await abrirIndexedDB();
             await carregarTudo();
@@ -1107,36 +1105,47 @@
             return 'dia';
         }
 
+        // ==================================================
+        // ESTATÍSTICAS SEPARADAS
+        // ==================================================
         function atualizarEstatisticas() {
+            // CLIENTES
             const cliDia = clientes.filter(c => getStatusFinal(c) === 'dia').length;
             const cliPago = clientes.filter(c => getStatusFinal(c) === 'pago').length;
             const cliNaoPago = clientes.filter(c => getStatusFinal(c) === 'naopago').length;
+            
+            document.getElementById('cli-total-badge').innerText = clientes.length;
+            document.getElementById('cli-stat-dia').innerText = cliDia;
+            document.getElementById('cli-stat-pago').innerText = cliPago;
+            document.getElementById('cli-stat-naopago').innerText = cliNaoPago;
+
+            const cliTotalValor = clientes.reduce((s, c) => s + (parseFloat((c.valor||'0').replace(',','.')) || 0), 0);
+            const cliPagoValor = clientes.filter(c=>getStatusFinal(c)==='pago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0);
+            const cliNaoPagoValor = clientes.filter(c=>getStatusFinal(c)==='naopago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0);
+            const cliPendenteValor = cliTotalValor - cliPagoValor;
+
+            document.getElementById('cli-stat-valor').innerText = 'R$ ' + cliTotalValor.toFixed(2).replace('.',',');
+            document.getElementById('cli-stat-recebido').innerText = 'R$ ' + cliPagoValor.toFixed(2).replace('.',',');
+            document.getElementById('cli-stat-pendente').innerText = 'R$ ' + cliNaoPagoValor.toFixed(2).replace('.',',');
+
+            // REVENDAS
             const revDia = revendas.filter(r => getStatusFinal(r) === 'dia').length;
             const revPago = revendas.filter(r => getStatusFinal(r) === 'pago').length;
             const revNaoPago = revendas.filter(r => getStatusFinal(r) === 'naopago').length;
+            
+            document.getElementById('rev-total-badge').innerText = revendas.length;
+            document.getElementById('rev-stat-dia').innerText = revDia;
+            document.getElementById('rev-stat-pago').innerText = revPago;
+            document.getElementById('rev-stat-naopago').innerText = revNaoPago;
 
-            document.getElementById('stat-cli-total').innerText = clientes.length;
-            document.getElementById('stat-cli-dia').innerText = cliDia;
-            document.getElementById('stat-cli-pago').innerText = cliPago;
-            document.getElementById('stat-cli-naopago').innerText = cliNaoPago;
-            document.getElementById('stat-rev-total').innerText = revendas.length;
-            document.getElementById('stat-rev-dia').innerText = revDia;
-            document.getElementById('stat-rev-pago').innerText = revPago;
-            document.getElementById('stat-rev-naopago').innerText = revNaoPago;
+            const revTotalValor = revendas.reduce((s, r) => s + (parseFloat((r.valor||'0').replace(',','.')) || 0), 0);
+            const revPagoValor = revendas.filter(r=>getStatusFinal(r)==='pago').reduce((s,r)=>s+(parseFloat((r.valor||'0').replace(',','.'))||0),0);
+            const revNaoPagoValor = revendas.filter(r=>getStatusFinal(r)==='naopago').reduce((s,r)=>s+(parseFloat((r.valor||'0').replace(',','.'))||0),0);
+            const revPendenteValor = revTotalValor - revPagoValor;
 
-            const totalCli = clientes.reduce((sum, c) => sum + (parseFloat((c.valor||'0').replace(',','.')) || 0), 0);
-            const totalRev = revendas.reduce((sum, r) => sum + (parseFloat((r.valor||'0').replace(',','.')) || 0), 0);
-            const totalGeral = totalCli + totalRev;
-            const pagoGeral = clientes.filter(c=>getStatusFinal(c)==='pago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0)
-                             + revendas.filter(r=>getStatusFinal(r)==='pago').reduce((s,r)=>s+(parseFloat((r.valor||'0').replace(',','.'))||0),0);
-            const naoPagoGeral = clientes.filter(c=>getStatusFinal(c)==='naopago').reduce((s,c)=>s+(parseFloat((c.valor||'0').replace(',','.'))||0),0)
-                             + revendas.filter(r=>getStatusFinal(r)==='naopago').reduce((s,r)=>s+(parseFloat((r.valor||'0').replace(',','.'))||0),0);
-            const pendenteGeral = totalGeral - pagoGeral - naoPagoGeral;
-
-            document.getElementById('stat-total-valor').innerText = 'R$ ' + totalGeral.toFixed(0);
-            document.getElementById('stat-valor-pago').innerText = 'R$ ' + pagoGeral.toFixed(0);
-            document.getElementById('stat-valor-pendente').innerText = 'R$ ' + pendenteGeral.toFixed(0);
-            document.getElementById('stat-valor-naopago').innerText = 'R$ ' + naoPagoGeral.toFixed(0);
+            document.getElementById('rev-stat-valor').innerText = 'R$ ' + revTotalValor.toFixed(2).replace('.',',');
+            document.getElementById('rev-stat-recebido').innerText = 'R$ ' + revPagoValor.toFixed(2).replace('.',',');
+            document.getElementById('rev-stat-pendente').innerText = 'R$ ' + revNaoPagoValor.toFixed(2).replace('.',',');
         }
 
         function filtrarClientes(tipo, btn) {
@@ -1247,7 +1256,6 @@
                 clientes.push(dados);
             }
             
-            // SALVA 2 VEZES para garantir
             await salvarTudo();
             await salvarTudo();
             
@@ -1298,7 +1306,6 @@
             clientes = clientes.filter(c => c.id !== id);
             await salvarTudo();
             renderizarClientes(); atualizarEstatisticas();
-            alert("🗑️ Cliente excluído!");
         }
 
         async function mudarStatusCliente(id, novoStatus) {
@@ -1433,7 +1440,6 @@
             revendas = revendas.filter(r => r.id !== id);
             await salvarTudo();
             renderizarRevendas(); atualizarEstatisticas();
-            alert("🗑️ Revenda excluída!");
         }
 
         async function mudarStatusRevenda(id, novoStatus) {
@@ -1789,7 +1795,7 @@
         }
 
         function exportarBackup() {
-            const backup = { versao: '7.0', data: new Date().toISOString(), clientes, revendas, historico, config, logoEmpresa, nomeEmpresa };
+            const backup = { versao: '8.0', data: new Date().toISOString(), clientes, revendas, historico, config, logoEmpresa, nomeEmpresa };
             const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -1839,7 +1845,6 @@
             location.reload();
         }
 
-        // Storage event para sincronizar entre abas
         window.addEventListener('storage', (e) => {
             if(e.key && (e.key.startsWith('tv_') || e.key === STORAGE_KEYS.clientes || e.key === STORAGE_KEYS.revendas)) {
                 carregarTudo().then(() => { 
